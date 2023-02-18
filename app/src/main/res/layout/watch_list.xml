@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="10">
+
+        <TextView
+            android:id="@+id/timeTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="00:00.0"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_weight="10"
+            android:textSize="50sp"/>
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:text="Start"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/blue"
+            android:text="Reset"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvInitialTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kezdőérték"
+            android:textStyle="italic"
+            android:padding="10dp"
+            android:layout_weight="10"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/black"
+            android:textSize="25sp"/>
+
+        <Button
+            android:id="@+id/minus5Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/blue"
+            android:text="-5 mp"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/minus1Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/blue"
+            android:text="-1 mp"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/plus1Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/blue"
+            android:text="+1 mp"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/plus5Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/blue"
+            android:text="+5 mp"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="9">
+
+        <TextView
+            android:id="@+id/tvNumberOfTeamWatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Csapatszám"
+            android:padding="10dp"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"/>
+
+</LinearLayout>

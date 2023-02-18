@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "511625415336",
+    "firebase_url": "https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "enduranceoagb-bb301",
+    "storage_bucket": "enduranceoagb-bb301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511625415336:android:10db6d127052214a7ed09d",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.android.enduranceoagb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511625415336-btppibg1b8rb9sm8or60qdasbpjkprne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hu.bme.aut.android.enduranceoagb",
+            "certificate_hash": "a5e4e09fddf2649dfc9d59b3750bf7b2a428d0ff"
+          }
+        },
+        {
+          "client_id": "511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa_OJ04F4pJMz_tb1mT1SJ7sB4Sh1Enas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

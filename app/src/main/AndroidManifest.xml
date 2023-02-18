@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hu.bme.aut.android.enduranceoagb">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/endu"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/endu"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Enduranceoagb">
+        <activity
+            android:name=".StintActivity2"
+            android:exported="false"
+            android:label="@string/title_activity_stint2"/>
+        <activity
+            android:name=".TeamActivity"
+            android:exported="true"
+            android:label="@string/teams" />
+        <activity
+            android:name=".TeamCheckActivity"
+            android:exported="true"
+            android:label="@string/teamsCheck" />
+        <activity
+            android:name=".AllCheckActivity"
+            android:exported="true"
+            android:label="@string/allCheck" />
+        <activity
+            android:name=".AllFinalCheckActivity"
+            android:exported="true"
+            android:label="@string/allFinalCheck" />
+        <activity
+            android:name=".ResultActivity"
+            android:exported="true"
+            android:label="@string/result" />
+        <activity
+            android:name=".DetailsTeamCheckActivity"
+            android:exported="true"
+            android:label="@string/teamsDetailsCheck" />
+        <activity
+            android:name=".DriverActivity"
+            android:exported="true"
+            android:label="@string/drivers" />
+        <activity
+            android:name=".DetailsStintWatchActivity"
+            android:screenOrientation="landscape"
+            android:exported="false"
+            android:label="@string/detailsStint" />
+        <activity
+            android:name=".RaceActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Enduranceoagb.NoActionBar" />
+        <activity
+            android:name=".PodiumActivity"
+            android:exported="true"
+            android:label="@string/podium" />
+        <activity
+            android:name=".AllTeamActivity"
+            android:exported="true"
+            android:label="@string/allTeams" />
+        <activity
+            android:name=".AllDriverActivity"
+            android:exported="true"
+            android:label="@string/allDrivers" />
+        <activity
+            android:name=".public.WelcomeActivity"
+            android:exported="true"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:label="@string/login">
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Enduranceoagb.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+    </application>
+
+</manifest>
