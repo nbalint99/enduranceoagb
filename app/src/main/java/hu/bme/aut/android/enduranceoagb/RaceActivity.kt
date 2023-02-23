@@ -3,6 +3,8 @@ package hu.bme.aut.android.enduranceoagb
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
@@ -60,7 +62,100 @@ class RaceActivity : AppCompatActivity() {
                             builder.setMessage("Biztos, hogy létre akarod hozni az etapokat? Innentől kezdve már nem módosíthatod a csapatokat és a versenyzőket!")
 
                             builder.setPositiveButton(R.string.button_ok) { _, _ ->
-                                val stintNumber =
+                                val builder2: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(
+                                    this,
+                                    android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                                )
+
+                                val inflater2 = this.layoutInflater
+                                val dialogView2: View =
+                                    inflater2.inflate(
+                                        hu.bme.aut.android.enduranceoagb.R.layout.change_time_dialog,
+                                        null
+                                    )
+                                builder2.setView(dialogView2)
+                                builder2.setTitle("Csereidő beállítása")
+
+                                builder2.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                    val changeTimeMin =
+                                        dialogView2.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etChangeTimeMin)
+                                    val changeTimeSec =
+                                        dialogView2.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etChangeTimeSec)
+
+                                    if (changeTimeMin.text.toString() != "" && changeTimeSec.text.toString() != ""
+                                    ) {
+                                        if (changeTimeSec.text.toString()
+                                                .toInt() < 60
+                                        ) {
+
+                                                val totalChange = (changeTimeMin.text.toString()
+                                                    .toInt()) * 60000 + (changeTimeSec.text.toString()
+                                                    .toInt()) * 1000
+
+                                                dbRef.child("Info").child("changeTime")
+                                                    .setValue(totalChange)
+
+                                                val stintNumber =
+                                                    p0.result.child("Info")
+                                                        .child("allStintNumber").value.toString()
+                                                        .toInt()
+                                                if (!p0.result.hasChild("AllStint")) {
+                                                    for (element in 1..stintNumber) {
+
+                                                        val newItem = DoneStint(
+                                                            element,
+                                                            false,
+                                                            false,
+                                                            zeroToUp(numberOfTeams, element),
+                                                            upToZero(numberOfTeams, element)
+                                                        )
+                                                        dbRef.child("AllStint")
+                                                            .child("numberOfStint")
+                                                            .child(element.toString())
+                                                            .setValue(newItem)
+                                                    }
+                                                }
+                                                for (ele in 1..stintNumber - 1) {
+                                                    if (!p0.result.child("Result")
+                                                            .child(ele.toString())
+                                                            .exists()
+                                                    ) {
+                                                        dbRef.child("Result").child(ele.toString())
+                                                            .child("team")
+                                                            .setValue("Nincs még eredmény!")
+                                                    }
+                                                }
+                                                dbRef.child("Info").child("hasStintReady")
+                                                    .setValue(true)
+
+                                                showDetailsIntent.setClass(
+                                                    this@RaceActivity,
+                                                    StintActivity2::class.java
+                                                )
+                                                showDetailsIntent.putExtra(
+                                                    StintActivity2.EXTRA_RACE_NAME,
+                                                    raceId
+                                                )
+                                                startActivity(showDetailsIntent)
+                                        }
+                                        else {
+                                            val snack = Snackbar.make(it, R.string.notValid, Snackbar.LENGTH_LONG)
+                                            snack.show()
+                                        }
+                                    }
+                                    else {
+                                        val snack = Snackbar.make(it, R.string.notValid, Snackbar.LENGTH_LONG)
+                                        snack.show()
+                                    }
+                                }
+                                builder2.setNeutralButton(R.string.button_megse, null)
+                                builder2.show()
+
+
+
+
+
+                                /*val stintNumber =
                                     p0.result.child("Info").child("allStintNumber").value.toString().toInt()
                                 if (!p0.result.hasChild("AllStint")) {
                                     for (element in 1..stintNumber) {
@@ -81,7 +176,7 @@ class RaceActivity : AppCompatActivity() {
 
                                 showDetailsIntent.setClass(this@RaceActivity, StintActivity2::class.java)
                                 showDetailsIntent.putExtra(StintActivity2.EXTRA_RACE_NAME, raceId)
-                                startActivity(showDetailsIntent)
+                                startActivity(showDetailsIntent)*/
                             }
                             builder.setNeutralButton(R.string.button_megse, null)
                             builder.show()

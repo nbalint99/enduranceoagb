@@ -30,6 +30,10 @@ class NewRaceFragment : DialogFragment() {
 
     private lateinit var dbRef: DatabaseReference
 
+    private val cal = Calendar.getInstance()
+
+    private val year2 = cal.get(Calendar.YEAR).toString()
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as? NewRaceListener
@@ -88,7 +92,7 @@ class NewRaceFragment : DialogFragment() {
 
 
     private fun getRaceItem() = Races(
-        nameR = binding.etNameRace.text.toString(),
+        nameR = year2 + " - " + binding.etNameRace.text.toString(),
         location = binding.etNewLocation.text.toString(),
         numberOfTeams = binding.etNewRaceTeams.text.toString().toInt(),
         allStintNumber = binding.etNewRaceTeams.text.toString().toInt() + 1,

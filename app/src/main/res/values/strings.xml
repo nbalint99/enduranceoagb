@@ -119,4 +119,6 @@
     <string name="notValid">Hiba történt!</string>
     <string name="allDrivers">A csapat összes idei versenyzője</string>
     <string name="notValidNumber">Hiba történt! Több személyt adtál meg, mint amennyi tagot tartalmaz a csapat!</string>
+    <string name="changeTimeMin">Perc</string>
+    <string name="changeTimeSec">Másodperc</string>
 </resources>

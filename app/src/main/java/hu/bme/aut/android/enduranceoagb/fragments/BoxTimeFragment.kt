@@ -76,13 +76,15 @@ class BoxTimeFragment : Fragment(), BoxTimeAdapter.BoxTimeItemClickListener{
 
         val items : MutableList<BoxTime>? = mutableListOf()
         val itemsTeams : MutableList<Teams>? = mutableListOf()
+        val itemsTime : MutableList<Double>? = mutableListOf()
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                 if (!p0.result.child("BoxTime").child(stintId).exists()) {
+                    val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt()
                     for (element in 1..numberOfTeams) {
-                        val boxTime = BoxTime(element, 90000.0, false)
+                        val boxTime = BoxTime(element, changeTime.toDouble(), false)
                         dbRef.child("BoxTime").child(stintId).child(element.toString()).setValue(boxTime)
                         items?.add(boxTime)
                     }
@@ -107,9 +109,13 @@ class BoxTimeFragment : Fragment(), BoxTimeAdapter.BoxTimeItemClickListener{
                         el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull())
                     itemsTeams?.add(teamsGet)
                 }
+                val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt().toDouble()
+                itemsTime?.add(changeTime)
+
 
                 adapter.update2(items!!)
                 adapter.update2Teams(itemsTeams!!)
+                adapter.update3time(itemsTime!!)
 
             }
         }

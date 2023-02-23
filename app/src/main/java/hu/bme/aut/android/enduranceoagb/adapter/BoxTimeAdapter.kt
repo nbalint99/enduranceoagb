@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DatabaseReference
 import hu.bme.aut.android.enduranceoagb.R
 import hu.bme.aut.android.enduranceoagb.data.BoxTime
 import hu.bme.aut.android.enduranceoagb.data.Teams
@@ -24,6 +25,8 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
 
     private val itemsTeams = mutableListOf<Teams>()
 
+    private val itemsTime = mutableListOf<Double>()
+
     private var positionDefault = -1
 
 
@@ -34,6 +37,7 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
 
     override fun onBindViewHolder(holder: BoxTimeViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val item = items[position]
+        val time = itemsTime[0]
 
         for (element in itemsTeams) {
             if (element.teamNumber == item.teamNumber) {
@@ -50,6 +54,13 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
         val secIni = (item.initialTime / 1000 % 60).toInt()
         holder.binding.tvNeedTime.text =
             "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
+
+        val initPenalty = item.initialTime - time
+
+        val minIniPenalty = (initPenalty / 60000 % 60).toInt()
+        val secIniPenalty = (initPenalty / 1000 % 60).toInt()
+        holder.binding.tvPrevPenalty.text =
+            String.format("%01d:%02d", minIniPenalty, secIniPenalty)
 
         /*if (item.hasDone) {
             holder.binding.timeTV.text = "MEHET!"
@@ -273,6 +284,13 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
     fun update2Teams(itemsWatch: MutableList<Teams>) {
         itemsTeams.clear()
         itemsTeams.addAll(itemsWatch)
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun update3time(time: MutableList<Double>) {
+        itemsTime.clear()
+        itemsTime.addAll(time)
         notifyDataSetChanged()
     }
 
