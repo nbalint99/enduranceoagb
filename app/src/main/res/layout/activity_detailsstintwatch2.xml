@@ -49,7 +49,7 @@
         app:layout_constraintRight_toLeftOf="@+id/boxTimeData"
         app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/boxTimeData"
         class="hu.bme.aut.android.enduranceoagb.fragments.BoxTimeFragment"
         android:layout_width="0dp"

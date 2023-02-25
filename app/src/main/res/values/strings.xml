@@ -121,4 +121,5 @@
     <string name="notValidNumber">Hiba történt! Több személyt adtál meg, mint amennyi tagot tartalmaz a csapat!</string>
     <string name="changeTimeMin">Perc</string>
     <string name="changeTimeSec">Másodperc</string>
+    <string name="changeTime">A csere körében teljesített kör ideje</string>
 </resources>

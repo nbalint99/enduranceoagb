@@ -298,19 +298,19 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:27 - 0:32"
+                        return "0:28 - 0:32"
                     }
                     3 -> {
-                        return "0:57 - 1:02"
+                        return "0:58 - 1:02"
                     }
                     4 -> {
-                        return "1:27 - 1:32"
+                        return "1:28 - 1:32"
                     }
                     5 -> {
-                        return "1:57 - 2:02"
+                        return "1:58 - 2:02"
                     }
                     6 -> {
-                        return "2:27 - 2:32"
+                        return "2:28 - 2:32"
                     }
                     else -> {return ""}
                 }
@@ -321,22 +321,22 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:23 - 0:29"
+                        return "0:23 - 0:28"
                     }
                     3 -> {
-                        return "0:48 - 0:54"
+                        return "0:48 - 0:53"
                     }
                     4 -> {
-                        return "1:14 - 1:20"
+                        return "1:14 - 1:19"
                     }
                     5 -> {
-                        return "1:39 - 1:45"
+                        return "1:40 - 1:45"
                     }
                     6 -> {
-                        return "2:05 - 2:11"
+                        return "2:06 - 2:11"
                     }
                     7 -> {
-                        return "2:30 - 2:36"
+                        return "2:32 - 2:37"
                     }
                     else -> {return ""}
                 }
@@ -347,25 +347,25 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:19 - 0:26"
+                        return "0:20 - 0:25"
                     }
                     3 -> {
-                        return "0:41 - 0:48"
+                        return "0:43 - 0:48"
                     }
                     4 -> {
-                        return "1:04 - 1:11"
+                        return "1:05 - 1:10"
                     }
                     5 -> {
-                        return "1:26 - 1:33"
+                        return "1:28 - 1:33"
                     }
                     6 -> {
-                        return "1:49 - 1:56"
+                        return "1:50 - 1:55"
                     }
                     7 -> {
-                        return "2:11 - 2:18"
+                        return "2:12 - 2:17"
                     }
                     8 -> {
-                        return "2:34 - 2:41"
+                        return "2:35 - 2:40"
                     }
                     else -> {return ""}
                 }
@@ -376,28 +376,28 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:16 - 0:24"
+                        return "0:17 - 0:23"
                     }
                     3 -> {
-                        return "0:36 - 0:44"
+                        return "0:37 - 0:43"
                     }
                     4 -> {
-                        return "0:56 - 1:04"
+                        return "0:57 - 1:03"
                     }
                     5 -> {
-                        return "1:16 - 1:24"
+                        return "1:17 - 1:23"
                     }
                     6 -> {
-                        return "1:36 - 1:44"
+                        return "1:37 - 1:43"
                     }
                     7 -> {
-                        return "1:56 - 2:04"
+                        return "1:57 - 2:03"
                     }
                     8 -> {
-                        return "2:16 - 2:24"
+                        return "2:17 - 2:23"
                     }
                     9 -> {
-                        return "2:36 - 2:44"
+                        return "2:37 - 2:43"
                     }
                     else -> {return ""}
                 }
@@ -408,31 +408,31 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:16 - 0:24"
+                        return "0:15 - 0:22"
                     }
                     3 -> {
-                        return "0:36 - 0:44"
+                        return "0:33 - 0:40"
                     }
                     4 -> {
-                        return "0:56 - 1:04"
+                        return "0:51 - 0:58"
                     }
                     5 -> {
-                        return "1:16 - 1:24"
+                        return "1:09 - 1:16"
                     }
                     6 -> {
-                        return "1:36 - 1:44"
+                        return "1:27 - 1:34"
                     }
                     7 -> {
-                        return "1:56 - 2:04"
+                        return "1:45 - 1:52"
                     }
                     8 -> {
-                        return "2:16 - 2:24"
+                        return "2:03 - 2:10"
                     }
                     9 -> {
-                        return "2:36 - 2:44"
+                        return "2:21 - 2:28"
                     }
                     10 -> {
-                        return "2:56 - 3:04"
+                        return "2:39 - 2:46"
                     }
                     else -> {return ""}
                 }
@@ -443,34 +443,34 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:15 - 0:25"
+                        return "0:13 - 0:20"
                     }
                     3 -> {
-                        return "0:35 - 0:45"
+                        return "0:29 - 0:36"
                     }
                     4 -> {
-                        return "0:55 - 1:05"
+                        return "0:46 - 0:53"
                     }
                     5 -> {
-                        return "1:15 - 1:25"
+                        return "1:02 - 1:09"
                     }
                     6 -> {
-                        return "1:35 - 1:45"
+                        return "1:18 - 1:25"
                     }
                     7 -> {
-                        return "1:55 - 2:05"
+                        return "1:35 - 1:42"
                     }
                     8 -> {
-                        return "2:15 - 2:25"
+                        return "1:51 - 1:58"
                     }
                     9 -> {
-                        return "2:35 - 2:45"
+                        return "2:08 - 2:15"
                     }
                     10 -> {
-                        return "2:55 - 3:05"
+                        return "2:24 - 2:31"
                     }
                     11 -> {
-                        return "3:15 - 3:25"
+                        return "2:40 - 2:47"
                     }
                     else -> {return ""}
                 }
@@ -481,37 +481,231 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "0:15 - 0:25"
+                        return "0:12 - 0:19"
                     }
                     3 -> {
-                        return "0:35 - 0:45"
+                        return "0:27 - 0:34"
                     }
                     4 -> {
-                        return "0:55 - 1:05"
+                        return "0:42 - 0:49"
                     }
                     5 -> {
-                        return "1:15 - 1:25"
+                        return "0:57 - 1:04"
                     }
                     6 -> {
-                        return "1:35 - 1:45"
+                        return "1:12 - 1:19"
                     }
                     7 -> {
-                        return "1:55 - 2:05"
+                        return "1:27 - 1:34"
                     }
                     8 -> {
-                        return "2:15 - 2:25"
+                        return "1:42 - 1:49"
                     }
                     9 -> {
-                        return "2:35 - 2:45"
+                        return "1:57 - 2:04"
                     }
                     10 -> {
-                        return "2:55 - 3:05"
+                        return "2:12 - 2:19"
                     }
                     11 -> {
-                        return "3:15 - 3:25"
+                        return "2:27 - 2:34"
                     }
                     12 -> {
-                        return "3:35 - 3:45"
+                        return "2:42 - 2:49"
+                    }
+                    else -> {return ""}
+                }
+            }
+            12 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "0:11 - 0:19"
+                    }
+                    3 -> {
+                        return "0:26 - 0:34"
+                    }
+                    4 -> {
+                        return "0:41 - 0:49"
+                    }
+                    5 -> {
+                        return "0:56 - 1:04"
+                    }
+                    6 -> {
+                        return "1:11 - 1:19"
+                    }
+                    7 -> {
+                        return "1:26 - 1:34"
+                    }
+                    8 -> {
+                        return "1:41 - 1:49"
+                    }
+                    9 -> {
+                        return "1:56 - 2:04"
+                    }
+                    10 -> {
+                        return "2:11 - 2:19"
+                    }
+                    11 -> {
+                        return "2:26 - 2:34"
+                    }
+                    12 -> {
+                        return "2:41 - 2:49"
+                    }
+                    13 -> {
+                        return "2:56 - 3:04"
+                    }
+                    else -> {return ""}
+                }
+            }
+            13 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "0:11 - 0:19"
+                    }
+                    3 -> {
+                        return "0:26 - 0:34"
+                    }
+                    4 -> {
+                        return "0:41 - 0:49"
+                    }
+                    5 -> {
+                        return "0:56 - 1:04"
+                    }
+                    6 -> {
+                        return "1:11 - 1:19"
+                    }
+                    7 -> {
+                        return "1:26 - 1:34"
+                    }
+                    8 -> {
+                        return "1:41 - 1:49"
+                    }
+                    9 -> {
+                        return "1:56 - 2:04"
+                    }
+                    10 -> {
+                        return "2:11 - 2:19"
+                    }
+                    11 -> {
+                        return "2:26 - 2:34"
+                    }
+                    12 -> {
+                        return "2:41 - 2:49"
+                    }
+                    13 -> {
+                        return "2:56 - 3:04"
+                    }
+                    14 -> {
+                        return "3:11 - 3:19"
+                    }
+                    else -> {return ""}
+                }
+            }
+            14 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "0:11 - 0:19"
+                    }
+                    3 -> {
+                        return "0:26 - 0:34"
+                    }
+                    4 -> {
+                        return "0:41 - 0:49"
+                    }
+                    5 -> {
+                        return "0:56 - 1:04"
+                    }
+                    6 -> {
+                        return "1:11 - 1:19"
+                    }
+                    7 -> {
+                        return "1:26 - 1:34"
+                    }
+                    8 -> {
+                        return "1:41 - 1:49"
+                    }
+                    9 -> {
+                        return "1:56 - 2:04"
+                    }
+                    10 -> {
+                        return "2:11 - 2:19"
+                    }
+                    11 -> {
+                        return "2:26 - 2:34"
+                    }
+                    12 -> {
+                        return "2:41 - 2:49"
+                    }
+                    13 -> {
+                        return "2:56 - 3:04"
+                    }
+                    14 -> {
+                        return "3:11 - 3:19"
+                    }
+                    15 -> {
+                        return "3:26 - 3:34"
+                    }
+                    else -> {return ""}
+                }
+            }
+            15 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "0:10 - 0:19"
+                    }
+                    3 -> {
+                        return "0:25 - 0:34"
+                    }
+                    4 -> {
+                        return "0:40 - 0:49"
+                    }
+                    5 -> {
+                        return "0:55 - 1:04"
+                    }
+                    6 -> {
+                        return "1:10 - 1:19"
+                    }
+                    7 -> {
+                        return "1:25 - 1:34"
+                    }
+                    8 -> {
+                        return "1:40 - 1:49"
+                    }
+                    9 -> {
+                        return "1:55 - 2:04"
+                    }
+                    10 -> {
+                        return "2:10 - 2:19"
+                    }
+                    11 -> {
+                        return "2:25 - 2:34"
+                    }
+                    12 -> {
+                        return "2:40 - 2:49"
+                    }
+                    13 -> {
+                        return "2:55 - 3:04"
+                    }
+                    14 -> {
+                        return "3:10 - 3:19"
+                    }
+                    15 -> {
+                        return "3:25 - 3:34"
+                    }
+                    16 -> {
+                        return "3:40 - 3:49"
                     }
                     else -> {return ""}
                 }
@@ -528,19 +722,19 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "2:33 - 2:28"
+                        return "2:32 - 2:28"
                     }
                     3 -> {
-                        return "2:03 - 1:58"
+                        return "2:02 - 1:58"
                     }
                     4 -> {
-                        return "1:33 - 1:28"
+                        return "1:32 - 1:28"
                     }
                     5 -> {
-                        return "1:03 - 0:58"
+                        return "1:02 - 0:58"
                     }
                     6 -> {
-                        return "0:33 - 0:28"
+                        return "0:32 - 0:28"
                     }
                     else -> {return ""}
                 }
@@ -551,22 +745,22 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "2:37 - 2:31"
+                        return "2:37 - 2:32"
                     }
                     3 -> {
-                        return "2:12 - 2:06"
+                        return "2:12 - 2:07"
                     }
                     4 -> {
-                        return "1:46 - 1:40"
+                        return "1:46 - 1:41"
                     }
                     5 -> {
-                        return "1:21 - 1:15"
+                        return "1:20 - 1:15"
                     }
                     6 -> {
-                        return "0:55 - 0:49"
+                        return "0:54 - 0:49"
                     }
                     7 -> {
-                        return "0:30 - 0:24"
+                        return "0:28 - 0:23"
                     }
                     else -> {return ""}
                 }
@@ -577,25 +771,25 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "2:41 - 2:34"
+                        return "2:40 - 2:35"
                     }
                     3 -> {
-                        return "2:19 - 2:12"
+                        return "2:17 - 2:12"
                     }
                     4 -> {
-                        return "1:56 - 1:49"
+                        return "1:55 - 1:50"
                     }
                     5 -> {
-                        return "1:34 - 1:27"
+                        return "1:32 - 1:27"
                     }
                     6 -> {
-                        return "1:11 - 1:04"
+                        return "1:10 - 1:05"
                     }
                     7 -> {
-                        return "0:49 - 0:42"
+                        return "0:48 - 0:43"
                     }
                     8 -> {
-                        return "0:26 - 0:19"
+                        return "0:25 - 0:20"
                     }
                     else -> {return ""}
                 }
@@ -606,28 +800,28 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "2:44 - 2:36"
+                        return "2:43 - 2:37"
                     }
                     3 -> {
-                        return "2:24 - 2:16"
+                        return "2:23 - 2:17"
                     }
                     4 -> {
-                        return "2:04 - 1:56"
+                        return "2:03 - 1:57"
                     }
                     5 -> {
-                        return "1:44 - 1:36"
+                        return "1:43 - 1:37"
                     }
                     6 -> {
-                        return "1:24 - 1:16"
+                        return "1:23 - 1:17"
                     }
                     7 -> {
-                        return "1:04 - 0:56"
+                        return "1:03 - 0:57"
                     }
                     8 -> {
-                        return "0:44 - 0:36"
+                        return "0:43 - 0:37"
                     }
                     9 -> {
-                        return "0:24 - 0:16"
+                        return "0:23 - 0:17"
                     }
                     else -> {return ""}
                 }
@@ -638,31 +832,31 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "3:04 - 2:56"
+                        return "2:45 - 2:38"
                     }
                     3 -> {
-                        return "2:44 - 2:36"
+                        return "2:27 - 2:20"
                     }
                     4 -> {
-                        return "2:24 - 2:16"
+                        return "2:09 - 2:02"
                     }
                     5 -> {
-                        return "2:04 - 1:56"
+                        return "1:51 - 1:44"
                     }
                     6 -> {
-                        return "1:44 - 1:36"
+                        return "1:33 - 1:26"
                     }
                     7 -> {
-                        return "1:24 - 1:16"
+                        return "1:15 - 1:08"
                     }
                     8 -> {
-                        return "1:04 - 0:56"
+                        return "0:57 - 0:50"
                     }
                     9 -> {
-                        return "0:44 - 0:36"
+                        return "0:39 - 0:32"
                     }
                     10 -> {
-                        return "0:24 - 0:16"
+                        return "0:21 - 0:14"
                     }
                     else -> {return ""}
                 }
@@ -673,34 +867,34 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "3:25 - 3:15"
+                        return "2:47 - 2:40"
                     }
                     3 -> {
-                        return "3:05 - 2:55"
+                        return "2:31 - 2:24"
                     }
                     4 -> {
-                        return "2:45 - 2:35"
+                        return "2:14 - 2:07"
                     }
                     5 -> {
-                        return "2:25 - 2:15"
+                        return "1:58 - 1:51"
                     }
                     6 -> {
-                        return "2:05 - 1:55"
+                        return "1:42 - 1:35"
                     }
                     7 -> {
-                        return "1:45 - 1:35"
+                        return "1:25 - 1:18"
                     }
                     8 -> {
-                        return "1:25 - 1:15"
+                        return "1:09 - 1:02"
                     }
                     9 -> {
-                        return "1:05 - 0:55"
+                        return "0:52 - 0:45"
                     }
                     10 -> {
-                        return "0:45 - 0:35"
+                        return "0:36 - 0:29"
                     }
                     11 -> {
-                        return "0:25 - 0:15"
+                        return "0:20 - 0:13"
                     }
                     else -> {return ""}
                 }
@@ -711,37 +905,231 @@ class RaceActivity : AppCompatActivity() {
                         return ""
                     }
                     2 -> {
-                        return "3:45 - 3:35"
+                        return "2:48 - 2:41"
                     }
                     3 -> {
-                        return "3:25 - 3:15"
+                        return "2:33 - 2:26"
                     }
                     4 -> {
-                        return "3:05 - 2:55"
+                        return "2:18 - 2:11"
                     }
                     5 -> {
-                        return "2:45 - 2:35"
+                        return "2:03 - 1:56"
                     }
                     6 -> {
-                        return "2:25 - 2:15"
+                        return "1:48 - 1:41"
                     }
                     7 -> {
-                        return "2:05 - 1:55"
+                        return "1:33 - 1:26"
                     }
                     8 -> {
-                        return "1:45 - 1:35"
+                        return "1:18 - 1:11"
                     }
                     9 -> {
-                        return "1:25 - 1:15"
+                        return "1:03 - 0:56"
                     }
                     10 -> {
-                        return "1:05 - 0:55"
+                        return "0:48 - 0:41"
                     }
                     11 -> {
-                        return "0:45 - 0:35"
+                        return "0:33 - 0:26"
                     }
                     12 -> {
-                        return "0:25 - 0:15"
+                        return "0:18 - 0:11"
+                    }
+                    else -> {return ""}
+                }
+            }
+            12 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "3:04 - 2:56"
+                    }
+                    3 -> {
+                        return "2:49 - 2:41"
+                    }
+                    4 -> {
+                        return "2:34 - 2:26"
+                    }
+                    5 -> {
+                        return "2:19 - 2:11"
+                    }
+                    6 -> {
+                        return "2:04 - 1:56"
+                    }
+                    7 -> {
+                        return "1:49 - 1:41"
+                    }
+                    8 -> {
+                        return "1:34 - 1:26"
+                    }
+                    9 -> {
+                        return "1:19 - 1:11"
+                    }
+                    10 -> {
+                        return "1:04 - 0:56"
+                    }
+                    11 -> {
+                        return "0:49 - 0:41"
+                    }
+                    12 -> {
+                        return "0:34 - 0:26"
+                    }
+                    13 -> {
+                        return "0:19 - 0:11"
+                    }
+                    else -> {return ""}
+                }
+            }
+            13 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "3:19 - 3:11"
+                    }
+                    3 -> {
+                        return "3:04 - 2:56"
+                    }
+                    4 -> {
+                        return "2:49 - 2:41"
+                    }
+                    5 -> {
+                        return "2:34 - 2:26"
+                    }
+                    6 -> {
+                        return "2:19 - 2:11"
+                    }
+                    7 -> {
+                        return "2:04 - 1:56"
+                    }
+                    8 -> {
+                        return "1:49 - 1:41"
+                    }
+                    9 -> {
+                        return "1:34 - 1:26"
+                    }
+                    10 -> {
+                        return "1:19 - 1:11"
+                    }
+                    11 -> {
+                        return "1:04 - 0:56"
+                    }
+                    12 -> {
+                        return "0:49 - 0:41"
+                    }
+                    13 -> {
+                        return "0:34 - 0:26"
+                    }
+                    14 -> {
+                        return "0:19 - 0:11"
+                    }
+                    else -> {return ""}
+                }
+            }
+            14 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "3:34 - 3:26"
+                    }
+                    3 -> {
+                        return "3:19 - 3:11"
+                    }
+                    4 -> {
+                        return "3:04 - 2:56"
+                    }
+                    5 -> {
+                        return "2:49 - 2:41"
+                    }
+                    6 -> {
+                        return "2:34 - 2:26"
+                    }
+                    7 -> {
+                        return "2:19 - 2:11"
+                    }
+                    8 -> {
+                        return "2:04 - 1:56"
+                    }
+                    9 -> {
+                        return "1:49 - 1:41"
+                    }
+                    10 -> {
+                        return "1:34 - 1:26"
+                    }
+                    11 -> {
+                        return "1:19 - 1:11"
+                    }
+                    12 -> {
+                        return "1:04 - 0:56"
+                    }
+                    13 -> {
+                        return "0:49 - 0:41"
+                    }
+                    14 -> {
+                        return "0:34 - 0:26"
+                    }
+                    15 -> {
+                        return "0:19 - 0:11"
+                    }
+                    else -> {return ""}
+                }
+            }
+            15 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return ""
+                    }
+                    2 -> {
+                        return "3:50 - 3:41"
+                    }
+                    3 -> {
+                        return "3:35 - 3:26"
+                    }
+                    4 -> {
+                        return "3:20 - 3:11"
+                    }
+                    5 -> {
+                        return "3:05 - 2:56"
+                    }
+                    6 -> {
+                        return "2:50 - 2:41"
+                    }
+                    7 -> {
+                        return "2:35 - 2:26"
+                    }
+                    8 -> {
+                        return "2:20 - 2:11"
+                    }
+                    9 -> {
+                        return "2:05 - 1:56"
+                    }
+                    10 -> {
+                        return "1:50 - 1:41"
+                    }
+                    11 -> {
+                        return "1:35 - 1:26"
+                    }
+                    12 -> {
+                        return "1:20 - 1:11"
+                    }
+                    13 -> {
+                        return "1:05 - 0:56"
+                    }
+                    14 -> {
+                        return "0:50 - 0:41"
+                    }
+                    15 -> {
+                        return "0:35 - 0:26"
+                    }
+                    16 -> {
+                        return "0:20 - 0:11"
                     }
                     else -> {return ""}
                 }

@@ -87,7 +87,7 @@ class NewRaceFragment : DialogFragment() {
     private fun isValid() = binding.etNameRace.text.isNotEmpty()
     private fun isValidLocation() = binding.etNewLocation.text.isNotEmpty()
     private fun isValidTeams() : Boolean {
-        return binding.etNewRaceTeams.text.isNotEmpty() && binding.etNewRaceTeams.text.toString().toInt() in 5..11
+        return binding.etNewRaceTeams.text.isNotEmpty() && binding.etNewRaceTeams.text.toString().toInt() in 5..15
     }
 
 

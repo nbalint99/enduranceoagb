@@ -46,21 +46,28 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
             }
         }
 
-        lateinit var countDownTimer: CountDownTimer
-
-        var counting = false
-
         val minIni = (item.initialTime / 60000 % 60).toInt()
         val secIni = (item.initialTime / 1000 % 60).toInt()
         holder.binding.tvNeedTime.text =
             "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
 
-        val initPenalty = item.initialTime - time
+        var initPenalty = ((item.initialTime - time) / 1000).toInt()
 
-        val minIniPenalty = (initPenalty / 60000 % 60).toInt()
-        val secIniPenalty = (initPenalty / 1000 % 60).toInt()
-        holder.binding.tvPrevPenalty.text =
-            String.format("%01d:%02d", minIniPenalty, secIniPenalty)
+        when {
+            initPenalty == 0 -> {
+                holder.binding.tvPrevPenalty.text = "-"
+                holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+            }
+            initPenalty < 0 -> {
+                holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                holder.binding.tvPrevPenalty.text = initPenalty.toString() + " mp"
+            }
+            initPenalty > 0 -> {
+                holder.binding.tvPrevPenalty.setTextColor(Color.RED)
+                holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
+            }
+        }
+
 
         /*if (item.hasDone) {
             holder.binding.timeTV.text = "MEHET!"
@@ -206,47 +213,139 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
 
 
          */
-
-        holder.binding.plus5Button.setOnClickListener {
+        if (!item.hasDone) {
+            holder.binding.plus5Button.setOnClickListener {
                 item.initialTime += 5000.0
+                initPenalty += 5
+                when {
+                    initPenalty == 0 -> {
+                        holder.binding.tvPrevPenalty.text = "-"
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                    }
+                    initPenalty < 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                        holder.binding.tvPrevPenalty.text = initPenalty.toString() + " mp"
+                    }
+                    initPenalty > 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.RED)
+                        holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
+                    }
+                }
                 val minIni = (item.initialTime / 60000 % 60).toInt()
                 val secIni = (item.initialTime / 1000 % 60).toInt()
                 holder.binding.tvNeedTime.text =
                     "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
 
                 listener.dataChanged(position, item.initialTime)
+            }
+
+
+
+            holder.binding.plus1Button.setOnClickListener {
+                item.initialTime += 1000.0
+                initPenalty += 1
+                when {
+                    initPenalty == 0 -> {
+                        holder.binding.tvPrevPenalty.text = "-"
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                    }
+                    initPenalty < 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                        holder.binding.tvPrevPenalty.text = initPenalty.toString() + " mp"
+                    }
+                    initPenalty > 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.RED)
+                        holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
+                    }
+                }
+                val minIni = (item.initialTime / 60000 % 60).toInt()
+                val secIni = (item.initialTime / 1000 % 60).toInt()
+                holder.binding.tvNeedTime.text =
+                    "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
+
+                listener.dataChanged(position, item.initialTime)
+            }
+
+            holder.binding.minus5Button.setOnClickListener {
+                item.initialTime -= 5000.0
+                initPenalty -= 5
+                when {
+                    initPenalty == 0 -> {
+                        holder.binding.tvPrevPenalty.text = "-"
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                    }
+                    initPenalty < 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                        holder.binding.tvPrevPenalty.text = initPenalty.toString() + " mp"
+                    }
+                    initPenalty > 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.RED)
+                        holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
+                    }
+                }
+                val minIni = (item.initialTime / 60000 % 60).toInt()
+                val secIni = (item.initialTime / 1000 % 60).toInt()
+                holder.binding.tvNeedTime.text =
+                    "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
+
+                listener.dataChanged(position, item.initialTime)
+            }
+
+            holder.binding.minus1Button.setOnClickListener {
+                item.initialTime -= 1000.0
+                initPenalty -= 1
+                when {
+                    initPenalty == 0 -> {
+                        holder.binding.tvPrevPenalty.text = "-"
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                    }
+                    initPenalty < 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.BLACK)
+                        holder.binding.tvPrevPenalty.text = initPenalty.toString() + " mp"
+                    }
+                    initPenalty > 0 -> {
+                        holder.binding.tvPrevPenalty.setTextColor(Color.RED)
+                        holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
+                    }
+                }
+                val minIni = (item.initialTime / 60000 % 60).toInt()
+                val secIni = (item.initialTime / 1000 % 60).toInt()
+                holder.binding.tvNeedTime.text =
+                    "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
+
+                listener.dataChanged(position, item.initialTime)
+            }
         }
 
+        if (!item.hasDone) {
+            holder.binding.tvActualTime.text = ""
+        }
+        if (item.hasDone) {
+            holder.binding.tvActualTime.setTextColor(Color.BLACK)
+            val minIniActual = (item.actualTime!! / 60000 % 60).toInt()
+            val secIniActual = (item.actualTime!! / 1000 % 60).toInt()
+            holder.binding.tvActualTime.text =
+                String.format("%01d:%02d", minIniActual, secIniActual)
+            if (item.penaltyTime.toString().toDouble() != 0.0) {
+                val penaltyTimeInt = item.penaltyTime.toString().toDouble().toInt()
+                holder.binding.tvNextPenalty.text = "+" + (penaltyTimeInt / 1000) + " mp"
+                holder.binding.tvNextPenalty.setTextColor(Color.RED)
+            }
+            else {
+                holder.binding.tvNextPenalty.text = "-"
+                holder.binding.tvNextPenalty.setTextColor(Color.BLACK)
+            }
+            holder.binding.tvActualTime.textSize = 45.0F
 
-
-        holder.binding.plus1Button.setOnClickListener {
-            item.initialTime += 1000.0
-            val minIni = (item.initialTime / 60000 % 60).toInt()
-            val secIni = (item.initialTime / 1000 % 60).toInt()
-            holder.binding.tvNeedTime.text =
-                "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
-
-            listener.dataChanged(position, item.initialTime)
         }
 
-        holder.binding.minus5Button.setOnClickListener {
-            item.initialTime -= 5000.0
-            val minIni = (item.initialTime / 60000 % 60).toInt()
-            val secIni = (item.initialTime / 1000 % 60).toInt()
-            holder.binding.tvNeedTime.text =
-                "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
-
-            listener.dataChanged(position, item.initialTime)
-        }
-
-        holder.binding.minus1Button.setOnClickListener {
-            item.initialTime -= 1000.0
-            val minIni = (item.initialTime / 60000 % 60).toInt()
-            val secIni = (item.initialTime / 1000 % 60).toInt()
-            holder.binding.tvNeedTime.text =
-                "Elvárt csereidő: " + String.format("%01d:%02d", minIni, secIni)
-
-            listener.dataChanged(position, item.initialTime)
+        holder.binding.btnActualTimeText.setOnClickListener {
+            for (element in itemsTeams) {
+                if (element.teamNumber == item.teamNumber) {
+                    listener.onNewBoxListener(position, item.teamNumber, item.hasDone, element.nameTeam)
+                    break
+                }
+            }
         }
 
         holder.bind(item)
@@ -258,6 +357,7 @@ class BoxTimeAdapter(private val listener: BoxTimeItemClickListener) :
     interface BoxTimeItemClickListener {
         fun dataChanged(position: Int, initTime: Double)
         fun dataChangedBool(position: Int)
+        fun onNewBoxListener(position: Int, teamNumber: Int, stintDone: Boolean, nameTeam: String)
         //fun dataChangedBoolFalse(position: Int)
     }
 

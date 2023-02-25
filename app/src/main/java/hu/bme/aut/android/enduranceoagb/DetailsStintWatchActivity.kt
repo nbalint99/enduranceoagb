@@ -12,13 +12,16 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import hu.bme.aut.android.enduranceoagb.databinding.ActivityBoxtimeBinding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatch2Binding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatchBinding
+import hu.bme.aut.android.enduranceoagb.fragments.BoxTimeFragment
+import hu.bme.aut.android.enduranceoagb.fragments.NewBoxFragment
 import hu.bme.aut.android.enduranceoagb.fragments.NewStintFragment
 import hu.bme.aut.android.enduranceoagb.fragments.WatchFragment
 
 
-class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener {
+class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener, NewBoxFragment.NewBoxListener {
     companion object {
         const val EXTRA_RACE_NAME = "extra.race_name"
         const val EXTRA_STINT_NUMBER = "extra.stint_number"
@@ -34,6 +37,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
     private lateinit var dbRef: DatabaseReference
 
     private val fragmentOri = DetailsStintActivity()
+    private val fragmentOri2 = BoxTimeFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         stintId = intent.getStringExtra(EXTRA_STINT_NUMBER)
 
         supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri, "1").commit()
+        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri2, "1").commit()
 
         if (stintId.toString().toInt() == 1) {
             binding = ActivityDetailsstintwatchBinding.inflate(layoutInflater)
@@ -231,6 +236,20 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
     override fun onStintNotCreated() {
         val fragment = DetailsStintActivity()
         fragment.onStintNotCreated()
+    }
+
+    override fun onBoxCreated(raceIdBox: String, teamName: String, teamNumber: Int, time: Double, stint: Int, activity: String) {
+        val fragment2 = BoxTimeFragment()
+        fragment2.onBoxCreated(raceIdBox, teamName, teamNumber, time, stintId.toString().toInt(), activity = this.toString())
+        val mBundle2 = Bundle()
+        mBundle2.putString("mText",teamNumber.toString())
+        fragment2.arguments = mBundle2
+        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragment2, "2").commit()
+    }
+
+    override fun onBoxNotCreated() {
+        val snack = Snackbar.make(ActivityBoxtimeBinding.inflate(layoutInflater).root, hu.bme.aut.android.enduranceoagb.R.string.notAddDriver, Snackbar.LENGTH_LONG)
+        snack.show()
     }
 
     override fun raceId(): String? {

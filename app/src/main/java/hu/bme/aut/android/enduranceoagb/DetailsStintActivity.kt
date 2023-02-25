@@ -62,6 +62,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
             handler.postDelayed(Runnable { layoutManager.smoothScrollToPosition(binding.rvMainDetailsStint, null, message.toInt()) }, 100)
         }
 
+        binding.rvMainDetailsStint.setItemViewCacheSize(16)
 
         createNotificationChannel()
 

@@ -122,35 +122,33 @@
         android:layout_marginBottom="25dp"
         android:weightSum="30">
 
-        <TextView
-            android:id="@+id/tvActualTimeText"
+        <Button
+            android:id="@+id/btnActualTimeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Csereidő:"
             android:padding="10dp"
             android:textColor="@color/black"
+            android:backgroundTint="@color/white"
             android:layout_gravity="center_vertical|end"
             android:layout_weight="10"
-            android:textSize="40sp"/>
+            android:textSize="30sp"/>
 
-        <Button
-            android:id="@+id/btnActualTime"
+        <TextView
+            android:id="@+id/tvActualTime"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:backgroundTint="@color/red"
-            android:text="Kattints ide!"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
             android:layout_weight="10"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/tvNextPenalty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="penalty"
-            android:padding="10dp"
+            android:padding="5dp"
             android:textColor="@color/black"
             android:textAlignment="center"
             android:layout_weight="10"

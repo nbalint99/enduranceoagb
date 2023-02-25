@@ -199,7 +199,7 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
 
                     dialogBuilder.setPositiveButton(R.string.button_ok) { _, _ ->
                         if (nameRaceEdit.text.toString()
-                                .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..11
+                                .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..15
                         ) {
                             dbRef.child(key).child("Info").child("nameR").setValue(nameRaceEdit.text.toString())
                             dbRef.child(key).child("Info").child("numberOfTeams").setValue(numberOfTeamsEdit.text.toString())

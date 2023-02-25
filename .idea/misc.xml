@@ -12,7 +12,7 @@
         <entry key="app/src/main/res/layout/activity_boxtime.xml" value="0.22665457842248413" />
         <entry key="app/src/main/res/layout/activity_detailsstint.xml" value="0.184375" />
         <entry key="app/src/main/res/layout/activity_detailsstintwatch.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_detailsstintwatch2.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_detailsstintwatch2.xml" value="0.12" />
         <entry key="app/src/main/res/layout/activity_detailsteamcheck.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_driver.xml" value="0.3609375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16" />
@@ -42,6 +42,7 @@
         <entry key="app/src/main/res/layout/modify_team_fragment.xml" value="0.14110186286167262" />
         <entry key="app/src/main/res/layout/new_alldriver_fragment.xml" value="0.21975203078238564" />
         <entry key="app/src/main/res/layout/new_allteam_fragment.xml" value="0.12868747327917915" />
+        <entry key="app/src/main/res/layout/new_box_fragment.xml" value="0.1671654553227875" />
         <entry key="app/src/main/res/layout/new_driver_fragment.xml" value="0.18489583333333334" />
         <entry key="app/src/main/res/layout/new_race_fragment.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/layout/new_stint_fragment.xml" value="0.18541666666666667" />

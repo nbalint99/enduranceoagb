@@ -49,7 +49,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
         binding.rvWatch.adapter = adapter
 
-        binding.rvWatch.setItemViewCacheSize(11)
+        binding.rvWatch.setItemViewCacheSize(16)
 
         return binding.root
     }
