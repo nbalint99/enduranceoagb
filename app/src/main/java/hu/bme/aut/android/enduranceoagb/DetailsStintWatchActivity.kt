@@ -46,7 +46,6 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         stintId = intent.getStringExtra(EXTRA_STINT_NUMBER)
 
         supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri, "1").commit()
-        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri2, "1").commit()
 
         if (stintId.toString().toInt() == 1) {
             binding = ActivityDetailsstintwatchBinding.inflate(layoutInflater)
@@ -191,6 +190,8 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
             }
         }
         else {
+            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri2, "2").commit()
+
             binding2 = ActivityDetailsstintwatch2Binding.inflate(layoutInflater)
             setContentView(binding2.root)
 

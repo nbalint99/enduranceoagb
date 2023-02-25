@@ -46,9 +46,10 @@ class AllFinalCheckActivity : AppCompatActivity(), AllFinalCheckAdapter.AllFinal
                 binding.tvTrackName.text = trackName
 
                 val list = p0.result.child("Teams").children
+                val numberOfStint = p0.result.child("Info").child("allStintNumber").value.toString().toInt().toDouble()
                 var valid = 0
                 for (element in list) {
-                    if (element.child("Info").child("avgWeight").value.toString().toDouble() < 90.0) {
+                    if (((element.child("Info").child("avgWeight").value.toString().toDouble()) / numberOfStint) < 90.0) {
                         valid += 1
                     }
                 }
