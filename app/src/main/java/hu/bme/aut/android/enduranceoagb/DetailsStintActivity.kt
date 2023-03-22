@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
@@ -595,6 +596,16 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
 
         }
+    }
+
+    override fun onTeamListener(position: String?, number: String?, gp2: Boolean?) {
+        val showDetailsIntent = Intent()
+        showDetailsIntent.setClass(this.requireContext(), DetailsTeamCheckActivity::class.java)
+        showDetailsIntent.putExtra(DriverActivity.EXTRA_RACE_NAME, raceId())
+        showDetailsIntent.putExtra(DriverActivity.EXTRA_NAMETEAM, position.toString())
+        showDetailsIntent.putExtra(DriverActivity.EXTRA_TEAM_NUMBER, number.toString())
+        showDetailsIntent.putExtra(DriverActivity.EXTRA_GP2, gp2.toString())
+        startActivity(showDetailsIntent)
     }
 
     @SuppressLint("NotifyDataSetChanged")

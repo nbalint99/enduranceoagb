@@ -119,7 +119,7 @@ class TeamCheckActivity : AppCompatActivity(), TeamCheckAdapter.TeamCheckItemCli
         }
     }
 
-    override fun onBackPressed() {
+    /*override fun onBackPressed() {
         super.onBackPressed()
         finish()
 
@@ -127,7 +127,7 @@ class TeamCheckActivity : AppCompatActivity(), TeamCheckAdapter.TeamCheckItemCli
         showDetailsIntent.setClass(this@TeamCheckActivity, RaceActivity::class.java)
         showDetailsIntent.putExtra(RaceActivity.EXTRA_RACE_NAME, raceId)
         startActivity(showDetailsIntent)
-    }
+    }*/
 
     override fun onTeamSelected(position: String?, number: String?, gp2: Boolean?) {
         val showDetailsIntent = Intent()

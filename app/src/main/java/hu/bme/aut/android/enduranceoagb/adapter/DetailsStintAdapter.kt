@@ -82,12 +82,22 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
         holder.binding.ibDone.setOnClickListener {
             listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight)
         }
+
+        holder.binding.tvTeamName.setOnClickListener {
+            for (i in itemsTeams) {
+                if (i.teamNumber == detailsStintItem.teamNumber) {
+                    listener.onTeamListener(detailsStintItem.teamName, detailsStintItem.teamNumber.toString(), i.gp2)
+                    break
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
     interface DetailsStintItemClickListener {
         fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?)
+        fun onTeamListener(teamName: String?, number: String?, gp2: Boolean?)
     }
 
     @SuppressLint("NotifyDataSetChanged")
