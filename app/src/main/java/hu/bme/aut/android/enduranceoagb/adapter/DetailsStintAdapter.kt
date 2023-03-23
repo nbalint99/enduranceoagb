@@ -11,6 +11,7 @@ import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.data.Stint
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintListBinding
+import kotlin.math.roundToInt
 
 
 class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
@@ -22,6 +23,8 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
     private val itemsTeams = mutableListOf<Teams>()
 
     private val itemsDrivers = mutableListOf<Drivers>()
+
+    private val numberOfStint = mutableListOf<Int>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DetailsStintViewHolder(
@@ -39,6 +42,34 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
 
         holder.binding.tvStintDriver.text = "Versenyző neve:"
         holder.binding.tvStintPlusWeight.text = "Plusz súly:"
+
+        for (i in itemsTeams) {
+            if (i.teamNumber == detailsStintItem.teamNumber) {
+                val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
+                if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                    val requiredWeight = 90.0 * detailsStintItem.numberStint
+                    val needWeight = requiredWeight - i.avgWeight!!
+                    if (needWeight < 0) {
+                        holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                    }
+                    else {
+                        holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                        holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                    }
+                    break
+                }
+                else {
+                    if (avgWeight != null) {
+                        holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                    }
+                    else {
+                        holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                    }
+                    break
+                }
+            }
+        }
+
 
         if (detailsStintItem.numberStint != 1) {
             holder.binding.tvPrevDriver.text = detailsStintItem.prevDriverName
@@ -124,6 +155,12 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
     fun drivers(detailsDriverItems: MutableList<Drivers>) {
         itemsDrivers.clear()
         itemsDrivers.addAll(detailsDriverItems)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun stints(stint: MutableList<Int>) {
+        numberOfStint.clear()
+        numberOfStint.addAll(stint)
     }
 
     inner class DetailsStintViewHolder(val binding: DetailsstintListBinding) : RecyclerView.ViewHolder(binding.root)

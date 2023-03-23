@@ -85,6 +85,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
         val itemsTeams : MutableList<Teams>? = mutableListOf()
 
+        val numberOfStint : MutableList<Int>? = mutableListOf()
+
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 //var change = "Etap: $stintId"
@@ -166,8 +168,13 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
                 loadBackgroundItems()
 
+                val allStint = p0.result.child("Info").child("allStintNumber").value.toString().toInt()
+
+                numberOfStint?.add(allStint)
+
                 requireActivity().runOnUiThread {
                     adapter.teams(itemsTeams!!.toMutableList())
+                    adapter.stints(numberOfStint!!.toMutableList())
                 }
 
             }

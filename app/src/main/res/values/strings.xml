@@ -122,4 +122,5 @@
     <string name="changeTimeMin">Perc</string>
     <string name="changeTimeSec">Másodperc</string>
     <string name="changeTime">A csere körében teljesített kör ideje</string>
+    <string name="avgWeight">Átlag súly</string>
 </resources>
