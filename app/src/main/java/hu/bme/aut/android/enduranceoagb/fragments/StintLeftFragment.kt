@@ -133,6 +133,23 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                                     dbRef.child("Stints").child("Etap: 1").child("Info").child("1-box").child("kartNumber").setValue(parkingKart.text.toString())
                                     dbRef.child("Cserék").child("Etap: 01").child("5 - Parkol").child("Parkol")
                                         .setValue(parkingKart.text.toString())
+                                    val id = p0.result.child("Id").value.toString()
+                                    var idNumber : Int
+                                    if (id == "-1") {
+                                        idNumber = 0
+                                    }
+                                    else {
+                                        idNumber = id.toInt()
+                                        idNumber++
+                                    }
+                                    dbRef.child("Id").setValue(idNumber)
+                                    val teamStintId = idNumber
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue(1)
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue("box")
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue("-")
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue(parkingKart.text.toString())
 
                                     showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
                                     showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())

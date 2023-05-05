@@ -128,7 +128,7 @@ class RaceActivity : AppCompatActivity() {
                                                 dbRef.child("Info").child("hasStintReady")
                                                     .setValue(true)
 
-                                                showDetailsIntent.setClass(
+                                            showDetailsIntent.setClass(
                                                     this@RaceActivity,
                                                     StintActivity2::class.java
                                                 )

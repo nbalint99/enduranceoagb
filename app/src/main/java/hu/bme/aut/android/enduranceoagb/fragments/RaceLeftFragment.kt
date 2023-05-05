@@ -114,6 +114,14 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                     showDetailsIntent.setClass(this.requireActivity(), RaceActivity::class.java)
                     showDetailsIntent.putExtra(RaceActivity.EXTRA_RACE_NAME, race?.id_r.toString())
                     startActivity(showDetailsIntent)
+                    dbRef.child(race?.id_r.toString()).child("Id").setValue(0)
+                    val id = 0
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("stintNumber").setValue("-")
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("teamNumber").setValue("-")
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("driver").setValue("-")
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("plusWeight").setValue("-")
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("totalWeight").setValue("-")
+                    dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("kartNumber").setValue("-")
                 }
                 else {
                     val snack = Snackbar.make(requireView(),R.string.notRace, Snackbar.LENGTH_LONG)

@@ -43,33 +43,6 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
         holder.binding.tvStintDriver.text = "Versenyző neve:"
         holder.binding.tvStintPlusWeight.text = "Plusz súly:"
 
-        for (i in itemsTeams) {
-            if (i.teamNumber == detailsStintItem.teamNumber) {
-                val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
-                if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
-                    val requiredWeight = 90.0 * detailsStintItem.numberStint
-                    val needWeight = requiredWeight - i.avgWeight!!
-                    if (needWeight < 0) {
-                        holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
-                    }
-                    else {
-                        holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
-                        holder.binding.tvAvgWeight.setTextColor(Color.RED)
-                    }
-                    break
-                }
-                else {
-                    if (avgWeight != null) {
-                        holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
-                    }
-                    else {
-                        holder.binding.tvAvgWeight.text = "Átlag súly: - "
-                    }
-                    break
-                }
-            }
-        }
-
 
         if (detailsStintItem.numberStint != 1) {
             holder.binding.tvPrevDriver.text = detailsStintItem.prevDriverName
@@ -80,6 +53,15 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
             holder.binding.tvPrevKart.setTextColor(Color.BLUE)
             holder.binding.tvPrevWeight.setTextColor(Color.BLUE)
             holder.binding.tvComing.setTextColor(Color.BLUE)
+
+            holder.binding.tvTeamName.setOnClickListener {
+                for (i in itemsTeams) {
+                    if (i.teamNumber == detailsStintItem.teamNumber) {
+                        listener.onTeamListener(detailsStintItem.teamName, detailsStintItem.teamNumber.toString(), i.gp2)
+                        break
+                    }
+                }
+            }
         }
 
         if (detailsStintItem.hasStintDone) {
@@ -94,6 +76,32 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
                 holder.binding.tvInfo.text = detailsStintItem.info
                 holder.binding.tvInfo.setTextColor(Color.RED)
             }
+            for (i in itemsTeams) {
+                if (detailsStintItem.teamNumber == i.teamNumber) {
+                    val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
+                    if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                        val requiredWeight = 90.0 * detailsStintItem.numberStint
+                        val needWeight = requiredWeight - i.avgWeight!!
+                        if (needWeight < 0) {
+                            holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                        }
+                        else {
+                            holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                            holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                        }
+                        break
+                    }
+                    else {
+                        if (avgWeight != null) {
+                            holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                        }
+                        else {
+                            holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                        }
+                        break
+                    }
+                }
+            }
         }
         else if (!detailsStintItem.hasStintDone) {
             holder.binding.tvInfoText.text = "Előző megjegyzése: "
@@ -107,20 +115,37 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
                 holder.binding.tvInfo.text = detailsStintItem.previousInfo
                 holder.binding.tvInfo.setTextColor(Color.RED)
             }
+            for (i in itemsTeams) {
+                if (detailsStintItem.teamNumber == i.teamNumber) {
+                    val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
+                    if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                        val requiredWeight = 90.0 * detailsStintItem.numberStint
+                        val needWeight = requiredWeight - i.avgWeight!!
+                        if (needWeight < 0) {
+                            holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                        }
+                        else {
+                            holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                            holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                        }
+                        break
+                    }
+                    else {
+                        if (avgWeight != null) {
+                            holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                        }
+                        else {
+                            holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                        }
+                        break
+                    }
+                }
+            }
         }
 
 
         holder.binding.ibDone.setOnClickListener {
             listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight)
-        }
-
-        holder.binding.tvTeamName.setOnClickListener {
-            for (i in itemsTeams) {
-                if (i.teamNumber == detailsStintItem.teamNumber) {
-                    listener.onTeamListener(detailsStintItem.teamName, detailsStintItem.teamNumber.toString(), i.gp2)
-                    break
-                }
-            }
         }
     }
 

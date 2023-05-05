@@ -9,7 +9,9 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -145,6 +147,28 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     }
                     dbRef.child("AllStint").child("numberOfStint").child(stintId.toString())
                         .child("hasDetailsStintReady").setValue(true)
+                    val allTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                    if (stintId.toInt() > 1) {
+                        val prevStint = stintId.toInt() - 1
+                        val prevParkKart = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                        val id = p0.result.child("Id").value.toString()
+                        var idNumber : Int
+                        if (id == "-1") {
+                            idNumber = 0
+                        }
+                        else {
+                            idNumber = id.toInt()
+                            idNumber++
+                        }
+                        dbRef.child("Id").setValue(idNumber)
+                        val teamStintId = idNumber
+                        dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                        dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue("box")
+                        dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue("-")
+                        dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
+                        dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
+                        dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue(prevParkKart)
+                    }
                 }
                 else {
                     for (element in p0.result.child("Teams").children) {
@@ -171,7 +195,6 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                 val allStint = p0.result.child("Info").child("allStintNumber").value.toString().toInt()
 
                 numberOfStint?.add(allStint)
-
                 requireActivity().runOnUiThread {
                     adapter.teams(itemsTeams!!.toMutableList())
                     adapter.stints(numberOfStint!!.toMutableList())
@@ -669,6 +692,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     dbRef.child("Teams").child(teamName).child("Info").child("stintsDone")
                         .setValue(stintNumber)
 
+
                     stintDoneCheck(raceIdpass, stintIdpass)
 
                     val numberOfTeams =
@@ -744,6 +768,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
                                 .child("weight").value.toString().toDouble()
                         val sum = oriWeight + weight + allWeight
+
                         dbRef.child("Teams").child(teamName).child("Info").child("avgWeight")
                             .setValue(sum)
                         dbRef.child("Stints").child(change).child("Info").child(teamStint)
@@ -777,51 +802,167 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                 }
 
                 if (stintId.toString().toInt() in 1..9) {
-                    val change = "Etap: 0$stintId"
-                    dbRef.child("Cserék").child(change).child("1 - Versenyzők")
-                        .child(teamNumber.toString()).setValue(driver)
-                    if (weight == 0.0) {
-                        dbRef.child("Cserék").child(change).child("4 - Plusz súlyok")
-                            .child(teamNumber.toString()).setValue("-")
-                    } else {
-                        val weightString = weight.toString()
-                        val output = weightString.replace('.', ',')
-                        dbRef.child("Cserék").child(change).child("4 - Plusz súlyok")
-                            .child(teamNumber.toString()).setValue(output)
+                    val getStintDone = p0.result.child("Stints").child("Etap: $stintId").child("Info").child("$stintId-$teamNumber").child("hasStintDone").value.toString().toBoolean()
+                    if (getStintDone) {
+                        val getId = p0.result.child("Id").value.toString()
+                        for (i in 1..getId.toInt()) {
+                            val getStintNumber = p0.result.child("Excel").child(i.toString()).child("stintNumber").value.toString()
+                            val getTeamNumber = p0.result.child("Excel").child(i.toString()).child("teamNumber").value.toString()
+                            val stintIdString = "$stintId. etap"
+                            val teamNumberString = "$teamNumber. csapat"
+                            if (getStintNumber == stintIdString && getTeamNumber == teamNumberString) {
+                                dbRef.child("Excel").child(i.toString()).child("driver").setValue(driver)
+                                if (weight == 0.0) {
+                                    dbRef.child("Excel").child(i.toString()).child("plusWeight").setValue("-")
+                                } else {
+                                    val weightString = weight.toString()
+                                    val output = weightString.replace('.', ',')
+                                    dbRef.child("Excel").child(i.toString()).child("plusWeight").setValue(output)
+                                }
+                                val originalWeight =
+                                    p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
+                                        .child("weight").value.toString().toDouble()
+                                val sumWeight = originalWeight + weight
+                                val sumWeightStr = sumWeight.toString()
+                                val outputSumWeight = sumWeightStr.replace('.', ',')
+                                dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
+                                dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                break
+                            }
+                        }
                     }
-                    val originalWeight =
-                        p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
-                            .child("weight").value.toString().toDouble()
-                    val sumWeight = originalWeight + weight
-                    val sumWeightStr = sumWeight.toString()
-                    val outputSumWeight = sumWeightStr.replace('.', ',')
-                    dbRef.child("Cserék").child(change).child("2 - Összsúly")
-                        .child(teamNumber.toString()).setValue(outputSumWeight)
-                    dbRef.child("Cserék").child(change).child("3 - Gépszámok")
-                        .child(teamNumber.toString()).setValue(kartNumber)
+                    else {
+                        val change = "Etap: 0$stintId"
+                        val id = p0.result.child("Id").value.toString()
+                        var idNumber: Int
+                        if (id == "-1") {
+                            idNumber = 0
+                        } else {
+                            idNumber = id.toInt()
+                            idNumber++
+                        }
+                        dbRef.child("Id").setValue(idNumber)
+                        val teamStint = idNumber
+                        val stintPass = "$stintId. etap"
+                        val teamPass = "$teamNumber. csapat"
+                        dbRef.child("Excel").child(teamStint.toString()).child("stintNumber")
+                            .setValue(stintPass)
+                        dbRef.child("Excel").child(teamStint.toString()).child("teamNumber")
+                            .setValue(teamPass)
+                        dbRef.child("Cserék").child(change).child("1 - Versenyzők")
+                            .child(teamNumber.toString()).setValue(driver)
+                        dbRef.child("Excel").child(teamStint.toString()).child("driver")
+                            .setValue(driver)
+                        if (weight == 0.0) {
+                            dbRef.child("Cserék").child(change).child("4 - Plusz súlyok")
+                                .child(teamNumber.toString()).setValue("-")
+                            dbRef.child("Excel").child(teamStint.toString()).child("plusWeight")
+                                .setValue("-")
+                        } else {
+                            val weightString = weight.toString()
+                            val output = weightString.replace('.', ',')
+                            dbRef.child("Cserék").child(change).child("4 - Plusz súlyok")
+                                .child(teamNumber.toString()).setValue(output)
+                            dbRef.child("Excel").child(teamStint.toString()).child("plusWeight")
+                                .setValue(output)
+                        }
+                        val originalWeight =
+                            p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
+                                .child("weight").value.toString().toDouble()
+                        val sumWeight = originalWeight + weight
+                        val sumWeightStr = sumWeight.toString()
+                        val outputSumWeight = sumWeightStr.replace('.', ',')
+                        dbRef.child("Cserék").child(change).child("2 - Összsúly")
+                            .child(teamNumber.toString()).setValue(outputSumWeight)
+                        dbRef.child("Cserék").child(change).child("3 - Gépszámok")
+                            .child(teamNumber.toString()).setValue(kartNumber)
+
+                        dbRef.child("Excel").child(teamStint.toString()).child("totalWeight")
+                            .setValue(outputSumWeight)
+                        dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
+                            .setValue(kartNumber)
+                    }
                 } else {
-                    val changeUp = "Etap: $stintId"
-                    dbRef.child("Cserék").child(changeUp).child("1 - Versenyzők")
-                        .child(teamNumber.toString()).setValue(driver)
-                    if (weight == 0.0) {
-                        dbRef.child("Cserék").child(changeUp).child("4 - Plusz súlyok")
-                            .child(teamNumber.toString()).setValue("-")
-                    } else {
-                        val weightString = weight.toString()
-                        val output = weightString.replace('.', ',')
-                        dbRef.child("Cserék").child(changeUp).child("4 - Plusz súlyok")
-                            .child(teamNumber.toString()).setValue(output)
+                    val getStintDone = p0.result.child("Stints").child("Etap: $stintId").child("Info").child("$stintId-$teamNumber").child("hasStintDone").value.toString().toBoolean()
+                    if (getStintDone) {
+                        val getId = p0.result.child("Id").value.toString()
+                        for (i in 1..getId.toInt()) {
+                            val getStintNumber = p0.result.child("Excel").child(i.toString()).child("stintNumber").value.toString()
+                            val getTeamNumber = p0.result.child("Excel").child(i.toString()).child("teamNumber").value.toString()
+                            val stintIdString = "$stintId. etap"
+                            val teamNumberString = "$teamNumber. csapat"
+                            if (getStintNumber == stintIdString && getTeamNumber == teamNumberString) {
+                                dbRef.child("Excel").child(i.toString()).child("driver").setValue(driver)
+                                if (weight == 0.0) {
+                                    dbRef.child("Excel").child(i.toString()).child("plusWeight").setValue("-")
+                                } else {
+                                    val weightString = weight.toString()
+                                    val output = weightString.replace('.', ',')
+                                    dbRef.child("Excel").child(i.toString()).child("plusWeight").setValue(output)
+                                }
+                                val originalWeight =
+                                    p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
+                                        .child("weight").value.toString().toDouble()
+                                val sumWeight = originalWeight + weight
+                                val sumWeightStr = sumWeight.toString()
+                                val outputSumWeight = sumWeightStr.replace('.', ',')
+                                dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
+                                dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                break
+                            }
+                        }
                     }
-                    val originalWeight =
-                        p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
-                            .child("weight").value.toString().toDouble()
-                    val sumWeight = originalWeight + weight
-                    val sumWeightStr = sumWeight.toString()
-                    val outputSumWeight = sumWeightStr.replace('.', ',')
-                    dbRef.child("Cserék").child(changeUp).child("2 - Összsúly")
-                        .child(teamNumber.toString()).setValue(outputSumWeight)
-                    dbRef.child("Cserék").child(changeUp).child("3 - Gépszámok")
-                        .child(teamNumber.toString()).setValue(kartNumber)
+                    else {
+                        val changeUp = "Etap: $stintId"
+                        val id = p0.result.child("Id").value.toString()
+                        var idNumber: Int
+                        if (id == "-1") {
+                            idNumber = 0
+                        } else {
+                            idNumber = id.toInt()
+                            idNumber++
+                        }
+                        dbRef.child("Id").setValue(idNumber)
+                        val teamStint = idNumber
+                        val stintPass = "$stintId. etap"
+                        val teamPass = "$teamNumber. csapat"
+                        dbRef.child("Excel").child(teamStint.toString()).child("stintNumber")
+                            .setValue(stintPass)
+                        dbRef.child("Excel").child(teamStint.toString()).child("teamNumber")
+                            .setValue(teamPass)
+                        dbRef.child("Cserék").child(changeUp).child("1 - Versenyzők")
+                            .child(teamNumber.toString()).setValue(driver)
+                        dbRef.child("Excel").child(teamStint.toString()).child("driver")
+                            .setValue(driver)
+                        if (weight == 0.0) {
+                            dbRef.child("Cserék").child(changeUp).child("4 - Plusz súlyok")
+                                .child(teamNumber.toString()).setValue("-")
+                            dbRef.child("Excel").child(teamStint.toString()).child("plusWeight")
+                                .setValue("-")
+                        } else {
+                            val weightString = weight.toString()
+                            val output = weightString.replace('.', ',')
+                            dbRef.child("Cserék").child(changeUp).child("4 - Plusz súlyok")
+                                .child(teamNumber.toString()).setValue(output)
+                            dbRef.child("Excel").child(teamStint.toString()).child("plusWeight")
+                                .setValue(output)
+                        }
+                        val originalWeight =
+                            p0.result.child("Teams").child(teamName).child("Drivers").child(driver)
+                                .child("weight").value.toString().toDouble()
+                        val sumWeight = originalWeight + weight
+                        val sumWeightStr = sumWeight.toString()
+                        val outputSumWeight = sumWeightStr.replace('.', ',')
+                        dbRef.child("Cserék").child(changeUp).child("2 - Összsúly")
+                            .child(teamNumber.toString()).setValue(outputSumWeight)
+                        dbRef.child("Cserék").child(changeUp).child("3 - Gépszámok")
+                            .child(teamNumber.toString()).setValue(kartNumber)
+
+                        dbRef.child("Excel").child(teamStint.toString()).child("totalWeight")
+                            .setValue(outputSumWeight)
+                        dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
+                            .setValue(kartNumber)
+                    }
                 }
 
             }
