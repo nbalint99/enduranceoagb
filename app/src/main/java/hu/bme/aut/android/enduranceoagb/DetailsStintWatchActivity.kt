@@ -15,10 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityBoxtimeBinding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatch2Binding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatchBinding
-import hu.bme.aut.android.enduranceoagb.fragments.BoxTimeFragment
-import hu.bme.aut.android.enduranceoagb.fragments.NewBoxFragment
-import hu.bme.aut.android.enduranceoagb.fragments.NewStintFragment
-import hu.bme.aut.android.enduranceoagb.fragments.WatchFragment
+import hu.bme.aut.android.enduranceoagb.fragments.*
 
 
 class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener, NewBoxFragment.NewBoxListener {
@@ -38,6 +35,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
 
     private val fragmentOri = DetailsStintActivity()
     private val fragmentOri2 = BoxTimeFragment()
+    private val fragmentOri3 = LiveTimingFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,7 +205,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
             }
         }
         else {
-            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri2, "2").commit()
+            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri3, "2").commit()
 
             binding2 = ActivityDetailsstintwatch2Binding.inflate(layoutInflater)
             setContentView(binding2.root)

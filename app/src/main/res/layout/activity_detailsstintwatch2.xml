@@ -51,7 +51,7 @@
 
     <FrameLayout
         android:id="@+id/boxTimeData"
-        class="hu.bme.aut.android.enduranceoagb.fragments.BoxTimeFragment"
+        class="hu.bme.aut.android.enduranceoagb.fragments.LiveTimingFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
