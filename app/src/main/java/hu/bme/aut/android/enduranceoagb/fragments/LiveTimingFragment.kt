@@ -1,5 +1,6 @@
 package hu.bme.aut.android.enduranceoagb.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater

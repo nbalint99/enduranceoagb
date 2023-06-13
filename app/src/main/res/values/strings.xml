@@ -123,4 +123,5 @@
     <string name="changeTimeSec">Másodperc</string>
     <string name="changeTime">A csere körében teljesített kör ideje</string>
     <string name="avgWeight">Átlag súly</string>
+    <string name="tab_text_main_1">Jelenlegi</string>
 </resources>

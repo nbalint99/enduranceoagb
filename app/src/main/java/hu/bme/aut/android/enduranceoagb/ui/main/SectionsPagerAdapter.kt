@@ -9,7 +9,7 @@ import hu.bme.aut.android.enduranceoagb.fragments.RaceDoneFragment
 import hu.bme.aut.android.enduranceoagb.fragments.RaceLeftFragment
 
 private val TAB_TITLES = arrayOf(
-    R.string.tab_text_1,
+    R.string.tab_text_main_1,
     R.string.tab_text_2
 )
 

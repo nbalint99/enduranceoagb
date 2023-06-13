@@ -40,7 +40,7 @@
 
     <FrameLayout
         android:id="@+id/stintData"
-        class="hu.bme.aut.android.enduranceoagb.DetailsStintActivity"
+        class="hu.bme.aut.android.enduranceoagb.DetailsStintFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"

@@ -36,6 +36,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
     private val fragmentOri = DetailsStintActivity()
     private val fragmentOri2 = BoxTimeFragment()
     private val fragmentOri3 = LiveTimingFragment()
+    private val fragmentOri1 = DetailsStintFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         raceId = intent.getStringExtra(EXTRA_RACE_NAME)
         stintId = intent.getStringExtra(EXTRA_STINT_NUMBER)
 
-        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri, "1").commit()
+        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri1, "1").commit()
 
         if (stintId.toString().toInt() == 1) {
             binding = ActivityDetailsstintwatchBinding.inflate(layoutInflater)
