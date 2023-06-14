@@ -10,6 +10,7 @@ data class Stint(
     @ColumnInfo(name = "teamNumber") var teamNumber: Int, //csapatsorszám
     @ColumnInfo(name = "driverName") var driverName: String? = null, //versenyző sorszáma
     @ColumnInfo(name = "numberStint") var numberStint: Int, //az etap száma/hányadik etap
+    @ColumnInfo(name = "shortTeamName") var shortTeamName: String? = null,
     @ColumnInfo(name = "plusWeight") var plusWeight: Double? = null,
     @ColumnInfo(name = "info") var info: String? = null, //plusz infó, megjegyzés
     @ColumnInfo(name = "previousInfo") var previousInfo: String? = null, //előző etap plusz infója, megjegyzése

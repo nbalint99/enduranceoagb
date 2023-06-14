@@ -36,7 +36,13 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
     override fun onBindViewHolder(holder: DetailsStintViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val detailsStintItem = items[position]
 
-        holder.binding.tvTeamName.text = detailsStintItem.teamName
+        if (detailsStintItem.shortTeamName == null) {
+            holder.binding.tvTeamName.text = detailsStintItem.teamName
+        }
+        else {
+            holder.binding.tvTeamName.text = detailsStintItem.shortTeamName
+        }
+
 
         holder.binding.tvTeamNumber.text = detailsStintItem.teamNumber.toString() + ". csapat"
 
@@ -145,14 +151,14 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
 
 
         holder.binding.ibDone.setOnClickListener {
-            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight)
+            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight, detailsStintItem.shortTeamName)
         }
     }
 
     override fun getItemCount(): Int = items.size
 
     interface DetailsStintItemClickListener {
-        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?)
+        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?)
         fun onTeamListener(teamName: String?, number: String?, gp2: Boolean?)
     }
 

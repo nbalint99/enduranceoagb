@@ -282,6 +282,19 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
                     dbRef.child("Info").child("hasTeamsDone").setValue(ServerValue.increment(1))
                     val snack = Snackbar.make(binding.root, R.string.addDriverDone, Snackbar.LENGTH_LONG)
                     snack.show()
+                    var teamMembers: String? = null
+                    val itemsSorted = items.sortedWith(compareBy { it.nameDriver })
+                    for (i in itemsSorted) {
+                        val arr = i.nameDriver.split(" ").toTypedArray()
+                        teamMembers = if (teamMembers == null) {
+                            arr[0]
+                        } else {
+                            var teamMembersOri = teamMembers
+                            var new = arr[0]
+                            "$teamMembersOri-$new"
+                        }
+                    }
+                    dbRef.child("Teams").child(teamName.toString()).child("Info").child("shortTeamName").setValue(teamMembers)
                 }
             }
         }

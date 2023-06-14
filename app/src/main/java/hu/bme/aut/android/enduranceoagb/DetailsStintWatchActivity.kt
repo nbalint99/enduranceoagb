@@ -142,6 +142,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                             for (element in teams) {
                                 val teamName = element.child("Info").child("nameTeam").value.toString()
                                 val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
+                                val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                                 val childTeam = "1-$teamNumber"
                                 val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)
                                     .child("kartNumber").value.toString().toIntOrNull()
@@ -151,16 +152,33 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                         if (i < 10) {
                                             var place = i.toString()
                                             place = "0$place"
-                                            val string =
-                                                "$place. hely - Gokart: $kartNumber - Csapat: $teamName"
-                                            items?.add(string)
-                                            break
+                                            if (shortTeamName != null) {
+                                                val string =
+                                                    "$place. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
+                                                items?.add(string)
+                                                break
+                                            }
+                                            else {
+                                                val string =
+                                                    "$place. hely - Gokart: $kartNumber - Csapat: $teamName"
+                                                items?.add(string)
+                                                break
+                                            }
+
                                         }
                                         else {
-                                            val string =
-                                                "$i. hely - Gokart: $kartNumber - Csapat: $teamName"
-                                            items?.add(string)
-                                            break
+                                            if (shortTeamName != null) {
+                                                val string =
+                                                    "$i. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
+                                                items?.add(string)
+                                                break
+                                            }
+                                            else {
+                                                val string =
+                                                    "$i. hely - Gokart: $kartNumber - Csapat: $teamName"
+                                                items?.add(string)
+                                                break
+                                            }
                                         }
                                     }
                                     init += 1
@@ -232,6 +250,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         teamNumber: Int,
         driver: String,
         stintNumber: Int,
+        shortTeamName: String?,
         weight: Double,
         info: String?,
         kartNumber: Int,
@@ -243,7 +262,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         raceIdpass: String?
     ) {
         val fragment = DetailsStintActivity()
-        fragment.onStintCreated(teamName, teamNumber, driver, stintNumber, weight, info, kartNumber, expectedKartNumber, driverName, plusWeightDriver, stintDonePrev, stintId, raceId)
+        fragment.onStintCreated(teamName, teamNumber, driver, stintNumber, shortTeamName, weight, info, kartNumber, expectedKartNumber, driverName, plusWeightDriver, stintDonePrev, stintId, raceId)
         val mBundle = Bundle()
         mBundle.putString("mText",teamNumber.toString())
         fragment.arguments = mBundle

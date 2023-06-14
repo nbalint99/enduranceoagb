@@ -15,5 +15,6 @@ data class Teams(
     @ColumnInfo(name = "startKartNumber") var startKartNumber: Int? = null,
     @ColumnInfo(name = "hasQualiDone") var hasQualiDone: Boolean,
     @ColumnInfo(name = "stintsDone") var stintsDone: Int? = null,
-    @ColumnInfo(name = "gp2") var gp2: Boolean? = null
+    @ColumnInfo(name = "gp2") var gp2: Boolean? = null,
+    @ColumnInfo(name = "shortTeamName") var shortTeamName: String? = null
 )

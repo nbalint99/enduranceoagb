@@ -107,7 +107,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             element.child("Info").child("startKartNumber").value.toString().toInt(),
                             element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
-                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull()
+                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                            element.child("Info").child("shortTeamName").value.toString()
                         )
 
                         itemsTeams?.add(addTeam)
@@ -137,7 +138,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
                         val stint = Stint(element.child("Info").child("nameTeam").value.toString(),
                             element.child("Info").child("teamNumber").value.toString().toInt(),
-                            null, stintId.toString().toInt(), null, null, null, false, null)
+                            null, stintId.toString().toInt(), element.child("Info").child("shortTeamName").value.toString(), null, null, null, false, null)
 
                         val teamStint = stintId + "-" + element.child("Info").child("teamNumber").value.toString().toInt()
 
@@ -183,7 +184,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             element.child("Info").child("startKartNumber").value.toString().toInt(),
                             element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
-                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull()
+                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                            element.child("Info").child("shortTeamName").value.toString()
 
                         )
                         itemsTeams?.add(addTeam)
@@ -243,6 +245,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         val nameTeam = element.child("Info").child("nameTeam").value.toString()
                         val teamNumber =
                             element.child("Info").child("teamNumber").value.toString().toInt()
+                        val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                         if (teamNumber == iterator) {
                             if (stintId.toString().toInt() == 1) {
                                 val hasStintDone =
@@ -267,6 +270,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                             teamNumber,
                                             nameDriver,
                                             stintId.toString().toInt(),
+                                            shortTeamName,
                                             plus,
                                             info,
                                             null,
@@ -315,6 +319,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                     teamNumber,
                                                     nameDriver,
                                                     stintId.toString().toInt(),
+                                                    shortTeamName,
                                                     plus,
                                                     info,
                                                     prevInfo,
@@ -340,6 +345,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                     teamNumber,
                                                     nameDriver,
                                                     stintId.toString().toInt(),
+                                                    shortTeamName,
                                                     plus,
                                                     info,
                                                     prevInfo,
@@ -368,6 +374,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                 teamNumber,
                                                 nameDriver,
                                                 stintId.toString().toInt(),
+                                                shortTeamName,
                                                 plus,
                                                 info,
                                                 prevInfo,
@@ -429,6 +436,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         val nameTeam = element.child("Info").child("nameTeam").value.toString()
                         val teamNumber =
                             element.child("Info").child("teamNumber").value.toString().toInt()
+                        val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                         if (teamNumber == iterator) {
                             if (stintId.toString().toInt() == 1) {
                                 val hasStintDone =
@@ -453,6 +461,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                             teamNumber,
                                             nameDriver,
                                             stintId.toString().toInt(),
+                                            shortTeamName,
                                             plus,
                                             info,
                                             null,
@@ -501,6 +510,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                     teamNumber,
                                                     nameDriver,
                                                     stintId.toString().toInt(),
+                                                    shortTeamName,
                                                     plus,
                                                     info,
                                                     prevInfo,
@@ -526,6 +536,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                     teamNumber,
                                                     nameDriver,
                                                     stintId.toString().toInt(),
+                                                    shortTeamName,
                                                     plus,
                                                     info,
                                                     prevInfo,
@@ -554,6 +565,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                 teamNumber,
                                                 nameDriver,
                                                 stintId.toString().toInt(),
+                                                shortTeamName,
                                                 plus,
                                                 info,
                                                 prevInfo,
@@ -579,7 +591,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
         }
     }
 
-    override fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?) {
+    override fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?) {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
         val stintId: String = activity?.getMyDataStint().toString()
@@ -604,7 +616,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     builder.setMessage("Ezt az etapot egyszer már létrehoztad. Biztos, hogy módosítani szeretnéd?")
 
                     builder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { dialog, which ->
-                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString())
+                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName)
                         fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                     }
                     builder.setNeutralButton(hu.bme.aut.android.enduranceoagb.R.string.button_megse, null)
@@ -618,7 +630,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         teamNumber.toString(),
                         stintDone.toString(),
                         driverName,
-                        plusWeight.toString()
+                        plusWeight.toString(),
+                        shortTeamName
                     )
                     fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                 }
@@ -644,6 +657,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
         teamNumber: Int,
         driver: String,
         stintNumber: Int,
+        shortTeamName: String?,
         weight: Double,
         info: String?,
         kartNumber: Int,
@@ -672,6 +686,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         teamNumber,
                         driver,
                         stintId.toString().toInt(),
+                        shortTeamName,
                         weight,
                         info,
                         null,
@@ -726,6 +741,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         teamNumber,
                         driver,
                         stintId.toString().toInt(),
+                        shortTeamName,
                         weight,
                         info,
                         prevInfo,

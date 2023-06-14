@@ -70,10 +70,20 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
             item = newItem
 
             if (item?.gp2 == true) {
-                binding.tvName.text = item?.nameTeam + " (GP2)"
+                if (item?.shortTeamName != null) {
+                    binding.tvName.text = item?.nameTeam + " (GP2) - " + item?.shortTeamName
+                }
+                else {
+                    binding.tvName.text = item?.nameTeam + " (GP2)"
+                }
             }
             else {
-                binding.tvName.text = item?.nameTeam
+                if (item?.shortTeamName != null) {
+                    binding.tvName.text = item?.nameTeam + " - " + item?.shortTeamName
+                }
+                else {
+                    binding.tvName.text = item?.nameTeam
+                }
             }
 
             if (item?.hasDriversDone != item?.people) {

@@ -69,7 +69,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                             element.child("Info").child("startKartNumber").value.toString().toIntOrNull(),
                             element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
-                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull()
+                            element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                            element.child("Info").child("shortTeamName").value.toString()
                         )
                         items.add(addTeam)
                     }
@@ -283,7 +284,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                         element.child("Info").child("startKartNumber").value.toString().toIntOrNull(),
                         element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                         element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
-                        element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull()
+                        element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                        element.child("Info").child("shortTeamName").value.toString()
                     )
 
                     items.add(addTeam)
