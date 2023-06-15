@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.android.enduranceoagb.databinding.NewStintFragmentBinding
 import hu.bme.aut.android.enduranceoagb.databinding.ResultFragmentBinding
 
+//TODO: a lista frissítése aszerint, hogy kiknek nincsen még helyezése
 class ResultFragment : DialogFragment() {
     interface ResultFragmentListener {
         fun onResultCreated(
@@ -59,7 +60,7 @@ class ResultFragment : DialogFragment() {
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 for (element in p0.result.child("Teams").children) {
-                    val addTeam = element.child("Info").child("nameTeam").value.toString()
+                    val addTeam = element.child("Info").child("shortTeamName").value.toString()
                     val addGP2 = element.child("Info").child("gp2").value.toString().toBoolean()
                     items.add(addTeam)
                     gp2Bool.add(addGP2)

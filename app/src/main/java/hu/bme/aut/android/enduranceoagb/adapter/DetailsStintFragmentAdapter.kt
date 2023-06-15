@@ -153,7 +153,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
 
 
         holder.binding.ibDone.setOnClickListener {
-            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight)
+            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight, detailsStintItem.shortTeamName)
         }
 
         val item = itemsBox[position]
@@ -467,7 +467,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
     override fun getItemCount(): Int = items.size
 
     interface DetailsStintFragmentItemClickListener {
-        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?)
+        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?)
         fun onTeamListener(teamName: String?, number: String?, gp2: Boolean?)
         fun dataChanged(position: Int, initTime: Double)
         fun dataChangedBool(position: Int)

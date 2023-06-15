@@ -94,6 +94,7 @@ class StintActivity2 : FragmentActivity() {
                                             each.child("teamNumber").value.toString().toInt(),
                                             each.child("driverName").value.toString(),
                                             each.child("numberStint").value.toString().toInt(),
+                                            each.child("shortTeamName").value.toString(),
                                             each.child("plusWeight").value.toString().toDouble(),
                                             each.child("info").value.toString(),
                                             each.child("previousInfo").value.toString(),
@@ -117,7 +118,7 @@ class StintActivity2 : FragmentActivity() {
 
                         if (sortedItems != null) {
                             for (e in sortedItems) {
-                                val string = "Gokart: " + e.kartNumber + " - " + e.teamName
+                                val string = "Gokart: " + e.kartNumber + " - " + e.shortTeamName
                                 onlyItems?.add(string)
                             }
                         }

@@ -124,4 +124,8 @@
     <string name="changeTime">A csere körében teljesített kör ideje</string>
     <string name="avgWeight">Átlag súly</string>
     <string name="tab_text_main_1">Jelenlegi</string>
+    <string name="tab_text_longer_1">Hátralévő etapok</string>
+    <string name="tab_text_longer_2">Lefutott etapok</string>
+    <string name="tab_text_main_race_1">Jelenlegi verseny</string>
+    <string name="tab_text_main_race_2">Lefutott versenyek</string>
 </resources>
