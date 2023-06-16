@@ -1,21 +1,18 @@
 package hu.bme.aut.android.enduranceoagb.fragments
 
-import android.R
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import hu.bme.aut.android.enduranceoagb.databinding.NewStintFragmentBinding
+import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.databinding.ResultFragmentBinding
 
-//TODO: a lista frissítése aszerint, hogy kiknek nincsen még helyezése
 class ResultFragment : DialogFragment() {
     interface ResultFragmentListener {
         fun onResultCreated(
@@ -56,6 +53,8 @@ class ResultFragment : DialogFragment() {
 
         val items: MutableList<String> = mutableListOf()
         val gp2Bool: MutableList<Boolean> = mutableListOf()
+        val membersList: MutableList<String> = mutableListOf()
+        var sendMembersList: MutableList<String>? = mutableListOf()
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
@@ -66,11 +65,35 @@ class ResultFragment : DialogFragment() {
                     gp2Bool.add(addGP2)
                 }
 
-                binding.spTeam.adapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
-                    items
-                )
+                for (el in p0.result.child("Result").children) {
+                    val resultTeam = el.child("team").value.toString()
+                    var checkNumber = 0
+                    for (e in items) {
+                        if (e == resultTeam) {
+                            checkNumber++
+                        }
+                    }
+                    if (checkNumber == 0) {
+                        membersList.add(resultTeam)
+                    }
+                }
+
+                val selectOne = "-- Válassz egyet! --"
+                if (sendMembersList != null) {
+                    sendMembersList.add(0, selectOne)
+
+                    for (elem in membersList) {
+                        sendMembersList.add(elem)
+                    }
+                }
+
+                if (sendMembersList != null) {
+                    binding.spTeam.adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        sendMembersList
+                    )
+                }
             }
         }
 
