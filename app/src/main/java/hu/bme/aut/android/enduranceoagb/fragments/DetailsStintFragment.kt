@@ -286,7 +286,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                             plus,
                                             info,
                                             null,
-                                            hasStintD, kartNumber, expectedKartNumber, null, null, null
+                                            hasStintD, null, kartNumber, expectedKartNumber, null, null, null
                                         )
                                         items?.add(addStint)
                                     }
@@ -312,6 +312,10 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                         p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("driverName").value.toString()
                                     val prevPlusWeight =
                                         p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("plusWeight").value.toString().toDoubleOrNull()
+                                    val prevAvgWeight = ready.child("prevAvgWeight").value.toString().toDoubleOrNull()
+                                    val driverWeight = p0.result.child("Teams").child(nameTeam).child("Drivers").child(prevDriverName).child("weight").value.toString().toDoubleOrNull()
+                                    val prevWeight = prevPlusWeight?.let { driverWeight?.plus(it) }
+                                    val avgWeight = prevWeight?.let { prevAvgWeight?.plus(it) }
                                     if (teamNumber > 1) {
                                         if (teamNum.toString().toIntOrNull() != null) {
                                             val changePrevTeam = (stintId.toString()
@@ -335,7 +339,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                                     plus,
                                                     info,
                                                     prevInfo,
-                                                    hasStintD,
+                                                    hasStintD, avgWeight,
                                                     kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                                 )
                                                 items?.add(addStint)
@@ -361,7 +365,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                                     plus,
                                                     info,
                                                     prevInfo,
-                                                    hasStintD,
+                                                    hasStintD, avgWeight,
                                                     kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                                 )
                                                 items?.add(addStint)
@@ -390,7 +394,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                                 plus,
                                                 info,
                                                 prevInfo,
-                                                hasStintD,
+                                                hasStintD, avgWeight,
                                                 kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                             )
                                             items?.add(addStint)
@@ -464,7 +468,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
         }
     }
 
-    private fun loadBackgroundItemsParam(raceIdpass: String?, stintIdpass: String?) {
+    /*private fun loadBackgroundItemsParam(raceIdpass: String?, stintIdpass: String?) {
         val raceId = raceIdpass.toString()
         val stintId = stintIdpass.toString()
 
@@ -656,7 +660,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
             }
         }
-    }
+    }*/
 
     override fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?) {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
@@ -833,7 +837,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                         weight,
                         info,
                         null,
-                        true,
+                        true, null,
                         kartNumber,
                         expectedKartNumber
                     )
@@ -878,6 +882,17 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                     val changePrev = (stintId.toString().toInt() - 1).toString() + "-" + teamNumber
                     val prevInfo = p0.result.child("Stints").child(changePrevStint).child("Info")
                         .child(changePrev).child("info").value.toString()
+                    val prevAvgWeight =
+                        p0.result.child("Stints").child(changePrevStint).child("Info")
+                            .child(changePrev).child("prevAvgWeight").value.toString().toDoubleOrNull()
+                    val prevDriverName = p0.result.child("Stints").child(changePrevStint).child("Info")
+                        .child(changePrev).child("driverName").value.toString()
+                    val prevDriverWeight = p0.result.child("Teams").child(teamName).child("Drivers").child(prevDriverName)
+                        .child("weight").value.toString().toDouble()
+                    val prevPlusWeight = p0.result.child("Stints").child(changePrevStint).child("Info")
+                        .child(changePrev).child("plusWeight").value.toString().toDouble()
+                    val prevDriverTotalWeight = prevDriverWeight + prevPlusWeight
+                    val totalAvgWeight = prevAvgWeight?.plus(prevDriverTotalWeight)
 
                     val stint = Stint(
                         teamName,
@@ -888,7 +903,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                         weight,
                         info,
                         prevInfo,
-                        true,
+                        true, totalAvgWeight,
                         kartNumber,
                         expectedKartNumber
                     )
@@ -930,8 +945,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                         dbRef.child("Teams").child(teamName).child("Info").child("avgWeight")
                             .setValue(sum)
-                        dbRef.child("Stints").child(change).child("Info").child(teamStint)
-                            .setValue(stint)
+                        /*dbRef.child("Stints").child(change).child("Info").child(teamStint)
+                            .setValue(stint)*/
                         dbRef.child("Teams").child(teamName).child("Info").child("stintsDone")
                             .setValue(stintNumber)
                     }

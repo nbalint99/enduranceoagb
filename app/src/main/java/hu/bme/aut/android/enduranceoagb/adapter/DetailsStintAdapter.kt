@@ -159,28 +159,55 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
             }
             for (i in itemsTeams) {
                 if (detailsStintItem.teamNumber == i.teamNumber) {
-                    val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
-                    if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
-                        val requiredWeight = 90.0 * detailsStintItem.numberStint
-                        val needWeight = requiredWeight - i.avgWeight!!
-                        if (needWeight < 0) {
-                            holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                    if (detailsStintItem.prevAvgWeight != null) {
+                        val avgWeight = detailsStintItem.prevAvgWeight?.div(i.stintsDone.toString().toDouble())
+                        if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                            val requiredWeight = 90.0 * detailsStintItem.numberStint
+                            val needWeight = requiredWeight - i.avgWeight!!
+                            if (needWeight < 0) {
+                                holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                            }
+                            else {
+                                holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                                holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                            }
+                            break
                         }
                         else {
-                            holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
-                            holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                            if (avgWeight != null) {
+                                holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                            }
+                            else {
+                                holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                            }
+                            break
                         }
-                        break
                     }
                     else {
-                        if (avgWeight != null) {
-                            holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                        val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
+                        if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                            val requiredWeight = 90.0 * detailsStintItem.numberStint
+                            val needWeight = requiredWeight - i.avgWeight!!
+                            if (needWeight < 0) {
+                                holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                            }
+                            else {
+                                holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                                holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                            }
+                            break
                         }
                         else {
-                            holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                            if (avgWeight != null) {
+                                holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                            }
+                            else {
+                                holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                            }
+                            break
                         }
-                        break
                     }
+
                 }
             }
         }

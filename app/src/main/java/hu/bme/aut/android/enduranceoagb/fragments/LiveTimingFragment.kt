@@ -53,6 +53,8 @@ class LiveTimingFragment : Fragment() {
         // if you want to enable zoom feature
         webView.settings.setSupportZoom(true)
 
+        //webView.isVerticalScrollBarEnabled
+
 
 
         return binding.root

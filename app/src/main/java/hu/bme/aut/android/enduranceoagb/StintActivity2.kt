@@ -99,6 +99,7 @@ class StintActivity2 : FragmentActivity() {
                                             each.child("info").value.toString(),
                                             each.child("previousInfo").value.toString(),
                                             each.child("hasStintDone").value.toString().toBoolean(),
+                                            each.child("prevAvgWeight").value.toString().toDoubleOrNull(),
                                             each.child("kartNumber").value.toString().toInt(),
                                             each.child("expectedKartNumber").value.toString().toInt()
                                         )
