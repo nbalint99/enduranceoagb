@@ -72,6 +72,7 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                 }
                 requireActivity().runOnUiThread {
                     if (items != null) {
+                        items.sortByDescending { it.id_r }
                         rvAdapter.update2(items)
                     }
                 }

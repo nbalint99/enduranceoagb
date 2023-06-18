@@ -21,7 +21,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.NewStintFragmentBinding
 
 class NewStintFragment : DialogFragment() {
     interface NewStintListener {
-        fun onStintCreated(teamName: String, teamNumber: Int, driver: String, stintNumber: Int, shortTeamName: String?, weight: Double, info: String? = null, kartNumber: Int, expectedKartNumber: Int, driverName: String?, plusWeightDriver: String?, stintDonePrev: String, stintIdpass: String? = null, raceIdpass: String? = null)
+        fun onStintCreated(teamName: String, teamNumber: Int, driver: String, driverWeight: Double?, totalWeight: Double?, stintNumber: Int, shortTeamName: String?, weight: Double, info: String? = null, kartNumber: Int, expectedKartNumber: Int, driverName: String?, plusWeightDriver: String?, stintDonePrev: String, stintIdpass: String? = null, raceIdpass: String? = null)
         fun onStintNotCreated()
         fun raceId() : String?
     }
@@ -60,6 +60,8 @@ class NewStintFragment : DialogFragment() {
         val dataPassedDriverName: String? = arguments?.getString("driverName")
         val dataPassedPlusWeight: String? = arguments?.getString("plusWeightDriver")
         val dataPassedShortTeamName: String? = arguments?.getString("shortTeamName")
+        val dataPassedDriverWeight: String? = arguments?.getString("driverWeight")
+        val dataPassedTotalWeight: String? = arguments?.getString("prevTotalWeight")
 
         binding.tvNameTeamStint.text = dataPassedTeamName
 
@@ -142,6 +144,8 @@ class NewStintFragment : DialogFragment() {
                                         dataPassedTeamName.toString(),
                                         dataPassedTeamId.toString().toInt(),
                                         selectedDriver,
+                                        dataPassedDriverWeight.toString().toDoubleOrNull(),
+                                        dataPassedTotalWeight.toString().toDoubleOrNull(),
                                         dataPassedStint.toString().toInt(),
                                         dataPassedShortTeamName,
                                         specialWeight.text.toString().toDouble(),
@@ -169,6 +173,8 @@ class NewStintFragment : DialogFragment() {
                                 dataPassedTeamName.toString(),
                                 dataPassedTeamId.toString().toInt(),
                                 selectedDriver,
+                                dataPassedDriverWeight.toString().toDoubleOrNull(),
+                                dataPassedTotalWeight.toString().toDoubleOrNull(),
                                 dataPassedStint.toString().toInt(),
                                 dataPassedShortTeamName,
                                 selectedWeight,
@@ -202,6 +208,8 @@ class NewStintFragment : DialogFragment() {
                                         dataPassedTeamName.toString(),
                                         dataPassedTeamId.toString().toInt(),
                                         selectedDriver,
+                                        dataPassedDriverWeight.toString().toDoubleOrNull(),
+                                        dataPassedTotalWeight.toString().toDoubleOrNull(),
                                         dataPassedStint.toString().toInt(),
                                         dataPassedShortTeamName,
                                         specialWeight.text.toString().toDouble(),
@@ -229,6 +237,8 @@ class NewStintFragment : DialogFragment() {
                                 dataPassedTeamName.toString(),
                                 dataPassedTeamId.toString().toInt(),
                                 selectedDriver,
+                                dataPassedDriverWeight.toString().toDoubleOrNull(),
+                                dataPassedTotalWeight.toString().toDoubleOrNull(),
                                 dataPassedStint.toString().toInt(),
                                 dataPassedShortTeamName,
                                 selectedWeight,
@@ -258,7 +268,9 @@ class NewStintFragment : DialogFragment() {
             stintDone: String,
             driverName: String?,
             plusWeightDriver: String?,
-            shortTeamName: String?
+            shortTeamName: String?,
+            driverWeight: String?,
+            prevTotalWeight: String?
         ): NewStintFragment {
             val args = Bundle()
             args.putString("position", position)
@@ -269,6 +281,8 @@ class NewStintFragment : DialogFragment() {
             args.putString("driverName", driverName)
             args.putString("plusWeightDriver", plusWeightDriver)
             args.putString("shortTeamName", shortTeamName)
+            args.putString("driverWeight", driverWeight)
+            args.putString("prevTotalWeight", prevTotalWeight)
             val fragment = NewStintFragment()
             fragment.arguments = args
             return fragment

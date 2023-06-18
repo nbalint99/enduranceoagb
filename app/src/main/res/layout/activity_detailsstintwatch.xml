@@ -62,7 +62,7 @@
 
     <FrameLayout
 
-        android:id="@+id/stintData"
+        android:id="@+id/stintDataFirst"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"

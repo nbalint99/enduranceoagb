@@ -137,6 +137,32 @@ class RaceActivity : AppCompatActivity() {
                                                     raceId
                                                 )
                                                 startActivity(showDetailsIntent)
+
+                                            val teams = p0.result.child("Teams").children
+                                            val id = p0.result.child("Id").value.toString()
+                                            var idNumber = 0
+                                            for (i in teams) {
+                                                val teamNumber = i.child("Info").child("teamNumber").value.toString()
+                                                val shortTeamName = i.child("Info").child("shortTeamName").value.toString()
+                                                when (id) {
+                                                    "-1" -> {
+                                                        idNumber = 0
+                                                    }
+                                                    else -> {
+                                                        idNumber++
+                                                    }
+                                                }
+                                                dbRef.child("Id").setValue(idNumber)
+                                                val teamStintId = idNumber
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue("Csapat")
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue(
+                                                    "$teamNumber. csapat"
+                                                )
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue(shortTeamName)
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue("-")
+                                            }
                                         }
                                         else {
                                             val snack = Snackbar.make(it, R.string.notValid, Snackbar.LENGTH_LONG)

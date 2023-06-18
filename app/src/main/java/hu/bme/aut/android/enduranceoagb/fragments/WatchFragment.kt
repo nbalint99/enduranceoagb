@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import hu.bme.aut.android.enduranceoagb.DetailsStintActivity
 import hu.bme.aut.android.enduranceoagb.DetailsStintWatchActivity
 import hu.bme.aut.android.enduranceoagb.R
 import hu.bme.aut.android.enduranceoagb.StintActivity2

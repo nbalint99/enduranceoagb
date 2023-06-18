@@ -339,10 +339,22 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
     override fun onItemClick(nameDriver: String?, weight: String?) {
         val builder = AlertDialog.Builder(this)
 
+        val items: MutableList<Drivers>? = mutableListOf()
+
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
+                for (element in p0.result.child("Teams").child(teamName.toString()).child("Drivers").children) {
+                    val addDriver = Drivers(
+                        element.child("nameDriver").value.toString(),
+                        element.child("weight").value.toString().toDoubleOrNull(),
+                        element.child("races").value.toString().toIntOrNull(),
+                        element.child("joker").value.toString().toBooleanStrictOrNull()
+                    )
+
+                    items?.add(addDriver)
+                }
                 val initDone =
                     p0.result.child("Info").child("hasStintReady").value.toString().toBoolean()
                 if (initDone) {
@@ -422,6 +434,21 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
                                         .child("hasTeamsDone").value.toString().toInt()
                                     dbRef.child("Info").child("hasTeamsDone")
                                         .setValue(teamsDone - 1)
+                                    var teamMembers: String? = null
+                                    val itemsSorted = items?.sortedWith(compareBy { it.nameDriver })
+                                    if (itemsSorted != null) {
+                                        for (i in itemsSorted) {
+                                            val arr = i.nameDriver.split(" ").toTypedArray()
+                                            teamMembers = if (teamMembers == null) {
+                                                arr[0]
+                                            } else {
+                                                var teamMembersOri = teamMembers
+                                                var new = arr[0]
+                                                "$teamMembersOri-$new"
+                                            }
+                                        }
+                                    }
+                                    dbRef.child("Teams").child(teamName.toString()).child("Info").child("shortTeamName").setValue(teamMembers)
                                 }
                                 else {
                                     dbRef.child("Teams").child(teamName.toString()).child("Info")
@@ -463,6 +490,21 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
 
                                 if (doneDrivers + 1 == people) {
                                     dbRef.child("Info").child("hasTeamsDone").setValue(ServerValue.increment(1))
+                                    var teamMembers: String? = null
+                                    val itemsSorted = items?.sortedWith(compareBy { it.nameDriver })
+                                    if (itemsSorted != null) {
+                                        for (i in itemsSorted) {
+                                            val arr = i.nameDriver.split(" ").toTypedArray()
+                                            teamMembers = if (teamMembers == null) {
+                                                arr[0]
+                                            } else {
+                                                var teamMembersOri = teamMembers
+                                                var new = arr[0]
+                                                "$teamMembersOri-$new"
+                                            }
+                                        }
+                                    }
+                                    dbRef.child("Teams").child(teamName.toString()).child("Info").child("shortTeamName").setValue(teamMembers)
                                 }
                                 runOnUiThread {
                                     adapter.deleteItem(oldItem)

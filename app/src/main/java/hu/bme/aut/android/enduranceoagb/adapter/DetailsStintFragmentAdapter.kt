@@ -5,14 +5,13 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import hu.bme.aut.android.enduranceoagb.R
 import hu.bme.aut.android.enduranceoagb.data.BoxTime
 import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.data.Stint
 import hu.bme.aut.android.enduranceoagb.data.Teams
-import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintListBinding
 import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintfragmentListBinding
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 
@@ -44,7 +43,12 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
     override fun onBindViewHolder(holder: DetailsStintFragmentViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val detailsStintItem = items[position]
 
-        holder.binding.tvTeamName.text = detailsStintItem.teamName
+        if (detailsStintItem.shortTeamName == null || detailsStintItem.shortTeamName == "null") {
+            holder.binding.tvTeamName.text = detailsStintItem.teamName
+        }
+        else {
+            holder.binding.tvTeamName.text = detailsStintItem.shortTeamName
+        }
 
         holder.binding.tvTeamNumber.text = detailsStintItem.teamNumber.toString() + ". csapat"
 
@@ -86,7 +90,24 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             }
             for (i in itemsTeams) {
                 if (detailsStintItem.teamNumber == i.teamNumber) {
-                    if (detailsStintItem.prevAvgWeight != null) {
+                    val prevAvgWeight = detailsStintItem.prevAvgWeight
+                    for (element in itemsDrivers) {
+                        if (element.nameDriver == detailsStintItem.driverName) {
+                            val driverWeight = element.weight!!
+                            val plusWeight = detailsStintItem.plusWeight
+                            val newWeight = driverWeight + plusWeight!!
+                            val totalWeight = prevAvgWeight?.plus(newWeight)
+                            val avgWeight = totalWeight?.div(detailsStintItem.numberStint.toDouble())
+                            if (avgWeight != null) {
+                                holder.binding.tvAvgWeight.text =
+                                    "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                            }
+                            else {
+                                holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                            }
+                        }
+                    }
+                    /*if (detailsStintItem.prevAvgWeight.toString() != "null" || detailsStintItem.prevAvgWeight != null) {
                         val prevAvgWeight = detailsStintItem.prevAvgWeight
                         for (element in itemsDrivers) {
                             if (element.nameDriver == detailsStintItem.driverName) {
@@ -95,6 +116,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                                 val newWeight = driverWeight + plusWeight!!
                                 val totalWeight = prevAvgWeight?.plus(newWeight)
                                 val avgWeight = totalWeight?.div(i.stintsDone.toString().toDouble())
+                                println(detailsStintItem.teamNumber)
+                                println("hasStintDone")
                                 /*if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
                                     val requiredWeight = 90.0 * detailsStintItem.numberStint
                                     val needWeight = requiredWeight - i.avgWeight!!
@@ -109,6 +132,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                                 }
                                 else {*/
                                 if (avgWeight != null) {
+                                    println(detailsStintItem.teamNumber)
+                                    println("hasStintDone else")
                                     holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
                                 }
                                 else {
@@ -119,6 +144,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                         }
                     }
                     else {
+                        println(detailsStintItem.teamNumber)
+                        println("hasStintDone, else")
                         val avgWeight = i.avgWeight?.div(i.stintsDone.toString().toDouble())
                         /*if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
                             val requiredWeight = 90.0 * detailsStintItem.numberStint
@@ -134,13 +161,15 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                         }
                         else {*/
                         if (avgWeight != null) {
+                            println(detailsStintItem.teamNumber)
+                            println("hasStintDone, else else")
                             holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
                         }
                         else {
                             holder.binding.tvAvgWeight.text = "Átlag súly: - "
                         }
                         break
-                    }
+                    }*/
 
 
                     //}
@@ -161,11 +190,47 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             }
             for (i in itemsTeams) {
                 if (detailsStintItem.teamNumber == i.teamNumber) {
-                    if (detailsStintItem.prevAvgWeight != null) {
+                    println(detailsStintItem.teamNumber)
+                    val prevAvgWeight = detailsStintItem.prevAvgWeight
+                            if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
+                                val requiredWeight = 90.0 * detailsStintItem.numberStint
+                                val needWeight = requiredWeight - prevAvgWeight!!
+                                println(detailsStintItem.teamNumber)
+                                println("hasNOTStintDone")
+                                if (needWeight < 0) {
+                                    holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
+                                }
+                                else {
+                                    holder.binding.tvAvgWeight.text = "Szükséges súly: ${((needWeight * 100.0).roundToInt() / 100.0)} kg"
+                                    holder.binding.tvAvgWeight.setTextColor(Color.RED)
+                                }
+                                break
+                            }
+                            else {
+                                //val driverWeight = element.weight!!
+                                //val plusWeight = detailsStintItem.plusWeight
+                                //val newWeight = driverWeight + plusWeight!!
+                                //val totalWeight = prevAvgWeight?.plus(newWeight)
+                                val avgWeight = prevAvgWeight?.div(i.stintsDone.toString().toDouble())
+                                println(detailsStintItem.teamNumber)
+                                println("hasNOTStintDone else")
+                                if (avgWeight != null) {
+                                    holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
+                                }
+                                else {
+                                    holder.binding.tvAvgWeight.text = "Átlag súly: - "
+                                }
+                                break
+                            }
+                    //    }
+                    //}
+                    /*if (detailsStintItem.prevAvgWeight.toString() != "null" || detailsStintItem.prevAvgWeight != null) {
                         val avgWeight = detailsStintItem.prevAvgWeight?.div(i.stintsDone.toString().toDouble())
                         if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
                             val requiredWeight = 90.0 * detailsStintItem.numberStint
                             val needWeight = requiredWeight - i.avgWeight!!
+                            println(detailsStintItem.teamNumber)
+                            println("hasNOTStintDone")
                             if (needWeight < 0) {
                                 holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
                             }
@@ -176,6 +241,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                             break
                         }
                         else {
+                            println(detailsStintItem.teamNumber)
+                            println("hasNOTStintDone else")
                             if (avgWeight != null) {
                                 holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
                             }
@@ -190,6 +257,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                         if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
                             val requiredWeight = 90.0 * detailsStintItem.numberStint
                             val needWeight = requiredWeight - i.avgWeight!!
+                            println(detailsStintItem.teamNumber)
+                            println("hasNOTStintDone else, not else")
                             if (needWeight < 0) {
                                 holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
                             }
@@ -200,6 +269,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                             break
                         }
                         else {
+                            println(detailsStintItem.teamNumber)
+                            println("hasNOTStintDone else, else")
                             if (avgWeight != null) {
                                 holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
                             }
@@ -208,7 +279,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                             }
                             break
                         }
-                    }
+                    }*/
 
                 }
             }
@@ -216,7 +287,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
 
 
         holder.binding.ibDone.setOnClickListener {
-            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight, detailsStintItem.shortTeamName)
+            listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight, detailsStintItem.shortTeamName, detailsStintItem.driverWeight, detailsStintItem.prevAvgWeight)
         }
 
         val item = itemsBox[position]
@@ -390,6 +461,9 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
 
          */
         if (!item.hasDone) {
+            if (detailsStintItem.hasStintDone) {
+                holder.itemView.setBackgroundResource(R.color.pink)
+            }
             holder.binding.plus5Button.setOnClickListener {
                 item.initialTime += 5000.0
                 initPenalty += 5
@@ -518,7 +592,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
         holder.binding.btnActualTimeText.setOnClickListener {
             for (element in itemsTeams) {
                 if (element.teamNumber == item.teamNumber) {
-                    listener.onNewBoxListener(position, item.teamNumber, item.hasDone, element.nameTeam)
+                    listener.onNewBoxListener(position, item.teamNumber, item.hasDone, element.shortTeamName.toString())
                     break
                 }
             }
@@ -530,7 +604,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
     override fun getItemCount(): Int = items.size
 
     interface DetailsStintFragmentItemClickListener {
-        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?)
+        fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?, driverWeight: Double?, prevTotalWeight: Double?)
         fun onTeamListener(teamName: String?, number: String?, gp2: Boolean?)
         fun dataChanged(position: Int, initTime: Double)
         fun dataChangedBool(position: Int)
@@ -549,6 +623,11 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
         items.clear()
         items.addAll(detailsStintItems)
         notifyDataSetChanged()
+    }
+
+    fun addItemStints(item: Stint) {
+        items.add(item)
+        notifyItemInserted(items.size - 1)
     }
 
     @SuppressLint("NotifyDataSetChanged")

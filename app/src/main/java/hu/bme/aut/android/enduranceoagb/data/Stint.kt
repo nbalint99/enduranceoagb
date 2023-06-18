@@ -16,6 +16,7 @@ data class Stint(
     @ColumnInfo(name = "previousInfo") var previousInfo: String? = null, //előző etap plusz infója, megjegyzése
     @ColumnInfo(name = "hasStintDone") var hasStintDone: Boolean,
     @ColumnInfo(name = "prevAvgWeight") var prevAvgWeight: Double? = null,
+    @ColumnInfo(name = "driverWeight") var driverWeight: Double? = null,
     @ColumnInfo(name = "kartNumber") var kartNumber: Int? = null,
     @ColumnInfo(name = "expectedKartNumber") var expectedKartNumber: Int? = null,
     @ColumnInfo(name = "prevDriverName") var prevDriverName: String? = null,

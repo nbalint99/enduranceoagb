@@ -144,7 +144,7 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                                     }
                                     dbRef.child("Id").setValue(idNumber)
                                     val teamStintId = idNumber
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue(1)
+                                    dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue("1. etap")
                                     dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue("box")
                                     dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue("-")
                                     dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")

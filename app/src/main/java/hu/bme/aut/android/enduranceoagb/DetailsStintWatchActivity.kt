@@ -44,9 +44,9 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         raceId = intent.getStringExtra(EXTRA_RACE_NAME)
         stintId = intent.getStringExtra(EXTRA_STINT_NUMBER)
 
-        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri1, "1").commit()
 
         if (stintId.toString().toInt() == 1) {
+            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintDataFirst, fragmentOri, "1").commit()
             binding = ActivityDetailsstintwatchBinding.inflate(layoutInflater)
             setContentView(binding.root)
             binding.tvNumberOfStint.text = "$stintId. etap"
@@ -224,6 +224,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
             }
         }
         else {
+            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragmentOri1, "1").commit()
             supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragmentOri3, "2").commit()
 
             binding2 = ActivityDetailsstintwatch2Binding.inflate(layoutInflater)
@@ -249,6 +250,8 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         teamName: String,
         teamNumber: Int,
         driver: String,
+        driverWeight: Double?,
+        totalWeight: Double?,
         stintNumber: Int,
         shortTeamName: String?,
         weight: Double,
@@ -261,26 +264,54 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         stintIdpass: String?,
         raceIdpass: String?
     ) {
-        val fragment = DetailsStintActivity()
-        fragment.onStintCreated(teamName, teamNumber, driver, stintNumber, shortTeamName, weight, info, kartNumber, expectedKartNumber, driverName, plusWeightDriver, stintDonePrev, stintId, raceId)
-        val mBundle = Bundle()
-        mBundle.putString("mText",teamNumber.toString())
-        fragment.arguments = mBundle
-        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragment, "1").commit()
+        if (stintNumber == 1) {
+            val fragment = DetailsStintActivity()
+            fragment.onStintCreated(teamName, teamNumber, driver, driverWeight, totalWeight, stintNumber, shortTeamName, weight, info, kartNumber, expectedKartNumber, driverName, plusWeightDriver, stintDonePrev, stintId, raceId)
+            val mBundle = Bundle()
+            mBundle.putString("mText",teamNumber.toString())
+            fragment.arguments = mBundle
+            supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintDataFirst, fragment, "1").commit()
+        }
+        else {
+            val fragment = DetailsStintFragment()
+            fragment.onStintCreated(
+                teamName,
+                teamNumber,
+                driver,
+                driverWeight,
+                totalWeight,
+                stintNumber,
+                shortTeamName,
+                weight,
+                info,
+                kartNumber,
+                expectedKartNumber,
+                driverName,
+                plusWeightDriver,
+                stintDonePrev,
+                stintId,
+                raceId
+            )
+            val mBundle = Bundle()
+            mBundle.putString("mText", teamNumber.toString())
+            fragment.arguments = mBundle
+            supportFragmentManager.beginTransaction()
+                .replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragment, "1").commit()
+        }
     }
 
     override fun onStintNotCreated() {
-        val fragment = DetailsStintActivity()
+        val fragment = DetailsStintFragment()
         fragment.onStintNotCreated()
     }
 
     override fun onBoxCreated(raceIdBox: String, teamName: String, teamNumber: Int, time: Double, stint: Int, activity: String) {
-        val fragment2 = BoxTimeFragment()
+        val fragment2 = DetailsStintFragment()
         fragment2.onBoxCreated(raceIdBox, teamName, teamNumber, time, stintId.toString().toInt(), activity = this.toString())
         val mBundle2 = Bundle()
         mBundle2.putString("mText",teamNumber.toString())
         fragment2.arguments = mBundle2
-        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.boxTimeData, fragment2, "2").commit()
+        supportFragmentManager.beginTransaction().replace(hu.bme.aut.android.enduranceoagb.R.id.stintData, fragment2, "2").commit()
     }
 
     override fun onBoxNotCreated() {

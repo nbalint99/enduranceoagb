@@ -114,7 +114,7 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                     showDetailsIntent.setClass(this.requireActivity(), RaceActivity::class.java)
                     showDetailsIntent.putExtra(RaceActivity.EXTRA_RACE_NAME, race?.id_r.toString())
                     startActivity(showDetailsIntent)
-                    if (!p0.result.child("Info").child("hasStintReady").value.toString().toBoolean()) {
+                    if (!p0.result.child(race?.id_r.toString()).child("Info").child("hasStintReady").value.toString().toBoolean()) {
                         dbRef.child(race?.id_r.toString()).child("Id").setValue(0)
                         val id = 0
                         dbRef.child(race?.id_r.toString()).child("Excel").child(id.toString()).child("stintNumber").setValue("-")

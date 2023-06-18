@@ -70,19 +70,25 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
             item = newItem
 
             if (item?.gp2 == true) {
-                if (item?.shortTeamName != null) {
-                    binding.tvName.text = item?.nameTeam + " (GP2) - " + item?.shortTeamName
+                if (item?.shortTeamName == "null") {
+                    binding.tvName.text = item?.nameTeam + " (GP2)"
+                }
+                else if (item?.shortTeamName == null) {
+                    binding.tvName.text = item?.nameTeam + " (GP2)"
                 }
                 else {
-                    binding.tvName.text = item?.nameTeam + " (GP2)"
+                    binding.tvName.text = item?.nameTeam + " (GP2) - " + item?.shortTeamName
                 }
             }
             else {
-                if (item?.shortTeamName != null) {
-                    binding.tvName.text = item?.nameTeam + " - " + item?.shortTeamName
+                if (item?.shortTeamName == "null") {
+                    binding.tvName.text = item?.nameTeam
+                }
+                else if (item?.shortTeamName == null) {
+                    binding.tvName.text = item?.nameTeam
                 }
                 else {
-                    binding.tvName.text = item?.nameTeam
+                    binding.tvName.text = item?.nameTeam + " - " + item?.shortTeamName
                 }
             }
 

@@ -95,7 +95,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
 
         binding.rvResult.adapter = adapter
 
-        //binding.rvResult.setItemViewCacheSize(11)
+        binding.rvResult.setItemViewCacheSize(16)
 
         loadItemsInBackground()
     }

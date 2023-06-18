@@ -145,8 +145,9 @@ class DetailsTeamCheckActivity : AppCompatActivity(), DetailsTeamCheckAdapter.De
                         val expectedKartNumber = p0.result.child("Stints").child(change).child("Info").child(pushTeamStint).child("expectedKartNumber").value.toString().toInt()
                         val shortTeamName = p0.result.child("Stints").child(change).child("Info").child(pushTeamStint).child("shortTeamName").value.toString()
                         val prevAvgWeight = p0.result.child("Stints").child(change).child("Info").child(pushTeamStint).child("prevAvgWeight").value.toString().toDoubleOrNull()
+                        val driverWeight = p0.result.child("Stints").child(change).child("Info").child(pushTeamStint).child("driverWeight").value.toString().toDoubleOrNull()
 
-                        val addStint = Stint(teamName.toString(), teamId.toString().toInt(), driver, i, shortTeamName, plusWeight, info, previousInfo, hasStintDone, prevAvgWeight, kartNumber, expectedKartNumber)
+                        val addStint = Stint(teamName.toString(), teamId.toString().toInt(), driver, i, shortTeamName, plusWeight, info, previousInfo, hasStintDone, prevAvgWeight, driverWeight, kartNumber, expectedKartNumber)
                         stint?.add(addStint)
                     }
 
