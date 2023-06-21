@@ -17,8 +17,7 @@ class ResultFragment : DialogFragment() {
     interface ResultFragmentListener {
         fun onResultCreated(
             result: Int,
-            team: String,
-            gp2: Boolean?
+            team: String
         )
 
         fun raceId(): String?
@@ -55,6 +54,7 @@ class ResultFragment : DialogFragment() {
         val gp2Bool: MutableList<Boolean> = mutableListOf()
         val membersList: MutableList<String> = mutableListOf()
         var sendMembersList: MutableList<String>? = mutableListOf()
+        var alreadyOnTheList: MutableList<String>? = mutableListOf()
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
@@ -67,16 +67,32 @@ class ResultFragment : DialogFragment() {
 
                 for (el in p0.result.child("Result").children) {
                     val resultTeam = el.child("team").value.toString()
-                    var checkNumber = 0
                     for (e in items) {
-                        if (e == resultTeam) {
-                            checkNumber++
+                        if (e !in resultTeam) {
+                            membersList.add(e)
+                            items.remove(e)
+                            break
                         }
                     }
-                    if (checkNumber == 0) {
-                        membersList.add(resultTeam)
+                }
+
+                for (ele in p0.result.child("Result").children) {
+                    val resultTeamEle = ele.child("team").value.toString()
+                    if (membersList != null) {
+                        for (i in membersList) {
+                            if (i == resultTeamEle) {
+                                alreadyOnTheList?.add(resultTeamEle)
+                            }
+                        }
                     }
                 }
+
+                if (alreadyOnTheList != null) {
+                    for (i in alreadyOnTheList) {
+                        membersList.remove(i)
+                    }
+                }
+
 
                 val selectOne = "-- Válassz egyet! --"
                 if (sendMembersList != null) {
@@ -103,10 +119,8 @@ class ResultFragment : DialogFragment() {
             .setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
                 val result: Int = dataPassed.toString().toInt()
                 val team: String = binding.spTeam.selectedItem.toString()
-                val itemId = binding.spTeam.selectedItemId.toInt()
-                val selectedWeight = gp2Bool[itemId]
 
-                listener.onResultCreated(result, team, selectedWeight)
+                listener.onResultCreated(result, team)
 
             }
             .setNegativeButton(hu.bme.aut.android.enduranceoagb.R.string.button_megse, null)

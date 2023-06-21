@@ -207,15 +207,22 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
         }
     }
 
-    override fun onResultCreated(result: Int, team: String, gp2: Boolean?) {
+    override fun onResultCreated(result: Int, team: String/*, gp2: Boolean?*/) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 dbRef.child("Result").child(result.toString()).child("team")
                     .setValue(team)
-                dbRef.child("Result").child(result.toString()).child("gp2").setValue(gp2)
-
+                val teams = p0.result.child("Teams").children
+                for (i in teams) {
+                    val teamName = i.child("Info").child("shortTeamName").value.toString()
+                    if (team == teamName) {
+                        val gp2 = i.child("Info").child("gp2").value.toString().toBoolean()
+                        dbRef.child("Result").child(result.toString()).child("gp2").setValue(gp2)
+                        break
+                    }
+                }
             }
         }
         loadItemsInBackground()

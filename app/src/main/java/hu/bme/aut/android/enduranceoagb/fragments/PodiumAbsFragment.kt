@@ -60,11 +60,19 @@ class PodiumAbsFragment : Fragment(), PodiumAdapter.PodiumItemClickListener {
                 val numberOfTeams =
                     p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                 for (element in 1..numberOfTeams) {
-
-                    val addResult = Result(p0.result.child("Result").child(element.toString()).child("team").value.toString(), p0.result.child("Result").child(element.toString()).child("gp2").value.toString().toBooleanStrictOrNull(), element)
+                    val resultTeam = p0.result.child("Result").child(element.toString()).child("team").value.toString()
                     if (items?.size!! < 3) {
-                        items.add(addResult)
-                        teams?.add(addResult.nameTeam)
+                        val teamsAll = p0.result.child("Teams").children
+                        for (i in teamsAll) {
+                            val teamName = i.child("Info").child("shortTeamName").value.toString()
+                            if (resultTeam == teamName) {
+                                val addTeam = i.child("Info").child("nameTeam").value.toString()
+                                val addResult = Result(addTeam, p0.result.child("Result").child(element.toString()).child("gp2").value.toString().toBooleanStrictOrNull(), element)
+                                items.add(addResult)
+                                teams?.add(addResult.nameTeam)
+                                break
+                            }
+                        }
                     }
                 }
 
