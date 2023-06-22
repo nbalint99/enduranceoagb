@@ -11,6 +11,10 @@ data class AllTeams(
     @ColumnInfo(name = "people") var people: Int?,
     @ColumnInfo(name = "joker") var joker: Int? = null,
     @ColumnInfo(name = "hasJokerRaced") var hasJokerRaced: Boolean? = null,
+    @ColumnInfo(name = "points") var points: Int? = null,
+    @ColumnInfo(name = "oldPoints") var oldPoints: Int? = null,
+    @ColumnInfo(name = "gp2Points") var gp2Points: Int? = null,
+    @ColumnInfo(name = "oldGp2Points") var oldGp2Points: Int? = null,
     @ColumnInfo(name = "gp2") var gp2: Boolean? = null,
     @ColumnInfo(name = "racesTeam") var racesTeam: Int
 )

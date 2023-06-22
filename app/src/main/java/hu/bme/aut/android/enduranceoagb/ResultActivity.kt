@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import hu.bme.aut.android.enduranceoagb.adapter.ResultAdapter
 import hu.bme.aut.android.enduranceoagb.adapter.TeamCheckAdapter
 import hu.bme.aut.android.enduranceoagb.data.Stint
@@ -20,11 +21,19 @@ import hu.bme.aut.android.enduranceoagb.databinding.ActivityResultBinding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityTeamcheckBinding
 import hu.bme.aut.android.enduranceoagb.fragments.NewStintFragment
 import hu.bme.aut.android.enduranceoagb.fragments.ResultFragment
+import java.util.*
 
 class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListener, ResultFragment.ResultFragmentListener {
     private lateinit var binding: ActivityResultBinding
 
     private lateinit var dbRef: DatabaseReference
+
+    private lateinit var dbRef2: DatabaseReference
+
+    private val c = Calendar.getInstance()
+
+    private val year = c.get(Calendar.YEAR)
+
     private lateinit var adapter: ResultAdapter
 
     companion object {
@@ -54,6 +63,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
             showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)
             showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
             startActivity(showDetailsIntent)
+            publishFinalResults()
         }
 
         initRecyclerView()
@@ -218,14 +228,140 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                 for (i in teams) {
                     val teamName = i.child("Info").child("shortTeamName").value.toString()
                     if (team == teamName) {
+                        val longTeamName = i.child("Info").child("nameTeam").value.toString()
                         val gp2 = i.child("Info").child("gp2").value.toString().toBoolean()
                         dbRef.child("Result").child(result.toString()).child("gp2").setValue(gp2)
+                        dbRef.child("Result").child(result.toString()).child("longTeamName").setValue(longTeamName)
                         break
                     }
                 }
             }
         }
         loadItemsInBackground()
+    }
+
+    private fun publishFinalResults() {
+        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+        dbRef.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val hasResultsDone = p0.result.child("Info").child("hasResultsDone").value.toString().toBooleanStrictOrNull()
+                if (hasResultsDone == false) {
+                    var gp2Result = 1
+                    val results = p0.result.child("Result").children
+                    var result = 1
+                    for (i in results) {
+                        val nameTeam = i.child("longTeamName").value.toString()
+                        val gp2 = i.child("gp2").value.toString().toBoolean()
+                        dbRef2 =
+                            FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                .getReference(year.toString())
+                        dbRef2.get().addOnCompleteListener { p1 ->
+                            if (p1.isSuccessful) {
+                                val currentPoints = p1.result.child("Teams").child(nameTeam)
+                                    .child("points").value.toString().toInt()
+                                val newPoints = currentPoints + pointGiving(result)
+                                dbRef2.child("Teams").child(nameTeam).child("points")
+                                    .setValue(newPoints)
+                                dbRef2.child("Teams").child(nameTeam).child("oldPoints")
+                                    .setValue(currentPoints)
+                                if (gp2) {
+                                    val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
+                                        .child("gp2Points").value.toString().toInt()
+                                    val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
+                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
+                                        .setValue(newPointsGp2)
+                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
+                                        .setValue(currentPointsGp2)
+                                    gp2Result++
+                                } else {
+                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
+                                        .setValue("-")
+                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
+                                        .setValue("-")
+                                }
+                                result++
+                            }
+                        }
+                    }
+                }
+                if (hasResultsDone == true) {
+                    var gp2Result = 1
+                    val results = p0.result.child("Result").children
+                    var result = 1
+                    for (i in results) {
+                        val nameTeam = i.child("longTeamName").value.toString()
+                        val gp2 = i.child("gp2").value.toString().toBoolean()
+                        dbRef2 =
+                            FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                .getReference(year.toString())
+                        dbRef2.get().addOnCompleteListener { p1 ->
+                            if (p1.isSuccessful) {
+                                val currentPoints = p1.result.child("Teams").child(nameTeam)
+                                    .child("oldPoints").value.toString().toInt()
+                                val newPoints = currentPoints + pointGiving(result)
+                                dbRef2.child("Teams").child(nameTeam).child("points")
+                                    .setValue(newPoints)
+                                dbRef2.child("Teams").child(nameTeam).child("oldPoints")
+                                    .setValue(currentPoints)
+                                if (gp2) {
+                                    val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
+                                        .child("oldGp2Points").value.toString().toInt()
+                                    val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
+                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
+                                        .setValue(newPointsGp2)
+                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
+                                        .setValue(currentPointsGp2)
+                                    gp2Result++
+                                } else {
+                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
+                                        .setValue("-")
+                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
+                                        .setValue("-")
+                                }
+                                result++
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun pointGiving(result: Int): Int {
+        when (result) {
+            1 -> {
+                return 25
+            }
+            2 -> {
+                return 18
+            }
+            3 -> {
+                return 15
+            }
+            4 -> {
+                return 12
+            }
+            5 -> {
+                return 10
+            }
+            6 -> {
+                return 8
+            }
+            7 -> {
+                return 6
+            }
+            8 -> {
+                return 4
+            }
+            9 -> {
+                return 2
+            }
+            10 -> {
+                return 1
+            }
+            else -> {return 0}
+        }
     }
 
 
