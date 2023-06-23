@@ -65,7 +65,7 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
-                        element.child("Info").child("hasQualiDone").value.toString().toInt())
+                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt())
                     if (element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }

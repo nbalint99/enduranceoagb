@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.room.ColumnInfo
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -100,6 +101,7 @@ class NewRaceFragment : DialogFragment() {
         hasRaceDone = false,
         petrolDone = false,
         hasTeamsDone = 0,
+        hasResultsDone = false,
         hasQualiDone = 0
     )
 }

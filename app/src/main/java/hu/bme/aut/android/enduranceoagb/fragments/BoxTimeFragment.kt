@@ -110,7 +110,8 @@ class BoxTimeFragment : Fragment(), BoxTimeAdapter.BoxTimeItemClickListener, New
                     val teamsGet = Teams(el.child("Info").child("nameTeam").value.toString(), el.child("Info").child("people").value.toString().toInt(),
                         el.child("Info").child("teamNumber").value.toString().toInt(), el.child("Info").child("avgWeight").value.toString().toDouble(),
                         el.child("Info").child("hasDriversDone").value.toString().toInt(), el.child("Info").child("startKartNumber").value.toString().toInt(),
-                        el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(), el.child("Info").child("shortTeamName").value.toString())
+                        el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString())
                     itemsTeams?.add(teamsGet)
                 }
                 val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt().toDouble()

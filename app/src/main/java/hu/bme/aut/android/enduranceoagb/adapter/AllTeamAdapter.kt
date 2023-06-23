@@ -27,7 +27,7 @@ class AllTeamAdapter(private val listener: AllTeamItemClickListener) :
     override fun onBindViewHolder(holder: AllTeamViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val teamItem = items[position]
 
-        holder.bind(teamItem)
+        holder.bind(teamItem, position)
 
     }
 
@@ -68,14 +68,30 @@ class AllTeamAdapter(private val listener: AllTeamItemClickListener) :
             binding.root.setOnLongClickListener { listener.onItemLongClick(item) }
         }
 
-        fun bind(newItem: AllTeams) {
+        fun bind(newItem: AllTeams, position: Int) {
             item = newItem
+
+            val place = position + 1
 
             if (item?.gp2 == true) {
                 binding.tvName.text = item?.nameTeam + " (GP2)"
             }
             else {
                 binding.tvName.text = item?.nameTeam
+            }
+
+            if (item?.points != null) {
+                binding.tvAllPoints.text = place.toString() + ". helyezett - " + item?.points.toString() + " pont"
+            }
+            else {
+                binding.tvAllPoints.text = ""
+            }
+
+            if (item?.gp2Points != null) {
+                binding.tvAllGP2Points.text = "GP2: " + item?.gp2Points.toString() + " pont"
+            }
+            else {
+                binding.tvAllGP2Points.text = ""
             }
 
             /*if (item?.hasDriversDone != item?.people) {

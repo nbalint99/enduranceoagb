@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.ColumnInfo
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -50,6 +51,10 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
                             element.child("people").value.toString().toIntOrNull(),
                             element.child("joker").value.toString().toIntOrNull(),
                             element.child("hasJokerRaced").value.toString().toBooleanStrictOrNull(),
+                            element.child("points").value.toString().toIntOrNull(),
+                            element.child("oldPoints").value.toString().toIntOrNull(),
+                            element.child("gp2Points").value.toString().toIntOrNull(),
+                            element.child("oldGp2Points").value.toString().toIntOrNull(),
                             element.child("gp2").value.toString().toBooleanStrictOrNull(),
                             element.child("racesTeam").value.toString().toInt()
                         )
@@ -137,6 +142,10 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
                         element.child("people").value.toString().toIntOrNull(),
                         element.child("joker").value.toString().toIntOrNull(),
                         element.child("hasJokerRaced").value.toString().toBooleanStrictOrNull(),
+                        element.child("points").value.toString().toIntOrNull(),
+                        element.child("oldPoints").value.toString().toIntOrNull(),
+                        element.child("gp2Points").value.toString().toIntOrNull(),
+                        element.child("oldGp2Points").value.toString().toIntOrNull(),
                         element.child("gp2").value.toString().toBooleanStrictOrNull(),
                         element.child("racesTeam").value.toString().toInt()
                     )
@@ -144,9 +153,9 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
                     items.add(addTeam)
                 }
 
-                //val sortedItems = items.sortedBy { it.teamNumber }
+                val sortedItems = items.sortedByDescending { it.points }
                 runOnUiThread {
-                    adapter.update2(items.toMutableList())
+                    adapter.update2(sortedItems.toMutableList())
                 }
             }
         }
@@ -155,7 +164,7 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
     override fun onTeamCreated(nameTeam: String, people: Int?, gp2: Boolean) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference(year.toString())
 
-        val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, gp2 = gp2, 0)
+        val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = gp2, 0)
         dbRef.child("Teams").child(nameTeam).setValue(newItem)
         runOnUiThread {
             adapter.addItem(newItem)

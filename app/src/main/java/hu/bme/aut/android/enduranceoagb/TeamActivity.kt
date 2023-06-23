@@ -70,6 +70,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                             element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                             element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                            element.child("Info").child("points").value.toString().toIntOrNull(),
                             element.child("Info").child("shortTeamName").value.toString()
                         )
                         items.add(addTeam)
@@ -97,6 +98,10 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                                 .toIntOrNull(),
                                             element.child("hasJokerRaced").value.toString()
                                                 .toBooleanStrictOrNull(),
+                                            element.child("points").value.toString().toIntOrNull(),
+                                            element.child("oldPoints").value.toString().toIntOrNull(),
+                                            element.child("gp2Points").value.toString().toIntOrNull(),
+                                            element.child("oldGp2Points").value.toString().toIntOrNull(),
                                             element.child("gp2").value.toString()
                                                 .toBooleanStrictOrNull(),
                                             element.child("racesTeam").value.toString()
@@ -274,33 +279,42 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
-                for (element in p0.result.child("Teams").children) {
-                    val addTeam = Teams(
-                        element.child("Info").child("nameTeam").value.toString(),
-                        element.child("Info").child("people").value.toString().toInt(),
-                        element.child("Info").child("teamNumber").value.toString().toIntOrNull(),
-                        element.child("Info").child("avgWeight").value.toString().toDoubleOrNull(),
-                        element.child("Info").child("hasDriversDone").value.toString().toInt(),
-                        element.child("Info").child("startKartNumber").value.toString().toIntOrNull(),
-                        element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
-                        element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
-                        element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
-                        element.child("Info").child("shortTeamName").value.toString()
-                    )
+                dbRef2 =
+                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                        .getReference(year.toString())
 
-                    items.add(addTeam)
+                dbRef2.get().addOnCompleteListener { p1 ->
+                    if (p1.isSuccessful) {
+                        for (element in p0.result.child("Teams").children) {
+                            val addTeam = Teams(
+                                element.child("Info").child("nameTeam").value.toString(),
+                                element.child("Info").child("people").value.toString().toInt(),
+                                element.child("Info").child("teamNumber").value.toString().toIntOrNull(),
+                                element.child("Info").child("avgWeight").value.toString().toDoubleOrNull(),
+                                element.child("Info").child("hasDriversDone").value.toString().toInt(),
+                                element.child("Info").child("startKartNumber").value.toString().toIntOrNull(),
+                                element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
+                                element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
+                                element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                                element.child("Info").child("points").value.toString().toIntOrNull(),
+                                element.child("Info").child("shortTeamName").value.toString()
+                            )
+                            items.add(addTeam)
+                        }
+
+                        val sortedItems = items.sortedWith(compareBy<Teams> { it.teamNumber }.thenByDescending { it.points })
+                        runOnUiThread {
+                            adapter.update2(sortedItems.toMutableList())
+                        }
+                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                        val missingTeams = numberOfTeams - items.size
+                        if (missingTeams != 0) {
+                            val snack = Snackbar.make(binding.root,"Még $missingTeams csapatot fel kell venned!", Snackbar.LENGTH_LONG)
+                            snack.show()
+                        }
+                    }
                 }
 
-                val sortedItems = items.sortedBy { it.teamNumber }
-                runOnUiThread {
-                    adapter.update2(sortedItems.toMutableList())
-                }
-                val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                val missingTeams = numberOfTeams - items.size
-                if (missingTeams != 0) {
-                    val snack = Snackbar.make(binding.root,"Még $missingTeams csapatot fel kell venned!", Snackbar.LENGTH_LONG)
-                    snack.show()
-                }
             }
         }
     }
@@ -308,14 +322,20 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
     override fun onTeamCreated(nameTeam: String, people: Int, gp2: Boolean) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
-        val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2)
-        dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
         dbRef2 =
             FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference(year.toString())
         dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
-        runOnUiThread {
-            adapter.addItem(newItem)
+        dbRef2.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val points = p0.result.child("Teams").child(nameTeam).child("points").value.toString().toIntOrNull()
+                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points)
+                dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
+
+                runOnUiThread {
+                    adapter.addItem(newItem)
+                }
+            }
         }
     }
 

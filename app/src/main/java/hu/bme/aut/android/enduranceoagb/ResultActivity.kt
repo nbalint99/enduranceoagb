@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import hu.bme.aut.android.enduranceoagb.adapter.ResultAdapter
 import hu.bme.aut.android.enduranceoagb.adapter.TeamCheckAdapter
+import hu.bme.aut.android.enduranceoagb.data.DoneStint
 import hu.bme.aut.android.enduranceoagb.data.Stint
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityResultBinding
@@ -59,10 +61,6 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
         binding.podium.visibility = View.INVISIBLE
 
         binding.podium.setOnClickListener {
-            val showDetailsIntent = Intent()
-            showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)
-            showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
-            startActivity(showDetailsIntent)
             publishFinalResults()
         }
 
@@ -128,6 +126,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                         element.child("Info").child("hasQualiDone").value.toString().toBoolean(),
                         element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                         element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
+                        element.child("Info").child("points").value.toString().toIntOrNull(),
                         element.child("Info").child("shortTeamName").value.toString()
                     )
 
@@ -274,55 +273,71 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                                     dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
                                         .setValue(currentPointsGp2)
                                     gp2Result++
-                                } else {
-                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
-                                        .setValue("-")
-                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
-                                        .setValue("-")
                                 }
                                 result++
                             }
                         }
                     }
+                    dbRef.child("Info").child("hasResultsDone").setValue(true)
+                    val showDetailsIntent = Intent()
+                    showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)
+                    showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                    startActivity(showDetailsIntent)
                 }
                 if (hasResultsDone == true) {
-                    var gp2Result = 1
-                    val results = p0.result.child("Result").children
-                    var result = 1
-                    for (i in results) {
-                        val nameTeam = i.child("longTeamName").value.toString()
-                        val gp2 = i.child("gp2").value.toString().toBoolean()
-                        dbRef2 =
-                            FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
-                                .getReference(year.toString())
-                        dbRef2.get().addOnCompleteListener { p1 ->
-                            if (p1.isSuccessful) {
-                                val currentPoints = p1.result.child("Teams").child(nameTeam)
-                                    .child("oldPoints").value.toString().toInt()
-                                val newPoints = currentPoints + pointGiving(result)
-                                dbRef2.child("Teams").child(nameTeam).child("points")
-                                    .setValue(newPoints)
-                                dbRef2.child("Teams").child(nameTeam).child("oldPoints")
-                                    .setValue(currentPoints)
-                                if (gp2) {
-                                    val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
-                                        .child("oldGp2Points").value.toString().toInt()
-                                    val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
-                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
-                                        .setValue(newPointsGp2)
-                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
-                                        .setValue(currentPointsGp2)
-                                    gp2Result++
-                                } else {
-                                    dbRef2.child("Teams").child(nameTeam).child("gp2Points")
-                                        .setValue("-")
-                                    dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
-                                        .setValue("-")
+                    val builder2: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(
+                        this,
+                        android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                    )
+
+                    builder2.setTitle("A végeredmény már létrejött! Szeretnéd, hogy a mostani állás szerint legyen újrapontozva a verseny?")
+                    builder2.setMessage(" Ha ez egy korábbi verseny, akkor nyomj NEMET! Ha módosuljon a pontozás, akkor nyomj IGENT!")
+                    builder2.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { _, _ ->
+                        var gp2Result = 1
+                        val results = p0.result.child("Result").children
+                        var result = 1
+                        for (i in results) {
+                            val nameTeam = i.child("longTeamName").value.toString()
+                            val gp2 = i.child("gp2").value.toString().toBoolean()
+                            dbRef2 =
+                                FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                    .getReference(year.toString())
+                            dbRef2.get().addOnCompleteListener { p1 ->
+                                if (p1.isSuccessful) {
+                                    val currentPoints = p1.result.child("Teams").child(nameTeam)
+                                        .child("oldPoints").value.toString().toInt()
+                                    val newPoints = currentPoints + pointGiving(result)
+                                    dbRef2.child("Teams").child(nameTeam).child("points")
+                                        .setValue(newPoints)
+                                    dbRef2.child("Teams").child(nameTeam).child("oldPoints")
+                                        .setValue(currentPoints)
+                                    if (gp2) {
+                                        val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
+                                            .child("oldGp2Points").value.toString().toInt()
+                                        val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
+                                        dbRef2.child("Teams").child(nameTeam).child("gp2Points")
+                                            .setValue(newPointsGp2)
+                                        dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
+                                            .setValue(currentPointsGp2)
+                                        gp2Result++
+                                    }
+                                    result++
                                 }
-                                result++
                             }
                         }
+                        val showDetailsIntent = Intent()
+                        showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                        startActivity(showDetailsIntent)
                     }
+                    builder2.setNegativeButton(R.string.no) { _, _ ->
+                        val showDetailsIntent = Intent()
+                        showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                        startActivity(showDetailsIntent)
+                    }
+                    builder2.setNeutralButton(R.string.button_megse, null)
+                    builder2.show()
                 }
             }
         }

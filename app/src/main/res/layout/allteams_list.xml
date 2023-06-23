@@ -24,11 +24,12 @@
             android:textSize="25sp"
             tools:text="@string/nameTeam" />
         <TextView
-            android:id="@+id/tvNumberOfTeam"
+            android:id="@+id/tvAllPoints"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="21sp" />
         <TextView
-            android:id="@+id/tvKartNumber"
+            android:id="@+id/tvAllGP2Points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"/>
