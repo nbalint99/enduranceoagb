@@ -464,6 +464,10 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             if (detailsStintItem.hasStintDone) {
                 holder.itemView.setBackgroundResource(R.color.pink)
             }
+            if (!detailsStintItem.hasStintDone) {
+                holder.itemView.setBackgroundResource(R.color.blueLight)
+                holder.itemView.background.alpha = 30
+            }
             holder.binding.plus5Button.setOnClickListener {
                 item.initialTime += 5000.0
                 initPenalty += 5
@@ -571,6 +575,10 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             holder.binding.tvActualTime.text = ""
         }
         if (item.hasDone) {
+            if (!detailsStintItem.hasStintDone) {
+                holder.itemView.setBackgroundResource(R.color.blueLight)
+                holder.itemView.background.alpha = 30
+            }
             holder.binding.tvActualTime.setTextColor(Color.BLACK)
             val minIniActual = (item.actualTime!! / 60000 % 60).toInt()
             val secIniActual = (item.actualTime!! / 1000 % 60).toInt()

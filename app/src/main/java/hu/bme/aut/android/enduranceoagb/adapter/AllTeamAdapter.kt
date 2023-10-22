@@ -81,46 +81,29 @@ class AllTeamAdapter(private val listener: AllTeamItemClickListener) :
             }
 
             if (item?.points != null) {
-                binding.tvAllPoints.text = place.toString() + ". helyezett - " + item?.points.toString() + " pont"
+                if (item?.totalPoints != item?.points) {
+                    binding.tvAllPoints.text = place.toString() + ". helyezett - " + item?.points.toString() + " pont (" + item?.totalPoints.toString() + " pont)"
+                }
+                else {
+                    binding.tvAllPoints.text =
+                        place.toString() + ". helyezett - " + item?.points.toString() + " pont"
+                }
             }
             else {
                 binding.tvAllPoints.text = ""
             }
 
             if (item?.gp2Points != null) {
-                binding.tvAllGP2Points.text = "GP2: " + item?.gp2Points.toString() + " pont"
+                if (item?.totalGp2Points != item?.gp2Points) {
+                    binding.tvAllGP2Points.text = "GP2: " + item?.gp2Points.toString() + " pont (" + item?.totalGp2Points.toString() + " pont)"
+                }
+                else {
+                    binding.tvAllGP2Points.text = "GP2: " + item?.gp2Points.toString() + " pont"
+                }
             }
             else {
                 binding.tvAllGP2Points.text = ""
             }
-
-            /*if (item?.hasDriversDone != item?.people) {
-                binding.tvWarn.text = "Vedd fel a versenyzőket!"
-            }
-            else {
-                binding.tvWarn.text = ""
-            }
-
-            if (item?.teamNumber == null) {
-                binding.tvNumberOfTeam.text = "Még nincs csapatszáma a csapatnak"
-            }
-            else {
-                binding.tvNumberOfTeam.text = item?.teamNumber.toString() + ". csapat "
-            }
-
-            if (item?.startKartNumber == null) {
-                binding.tvKartNumber.text = ""
-            }
-            else if (item?.teamNumber == null) {
-                binding.tvKartNumber.text = "Időmérős gépszám: " + item?.startKartNumber.toString()
-            }
-            else if (item?.teamNumber != null) {
-                binding.tvKartNumber.text = "Rajtolós gokartszám: " + item?.startKartNumber.toString()
-            }
-
-            binding.ibAdd.setOnClickListener {
-                listener.onTeamSelected(item?.nameTeam, item?.people, item?.joker, item?.hasJokerRaced, item?.gp2)
-            }*/
         }
     }
 }

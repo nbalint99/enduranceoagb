@@ -32,7 +32,7 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
     ): View {
         val binding = RacedonefragmentBinding.inflate(layoutInflater)
 
-        Firebase.database.setPersistenceEnabled(true)
+        //Firebase.database.setPersistenceEnabled(true)
 
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this.context)
 
@@ -65,7 +65,8 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
-                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt())
+                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
+                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull())
                     if (element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }

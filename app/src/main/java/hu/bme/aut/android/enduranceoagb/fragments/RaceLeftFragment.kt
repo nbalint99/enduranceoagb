@@ -24,12 +24,17 @@ import hu.bme.aut.android.enduranceoagb.RaceActivity
 import hu.bme.aut.android.enduranceoagb.adapter.RaceAdapter
 import hu.bme.aut.android.enduranceoagb.data.Races
 import hu.bme.aut.android.enduranceoagb.databinding.RaceleftfragmentBinding
+import java.util.*
 import kotlin.concurrent.thread
 
 class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceFragment.NewRaceListener {
     private lateinit var rvAdapter: RaceAdapter
 
     private lateinit var dbRef: DatabaseReference
+
+    private val cal = Calendar.getInstance()
+
+    private val year2 = cal.get(Calendar.YEAR).toString()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +43,7 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
     ): View {
         val binding = RaceleftfragmentBinding.inflate(layoutInflater)
 
-        Firebase.database.setPersistenceEnabled(true)
+        //Firebase.database.setPersistenceEnabled(true)
 
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this.context)
 
@@ -72,7 +77,8 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                                         element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
                                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
-                                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt())
+                                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
+                                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull())
                     if (!element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }
@@ -104,7 +110,8 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
-                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt())
+                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
+                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull())
                     if (!element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }
@@ -211,7 +218,8 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         if (nameRaceEdit.text.toString()
                                 .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..15
                         ) {
-                            dbRef.child(key).child("Info").child("nameR").setValue(nameRaceEdit.text.toString())
+                            dbRef.child(key).child("Info").child("numberOfRace").setValue(nameRaceEdit.text.toString())
+                            dbRef.child(key).child("Info").child("nameR").setValue(year2 + " - " + nameRaceEdit.text.toString() + ". verseny")
                             dbRef.child(key).child("Info").child("numberOfTeams").setValue(numberOfTeamsEdit.text.toString())
 
                             if (cbActual.isChecked) {

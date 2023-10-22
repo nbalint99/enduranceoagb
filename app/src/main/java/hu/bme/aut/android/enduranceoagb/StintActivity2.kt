@@ -160,17 +160,38 @@ class StintActivity2 : FragmentActivity() {
                                                 if (parkingKart.text.isNotEmpty()) {
                                                     val newKart = parkingKart.text.toString()
                                                     var numberOfStint = (element.child("numberOfStint").value.toString().toInt() - 1).toString()
+                                                    val id = p0.result.child("Id").value.toString().toInt()
                                                     if (numberOfStint.toInt() in 1..9) {
                                                         numberOfStint = "0$numberOfStint"
                                                         val getKart = p0.result.child("Cserék").child("Etap: $numberOfStint").child("3 - Gépszámok").child("${teamKart.selectedItemId+1}").value.toString()
-                                                        val pushKart = getKart + "és" + newKart
+                                                        val pushKart = "$getKart és $newKart"
                                                         dbRef.child("Cserék").child("Etap: $numberOfStint").child("3 - Gépszámok").child("${teamKart.selectedItemId+1}").setValue(pushKart)
+                                                        for (el in 1..id) {
+                                                            val stintExcel = p0.result.child("Excel").child(el.toString()).child("stintNumber").value.toString()
+                                                            val teamNumberExcel = p0.result.child("Excel").child(el.toString()).child("teamNumber").value.toString()
+                                                            val numberStint = element.child("numberOfStint").value.toString().toInt() - 1
+                                                            val stintFull = "$numberStint. etap"
+                                                            val teamReal = "${teamKart.selectedItemId+1}. csapat"
+                                                            if (teamNumberExcel == teamReal && stintExcel == stintFull) {
+                                                                dbRef.child("Excel").child(el.toString()).child("kartNumber").setValue(pushKart)
+                                                            }
+                                                        }
                                                     }
                                                     else {
                                                         val numberOfStintNormal = (element.child("numberOfStint").value.toString().toInt() - 1).toString()
                                                         val getKart = p0.result.child("Cserék").child("Etap: $numberOfStintNormal").child("3 - Gépszámok").child("${teamKart.selectedItemId+1}").value.toString()
-                                                        val pushKart = getKart + "és" + newKart
+                                                        val pushKart = "$getKart és $newKart"
                                                         dbRef.child("Cserék").child("Etap: $numberOfStintNormal").child("3 - Gépszámok").child("${teamKart.selectedItemId+1}").setValue(pushKart)
+                                                        for (el in 1..id) {
+                                                            val stintExcel = p0.result.child("Excel").child(el.toString()).child("stintNumber").value.toString()
+                                                            val teamNumberExcel = p0.result.child("Excel").child(el.toString()).child("teamNumber").value.toString()
+                                                            val numberStint = element.child("numberOfStint").value.toString().toInt() - 1
+                                                            val stintFull = "$numberStint. etap"
+                                                            val teamReal = "${teamKart.selectedItemId+1}. csapat"
+                                                            if (teamNumberExcel == teamReal && stintExcel == stintFull) {
+                                                                dbRef.child("Excel").child(el.toString()).child("kartNumber").setValue(pushKart)
+                                                            }
+                                                        }
                                                     }
                                                     val numberOfStintReal = (element.child("numberOfStint").value.toString().toInt() - 1).toString()
                                                     dbRef.child("Stints").child("Etap: $numberOfStintReal").child("Info").child("$numberOfStintReal-${teamKart.selectedItemId+1}").child("kartNumber").setValue(newKart)

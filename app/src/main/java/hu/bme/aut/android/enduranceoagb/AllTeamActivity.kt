@@ -56,7 +56,39 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
                             element.child("gp2Points").value.toString().toIntOrNull(),
                             element.child("oldGp2Points").value.toString().toIntOrNull(),
                             element.child("gp2").value.toString().toBooleanStrictOrNull(),
-                            element.child("racesTeam").value.toString().toInt()
+                            element.child("racesTeam").value.toString().toInt(),
+                            element.child("totalPoints").value.toString().toIntOrNull(),
+                            element.child("totalGp2Points").value.toString().toIntOrNull(),
+                            element.child("one").value.toString().toIntOrNull(),
+                            element.child("two").value.toString().toIntOrNull(),
+                            element.child("three").value.toString().toIntOrNull(),
+                            element.child("four").value.toString().toIntOrNull(),
+                            element.child("five").value.toString().toIntOrNull(),
+                            element.child("six").value.toString().toIntOrNull(),
+                            element.child("seven").value.toString().toIntOrNull(),
+                            element.child("eight").value.toString().toIntOrNull(),
+                            element.child("nine").value.toString().toIntOrNull(),
+                            element.child("ten").value.toString().toIntOrNull(),
+                            element.child("eleven").value.toString().toIntOrNull(),
+                            element.child("twelve").value.toString().toIntOrNull(),
+                            element.child("thirteen").value.toString().toIntOrNull(),
+                            element.child("fourteen").value.toString().toIntOrNull(),
+                            element.child("fifteen").value.toString().toIntOrNull(),
+                            element.child("oneGp2").value.toString().toIntOrNull(),
+                            element.child("twoGp2").value.toString().toIntOrNull(),
+                            element.child("threeGp2").value.toString().toIntOrNull(),
+                            element.child("fourGp2").value.toString().toIntOrNull(),
+                            element.child("fiveGp2").value.toString().toIntOrNull(),
+                            element.child("sixGp2").value.toString().toIntOrNull(),
+                            element.child("sevenGp2").value.toString().toIntOrNull(),
+                            element.child("eightGp2").value.toString().toIntOrNull(),
+                            element.child("nineGp2").value.toString().toIntOrNull(),
+                            element.child("tenGp2").value.toString().toIntOrNull(),
+                            element.child("elevenGp2").value.toString().toIntOrNull(),
+                            element.child("twelveGp2").value.toString().toIntOrNull(),
+                            element.child("thirteenGp2").value.toString().toIntOrNull(),
+                            element.child("fourteenGp2").value.toString().toIntOrNull(),
+                            element.child("fifteenGp2").value.toString().toIntOrNull()
                         )
                         items.add(addTeam)
                     }
@@ -134,6 +166,8 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
 
         val items : MutableList<AllTeams> = mutableListOf()
 
+        val itemsTotal : MutableList<AllTeams> = mutableListOf()
+
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 for (element in p0.result.child("Teams").children) {
@@ -147,15 +181,79 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
                         element.child("gp2Points").value.toString().toIntOrNull(),
                         element.child("oldGp2Points").value.toString().toIntOrNull(),
                         element.child("gp2").value.toString().toBooleanStrictOrNull(),
-                        element.child("racesTeam").value.toString().toInt()
+                        element.child("racesTeam").value.toString().toInt(),
+                        element.child("totalPoints").value.toString().toIntOrNull(),
+                        element.child("totalGp2Points").value.toString().toIntOrNull(),
+                        element.child("one").value.toString().toIntOrNull(),
+                        element.child("two").value.toString().toIntOrNull(),
+                        element.child("three").value.toString().toIntOrNull(),
+                        element.child("four").value.toString().toIntOrNull(),
+                        element.child("five").value.toString().toIntOrNull(),
+                        element.child("six").value.toString().toIntOrNull(),
+                        element.child("seven").value.toString().toIntOrNull(),
+                        element.child("eight").value.toString().toIntOrNull(),
+                        element.child("nine").value.toString().toIntOrNull(),
+                        element.child("ten").value.toString().toIntOrNull(),
+                        element.child("eleven").value.toString().toIntOrNull(),
+                        element.child("twelve").value.toString().toIntOrNull(),
+                        element.child("thirteen").value.toString().toIntOrNull(),
+                        element.child("fourteen").value.toString().toIntOrNull(),
+                        element.child("fifteen").value.toString().toIntOrNull(),
+                        element.child("oneGp2").value.toString().toIntOrNull(),
+                        element.child("twoGp2").value.toString().toIntOrNull(),
+                        element.child("threeGp2").value.toString().toIntOrNull(),
+                        element.child("fourGp2").value.toString().toIntOrNull(),
+                        element.child("fiveGp2").value.toString().toIntOrNull(),
+                        element.child("sixGp2").value.toString().toIntOrNull(),
+                        element.child("sevenGp2").value.toString().toIntOrNull(),
+                        element.child("eightGp2").value.toString().toIntOrNull(),
+                        element.child("nineGp2").value.toString().toIntOrNull(),
+                        element.child("tenGp2").value.toString().toIntOrNull(),
+                        element.child("elevenGp2").value.toString().toIntOrNull(),
+                        element.child("twelveGp2").value.toString().toIntOrNull(),
+                        element.child("thirteenGp2").value.toString().toIntOrNull(),
+                        element.child("fourteenGp2").value.toString().toIntOrNull(),
+                        element.child("fifteenGp2").value.toString().toIntOrNull()
                     )
 
                     items.add(addTeam)
                 }
 
                 val sortedItems = items.sortedByDescending { it.points }
+                for (i in sortedItems) {
+                    if (i.racesTeam == 9) {
+                        var minimumPoint = 100
+                        var minimumPointGp2 = 100
+                        for (el in p0.result.child("Teams").child(i.nameTeam).child("races").children) {
+                            val actualPoint = el.child("points").value.toString().toInt()
+                            if (actualPoint < minimumPoint) {
+                                minimumPoint = actualPoint
+                            }
+                            if (i.gp2 == true) {
+                                val actualPointGp2 = el.child("pointsGp2").value.toString().toInt()
+                                if (actualPointGp2 < minimumPointGp2) {
+                                    minimumPointGp2 = actualPointGp2
+                                }
+                            }
+                        }
+                        if (i.gp2 == true) {
+                            i.totalGp2Points = i.gp2Points
+                            val realGp2Points = i.totalGp2Points?.minus(minimumPointGp2)
+                            i.gp2Points = realGp2Points
+                        }
+                        i.totalPoints = i.points
+                        val realPoints = i.totalPoints?.minus(minimumPoint)
+                        i.points = realPoints
+                    }
+                    itemsTotal.add(i)
+                }
+
+                val sortedTotalItems = itemsTotal.sortedWith(compareByDescending<AllTeams> { it.points }.thenByDescending { it.totalPoints }.thenByDescending { it.one }.thenByDescending { it.two }.thenByDescending { it.three }.thenByDescending { it.four }
+                    .thenByDescending { it.five }.thenByDescending { it.six }.thenByDescending { it.seven }.thenByDescending { it.eight }.thenByDescending { it.nine }.thenByDescending { it.ten }.thenByDescending { it.eleven }.thenByDescending { it.twelve }
+                    .thenByDescending { it.thirteen }.thenByDescending { it.fourteen }.thenByDescending { it.fifteen }.thenByDescending { it.gp2Points })
+
                 runOnUiThread {
-                    adapter.update2(sortedItems.toMutableList())
+                    adapter.update2(sortedTotalItems.toMutableList())
                 }
             }
         }
@@ -164,7 +262,9 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
     override fun onTeamCreated(nameTeam: String, people: Int?, gp2: Boolean) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference(year.toString())
 
-        val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = gp2, 0)
+        val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = gp2, 0, 0, 0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0)
         dbRef.child("Teams").child(nameTeam).setValue(newItem)
         runOnUiThread {
             adapter.addItem(newItem)

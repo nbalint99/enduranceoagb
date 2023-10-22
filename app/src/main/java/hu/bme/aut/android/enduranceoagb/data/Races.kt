@@ -16,5 +16,6 @@ data class Races(
     @ColumnInfo(name = "petrolDone") var petrolDone: Boolean,
     @ColumnInfo(name = "hasTeamsDone") var hasTeamsDone: Int,
     @ColumnInfo(name = "hasResultsDone") var hasResultsDone: Boolean,
-    @ColumnInfo(name = "hasRaceDone") var hasQualiDone: Int
+    @ColumnInfo(name = "hasRaceDone") var hasQualiDone: Int,
+    @ColumnInfo(name = "numberOfRace") var numberOfRace: Int? = null
 )

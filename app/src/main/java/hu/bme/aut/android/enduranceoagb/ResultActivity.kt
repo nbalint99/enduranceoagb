@@ -245,6 +245,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val hasResultsDone = p0.result.child("Info").child("hasResultsDone").value.toString().toBooleanStrictOrNull()
+                val numberOfRace = p0.result.child("Info").child("numberOfRace").value.toString().toInt()
                 if (hasResultsDone == false) {
                     var gp2Result = 1
                     val results = p0.result.child("Result").children
@@ -262,19 +263,30 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                                 val newPoints = currentPoints + pointGiving(result)
                                 dbRef2.child("Teams").child(nameTeam).child("points")
                                     .setValue(newPoints)
+                                dbRef2.child("Teams").child(nameTeam).child("totalPoints")
+                                    .setValue(newPoints)
                                 dbRef2.child("Teams").child(nameTeam).child("oldPoints")
                                     .setValue(currentPoints)
+                                dbRef2.child("Teams").child(nameTeam).child(resultFun(result)).setValue(ServerValue.increment(1))
+                                dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("result").setValue(result)
+                                dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("points").setValue(pointGiving(result))
                                 if (gp2) {
                                     val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
                                         .child("gp2Points").value.toString().toInt()
                                     val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
                                     dbRef2.child("Teams").child(nameTeam).child("gp2Points")
                                         .setValue(newPointsGp2)
+                                    dbRef2.child("Teams").child(nameTeam).child("totalGp2Points")
+                                        .setValue(newPointsGp2)
                                     dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
                                         .setValue(currentPointsGp2)
+                                    dbRef2.child("Teams").child(nameTeam).child(resultFunGp2(gp2Result)).setValue(ServerValue.increment(1))
+                                    dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("resultGp2").setValue(gp2Result)
+                                    dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("pointsGp2").setValue(pointGiving(gp2Result))
                                     gp2Result++
                                 }
                                 result++
+                                dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
                             }
                         }
                     }
@@ -309,16 +321,30 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                                     val newPoints = currentPoints + pointGiving(result)
                                     dbRef2.child("Teams").child(nameTeam).child("points")
                                         .setValue(newPoints)
+                                    dbRef2.child("Teams").child(nameTeam).child("totalPoints")
+                                        .setValue(newPoints)
                                     dbRef2.child("Teams").child(nameTeam).child("oldPoints")
                                         .setValue(currentPoints)
+                                    val oldResult = p1.result.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("result").value.toString().toInt()
+                                    dbRef2.child("Teams").child(nameTeam).child(resultFun(oldResult)).setValue(ServerValue.increment(-1))
+                                    dbRef2.child("Teams").child(nameTeam).child(resultFun(result)).setValue(ServerValue.increment(1))
+                                    dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("result").setValue(result)
+                                    dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("points").setValue(pointGiving(result))
                                     if (gp2) {
                                         val currentPointsGp2 = p1.result.child("Teams").child(nameTeam)
                                             .child("oldGp2Points").value.toString().toInt()
                                         val newPointsGp2 = currentPointsGp2 + pointGiving(gp2Result)
                                         dbRef2.child("Teams").child(nameTeam).child("gp2Points")
                                             .setValue(newPointsGp2)
+                                        dbRef2.child("Teams").child(nameTeam).child("totalGp2Points")
+                                            .setValue(newPointsGp2)
                                         dbRef2.child("Teams").child(nameTeam).child("oldGp2Points")
                                             .setValue(currentPointsGp2)
+                                        val oldGp2Result = p1.result.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("resultGp2").value.toString().toInt()
+                                        dbRef2.child("Teams").child(nameTeam).child(resultFunGp2(oldGp2Result)).setValue(ServerValue.increment(-1))
+                                        dbRef2.child("Teams").child(nameTeam).child(resultFunGp2(gp2Result)).setValue(ServerValue.increment(1))
+                                        dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("resultGp2").setValue(gp2Result)
+                                        dbRef2.child("Teams").child(nameTeam).child("races").child(numberOfRace.toString()).child("pointsGp2").setValue(pointGiving(gp2Result))
                                         gp2Result++
                                     }
                                     result++
@@ -376,6 +402,108 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                 return 1
             }
             else -> {return 0}
+        }
+    }
+
+    private fun resultFun(result: Int): String {
+        when (result) {
+            1 -> {
+                return "one"
+            }
+            2 -> {
+                return "two"
+            }
+            3 -> {
+                return "three"
+            }
+            4 -> {
+                return "four"
+            }
+            5 -> {
+                return "five"
+            }
+            6 -> {
+                return "six"
+            }
+            7 -> {
+                return "seven"
+            }
+            8 -> {
+                return "eight"
+            }
+            9 -> {
+                return "nine"
+            }
+            10 -> {
+                return "ten"
+            }
+            11 -> {
+                return "eleven"
+            }
+            12 -> {
+                return "twelve"
+            }
+            13 -> {
+                return "thirteen"
+            }
+            14 -> {
+                return "fourteen"
+            }
+            15 -> {
+                return "fifteen"
+            }
+            else -> {return "other"}
+        }
+    }
+
+    private fun resultFunGp2(result: Int): String {
+        when (result) {
+            1 -> {
+                return "oneGp2"
+            }
+            2 -> {
+                return "twoGp2"
+            }
+            3 -> {
+                return "threeGp2"
+            }
+            4 -> {
+                return "fourGp2"
+            }
+            5 -> {
+                return "fiveGp2"
+            }
+            6 -> {
+                return "sixGp2"
+            }
+            7 -> {
+                return "sevenGp2"
+            }
+            8 -> {
+                return "eightGp2"
+            }
+            9 -> {
+                return "nineGp2"
+            }
+            10 -> {
+                return "tenGp2"
+            }
+            11 -> {
+                return "elevenGp2"
+            }
+            12 -> {
+                return "twelveGp2"
+            }
+            13 -> {
+                return "thirteenGp2"
+            }
+            14 -> {
+                return "fourteenGp2"
+            }
+            15 -> {
+                return "fifteenGp2"
+            }
+            else -> {return "other"}
         }
     }
 

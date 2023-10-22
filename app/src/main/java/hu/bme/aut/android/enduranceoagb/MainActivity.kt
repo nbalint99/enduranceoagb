@@ -1,28 +1,18 @@
 package hu.bme.aut.android.enduranceoagb
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.android.enduranceoagb.data.Races
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityMainBinding
 import hu.bme.aut.android.enduranceoagb.fragments.NewRaceFragment
 import hu.bme.aut.android.enduranceoagb.ui.main.SectionsPagerAdapter
-import java.util.*
-import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity(), NewRaceFragment.NewRaceListener {
@@ -35,8 +25,8 @@ class MainActivity : AppCompatActivity(), NewRaceFragment.NewRaceListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Firebase.database.setPersistenceEnabled(true)
+        
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

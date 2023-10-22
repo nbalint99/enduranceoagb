@@ -93,7 +93,7 @@ class NewRaceFragment : DialogFragment() {
 
 
     private fun getRaceItem() = Races(
-        nameR = year2 + " - " + binding.etNameRace.text.toString(),
+        nameR = year2 + " - " + binding.etNameRace.text.toString() + ". verseny",
         location = binding.etNewLocation.text.toString(),
         numberOfTeams = binding.etNewRaceTeams.text.toString().toInt(),
         allStintNumber = binding.etNewRaceTeams.text.toString().toInt() + 1,
@@ -102,6 +102,7 @@ class NewRaceFragment : DialogFragment() {
         petrolDone = false,
         hasTeamsDone = 0,
         hasResultsDone = false,
-        hasQualiDone = 0
+        hasQualiDone = 0,
+        numberOfRace = binding.etNameRace.text.toString().toInt()
     )
 }

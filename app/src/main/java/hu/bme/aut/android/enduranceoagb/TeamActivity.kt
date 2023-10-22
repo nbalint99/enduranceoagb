@@ -105,7 +105,39 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                             element.child("gp2").value.toString()
                                                 .toBooleanStrictOrNull(),
                                             element.child("racesTeam").value.toString()
-                                                .toInt()
+                                                .toInt(),
+                                            element.child("totalPoints").value.toString().toIntOrNull(),
+                                            element.child("totalGp2Points").value.toString().toIntOrNull(),
+                                            element.child("one").value.toString().toIntOrNull(),
+                                            element.child("two").value.toString().toIntOrNull(),
+                                            element.child("three").value.toString().toIntOrNull(),
+                                            element.child("four").value.toString().toIntOrNull(),
+                                            element.child("five").value.toString().toIntOrNull(),
+                                            element.child("six").value.toString().toIntOrNull(),
+                                            element.child("seven").value.toString().toIntOrNull(),
+                                            element.child("eight").value.toString().toIntOrNull(),
+                                            element.child("nine").value.toString().toIntOrNull(),
+                                            element.child("ten").value.toString().toIntOrNull(),
+                                            element.child("eleven").value.toString().toIntOrNull(),
+                                            element.child("twelve").value.toString().toIntOrNull(),
+                                            element.child("thirteen").value.toString().toIntOrNull(),
+                                            element.child("fourteen").value.toString().toIntOrNull(),
+                                            element.child("fifteen").value.toString().toIntOrNull(),
+                                            element.child("oneGp2").value.toString().toIntOrNull(),
+                                            element.child("twoGp2").value.toString().toIntOrNull(),
+                                            element.child("threeGp2").value.toString().toIntOrNull(),
+                                            element.child("fourGp2").value.toString().toIntOrNull(),
+                                            element.child("fiveGp2").value.toString().toIntOrNull(),
+                                            element.child("sixGp2").value.toString().toIntOrNull(),
+                                            element.child("sevenGp2").value.toString().toIntOrNull(),
+                                            element.child("eightGp2").value.toString().toIntOrNull(),
+                                            element.child("nineGp2").value.toString().toIntOrNull(),
+                                            element.child("tenGp2").value.toString().toIntOrNull(),
+                                            element.child("elevenGp2").value.toString().toIntOrNull(),
+                                            element.child("twelveGp2").value.toString().toIntOrNull(),
+                                            element.child("thirteenGp2").value.toString().toIntOrNull(),
+                                            element.child("fourteenGp2").value.toString().toIntOrNull(),
+                                            element.child("fifteenGp2").value.toString().toIntOrNull()
                                         )
                                         items2.add(addTeam2)
                                     }
@@ -325,7 +357,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         dbRef2 =
             FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference(year.toString())
-        dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
+        //dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
         dbRef2.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val points = p0.result.child("Teams").child(nameTeam).child("points").value.toString().toIntOrNull()
@@ -457,7 +489,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                         }
 
                                         dbRef.child("Teams").child(team.nameTeam).removeValue()
-                                        dbRef2.child("Teams").child(team.nameTeam).child("racesTeam").setValue(ServerValue.increment(-1))
+                                        //dbRef2.child("Teams").child(team.nameTeam).child("racesTeam").setValue(ServerValue.increment(-1))
                                     }
                                 }
                             }

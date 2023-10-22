@@ -37,7 +37,12 @@ class WelcomeActivity : AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (Firebase.auth.currentUser != null) {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
+        val intent = Intent(this@WelcomeActivity, MainActivity::class.java)
+        startActivity(intent)
+
+        /*if (Firebase.auth.currentUser != null) {
             binding.tvUser.text = Firebase.auth.currentUser!!.email
         }
         else {
@@ -51,7 +56,7 @@ class WelcomeActivity : AppCompatActivity() {
                 val raceName = p0.result.child("Actual").child("name").value.toString()
                 binding.tvRaceName.text = raceName
             }
-        }
+        }*/
 
         /*binding.signOut.setOnClickListener {
             Firebase.auth.signOut()

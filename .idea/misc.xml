@@ -16,8 +16,9 @@
         <entry key="app/src/main/res/layout/activity_detailsstintwatch2.xml" value="0.12" />
         <entry key="app/src/main/res/layout/activity_detailsteamcheck.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_driver.xml" value="0.3609375" />
+        <entry key="app/src/main/res/layout/activity_firebasehandler.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.18489583333333334" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_podium.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_quali.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/layout/activity_race.xml" value="0.18541666666666667" />
