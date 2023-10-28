@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -55,7 +56,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
     ): View {
         val binding = ActivityDetailsstintBinding.inflate(layoutInflater)
 
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this.context)
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this.context, 2)
 
         binding.rvMainDetailsStint.setLayoutManager(layoutManager)
 

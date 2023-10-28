@@ -58,14 +58,14 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
 
 
         if (detailsStintItem.numberStint != 1) {
-            holder.binding.tvPrevDriver.text = detailsStintItem.prevDriverName
+            /*holder.binding.tvPrevDriver.text = detailsStintItem.prevDriverName
             holder.binding.tvPrevKart.text = "Gokart: " + detailsStintItem.prevKartNumber
             holder.binding.tvPrevWeight.text = detailsStintItem.prevPlusWeight.toString() + " kg"
             holder.binding.tvComing.text = "Érkezik:"
             holder.binding.tvPrevDriver.setTextColor(Color.BLUE)
             holder.binding.tvPrevKart.setTextColor(Color.BLUE)
             holder.binding.tvPrevWeight.setTextColor(Color.BLUE)
-            holder.binding.tvComing.setTextColor(Color.BLUE)
+            holder.binding.tvComing.setTextColor(Color.BLUE)*/
 
             holder.binding.tvTeamName.setOnClickListener {
                 for (i in itemsTeams) {
@@ -78,18 +78,18 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
         }
 
         if (detailsStintItem.hasStintDone) {
-            holder.binding.tvInfoText.text = "Megjegyzés: "
+            //holder.binding.tvInfoText.text = "Megjegyzés: "
             holder.binding.tvStintDriverName.text = detailsStintItem.driverName
             holder.binding.tvStintPlusWeightValue.text = detailsStintItem.plusWeight.toString() + " kg"
             holder.binding.tvKartNumberStint.text = "Gokart: ${detailsStintItem.kartNumber}"
-            if (detailsStintItem.info == "") {
+            /*if (detailsStintItem.info == "") {
                 holder.binding.tvInfo.text = "-"
             }
             else {
                 holder.binding.tvInfo.text = detailsStintItem.info
                 holder.binding.tvInfo.setTextColor(Color.RED)
-            }
-            for (i in itemsTeams) {
+            }*/
+            /*for (i in itemsTeams) {
                 if (detailsStintItem.teamNumber == i.teamNumber) {
                     if (detailsStintItem.numberStint == 1) {
                         val avgWeight = detailsStintItem.plusWeight?.let {
@@ -141,14 +141,14 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
                     }
 
                 }
-            }
+            }*/
         }
         else if (!detailsStintItem.hasStintDone) {
-            holder.binding.tvInfoText.text = "Előző megjegyzése: "
+            //holder.binding.tvInfoText.text = "Előző megjegyzése: "
             holder.binding.tvStintDriverName.text = ""
             holder.binding.tvStintPlusWeightValue.text = ""
             holder.binding.tvKartNumberStint.text = "Gokart: ${detailsStintItem.expectedKartNumber}"
-            if (detailsStintItem.previousInfo == "" || detailsStintItem.previousInfo == null) {
+            /*if (detailsStintItem.previousInfo == "" || detailsStintItem.previousInfo == null) {
                 holder.binding.tvInfo.text = "-"
             }
             else {
@@ -207,7 +207,7 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
                     }
 
                 }
-            }
+            }*/
         }
 
 
