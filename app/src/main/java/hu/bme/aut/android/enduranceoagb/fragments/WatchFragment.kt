@@ -76,9 +76,10 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                val changeTime = p0.result.child("Info").child("changeTime").value.toString().toDouble()
                 if (!p0.result.child("Watch").child(stintId).exists()) {
                     for (element in 1..numberOfTeams) {
-                        val watch = Watch(element, 40000.0, false, 40000.0)
+                        val watch = Watch(element, changeTime, false, changeTime)
                         dbRef.child("Watch").child(stintId).child(element.toString()).setValue(watch)
                         items?.add(watch)
                     }
@@ -98,7 +99,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                                         el.child("Info").child("teamNumber").value.toString().toInt(), el.child("Info").child("avgWeight").value.toString().toDouble(),
                                         el.child("Info").child("hasDriversDone").value.toString().toInt(), el.child("Info").child("startKartNumber").value.toString().toInt(),
                                         el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
-                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString())
+                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString(), el.child("Info").child("group").value.toString().toIntOrNull())
                     itemsTeams?.add(teamsGet)
                 }
 
@@ -146,8 +147,9 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
+                val changeTime = p0.result.child("Info").child("changeTime").value.toString().toDouble()
                 dbRef.child("Watch").child(stintId).child((position+1).toString()).child("hasDone").setValue(false)
-                dbRef.child("Watch").child(stintId).child((position+1).toString()).child("initialTime").setValue(40000.0)
+                dbRef.child("Watch").child(stintId).child((position+1).toString()).child("initialTime").setValue(changeTime)
             }
         }
     }

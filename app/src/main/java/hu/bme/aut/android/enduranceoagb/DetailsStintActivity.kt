@@ -85,7 +85,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
     override fun onStart() {
         super.onStart()
-        loadBackgroundBoxItems()
+        //loadBackgroundBoxItems()
         loadItemsInBackground()
     }
 
@@ -621,7 +621,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
     }
 
     //EZT KI KELL VENNI 2024-BEN
-    private fun loadBackgroundBoxItems() {
+    /*private fun loadBackgroundBoxItems() {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
         val stintId: String = activity?.getMyDataStint().toString()
@@ -674,7 +674,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                 }
             }
         }
-    }
+    }*/
 
     /*private fun loadBackgroundItemsParam(raceIdpass: String?, stintIdpass: String?) {
         val raceId = raceIdpass.toString()

@@ -137,4 +137,5 @@
     <string name="secondgroupsecond">A 2. csoport 2. cseregokartjának megadása</string>
     <string name="firstgroupsecond">Az 1. csoport 2. cseregokartjának megadása</string>
     <string name="parkingKarts">Első cseregokartok megadása csoportonként</string>
+    <string name="qualiResultEnd">Időmérő edzés végeredménye</string>
 </resources>

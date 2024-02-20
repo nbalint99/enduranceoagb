@@ -39,7 +39,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintfragmentListBind
 import hu.bme.aut.android.enduranceoagb.fragments.NewStintFragment
 
 
-class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStintFragmentItemClickListener, NewStintFragment.NewStintListener, NewBoxFragment.NewBoxListener {
+class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStintFragmentItemClickListener, NewStintFragment.NewStintListener/*, NewBoxFragment.NewBoxListener*/ {
     private lateinit var binding: ActivityDetailsstintfragmentBinding
 
     private lateinit var dbRef: DatabaseReference
@@ -1616,7 +1616,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
     }
 
     //EZ NEM KELL 2024-BEN
-    override fun onBoxCreated(
+    /*override fun onBoxCreated(
         raceIdBox: String,
         teamName: String,
         teamNumber: Int,
@@ -1696,7 +1696,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
     override fun onBoxNotCreated() {
         val snack = Snackbar.make(ActivityBoxtimeBinding.inflate(layoutInflater).root, hu.bme.aut.android.enduranceoagb.R.string.notAddDriver, Snackbar.LENGTH_LONG)
         snack.show()
-    }
+    }*/
 
     override fun raceId(): String? {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?

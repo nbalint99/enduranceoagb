@@ -18,7 +18,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatchBin
 import hu.bme.aut.android.enduranceoagb.fragments.*
 
 
-class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener, NewBoxFragment.NewBoxListener {
+class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener/*, NewBoxFragment.NewBoxListener*/ {
     companion object {
         const val EXTRA_RACE_NAME = "extra.race_name"
         const val EXTRA_STINT_NUMBER = "extra.stint_number"
@@ -35,7 +35,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
 
     private val fragmentOri = DetailsStintActivity()
     private val fragmentOri2 = BoxTimeFragment()
-    private val fragmentOri3 = LiveTimingFragment()
+    private val fragmentOri3 = WatchFragment()
     private val fragmentOri1 = DetailsStintFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -669,7 +669,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
         fragment.onStintNotCreated()
     }
 
-    override fun onBoxCreated(raceIdBox: String, teamName: String, teamNumber: Int, time: Double, stint: Int, activity: String) {
+    /*override fun onBoxCreated(raceIdBox: String, teamName: String, teamNumber: Int, time: Double, stint: Int, activity: String) {
         val fragment2 = DetailsStintFragment()
         fragment2.onBoxCreated(raceIdBox, teamName, teamNumber, time, stintId.toString().toInt(), activity = this.toString())
         val mBundle2 = Bundle()
@@ -681,7 +681,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
     override fun onBoxNotCreated() {
         val snack = Snackbar.make(ActivityBoxtimeBinding.inflate(layoutInflater).root, hu.bme.aut.android.enduranceoagb.R.string.notAddDriver, Snackbar.LENGTH_LONG)
         snack.show()
-    }
+    }*/
 
     override fun raceId(): String? {
         return raceId

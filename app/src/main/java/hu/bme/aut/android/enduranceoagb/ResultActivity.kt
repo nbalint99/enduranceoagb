@@ -127,7 +127,8 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                         element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                         element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                         element.child("Info").child("points").value.toString().toIntOrNull(),
-                        element.child("Info").child("shortTeamName").value.toString()
+                        element.child("Info").child("shortTeamName").value.toString(),
+                        element.child("Info").child("group").value.toString().toIntOrNull()
                     )
 
                     items?.add(addTeam)

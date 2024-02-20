@@ -104,7 +104,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                             holder.binding.startButton.setBackgroundColor(Color.GREEN)
                             holder.binding.timeTV.text = "MEHET!"
                             holder.binding.timeTV.setTextColor(Color.GREEN)
-                            item.time = 40000.0
+                            item.time = item.initialTime
 
                             holder.binding.startButton.visibility = View.GONE
 
@@ -161,7 +161,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                             holder.binding.startButton.setBackgroundColor(Color.GREEN)
                             holder.binding.timeTV.text = "MEHET!"
                             holder.binding.timeTV.setTextColor(Color.GREEN)
-                            item.time = 40000.0
+                            item.time = item.initialTime
 
                             holder.binding.startButton.visibility = View.GONE
 
@@ -180,11 +180,16 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         holder.binding.resetButton.setOnClickListener {
             if (!counting) {
-                holder.binding.timeTV.text = "00:40.0"
+                item.time = item.initialTime
+
+                val msIni = (item.initialTime / 100 % 10).toInt()
+                val minIni = (item.initialTime / 60000 % 60).toInt()
+                val secIni = (item.initialTime / 1000 % 60).toInt()
+                holder.binding.tvInitialTime.text =
+                    "Boxban töltött idő: " + String.format("%02d:%02d.%01d", minIni, secIni, msIni)
+
+                holder.binding.timeTV.text = String.format("%02d:%02d.%01d", minIni, secIni, msIni)
                 holder.binding.timeTV.setTextColor(Color.BLACK)
-                item.time = 40000.0
-                item.initialTime = 40000.0
-                holder.binding.tvInitialTime.text = "Boxban töltött idő: 00:40.0"
 
                 holder.binding.startButton.visibility = View.VISIBLE
 
@@ -234,7 +239,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                             holder.binding.startButton.setBackgroundColor(Color.GREEN)
                             holder.binding.timeTV.text = "MEHET!"
                             holder.binding.timeTV.setTextColor(Color.GREEN)
-                            item.time = 40000.0
+                            item.time = item.initialTime
 
                             holder.binding.startButton.visibility = View.GONE
 
@@ -303,7 +308,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                             holder.binding.startButton.setBackgroundColor(Color.GREEN)
                             holder.binding.timeTV.text = "MEHET!"
                             holder.binding.timeTV.setTextColor(Color.GREEN)
-                            item.time = 40000.0
+                            item.time = item.initialTime
 
                             holder.binding.startButton.visibility = View.GONE
 
@@ -371,7 +376,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                                 holder.binding.startButton.setBackgroundColor(Color.GREEN)
                                 holder.binding.timeTV.text = "MEHET!"
                                 holder.binding.timeTV.setTextColor(Color.GREEN)
-                                item.time = 40000.0
+                                item.time = item.initialTime
 
                                 holder.binding.startButton.visibility = View.GONE
 
@@ -444,7 +449,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                                 holder.binding.startButton.setBackgroundColor(Color.GREEN)
                                 holder.binding.timeTV.text = "MEHET!"
                                 holder.binding.timeTV.setTextColor(Color.GREEN)
-                                item.time = 40000.0
+                                item.time = item.initialTime
 
                                 holder.binding.startButton.visibility = View.GONE
 
