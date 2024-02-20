@@ -88,7 +88,7 @@ class NewRaceFragment : DialogFragment() {
     private fun isValid() = binding.etNameRace.text.isNotEmpty()
     private fun isValidLocation() = binding.etNewLocation.text.isNotEmpty()
     private fun isValidTeams() : Boolean {
-        return binding.etNewRaceTeams.text.isNotEmpty() && binding.etNewRaceTeams.text.toString().toInt() in 5..15
+        return binding.etNewRaceTeams.text.isNotEmpty() && binding.etNewRaceTeams.text.toString().toInt() in 5..14
     }
 
 
@@ -96,13 +96,30 @@ class NewRaceFragment : DialogFragment() {
         nameR = year2 + " - " + binding.etNameRace.text.toString() + ". verseny",
         location = binding.etNewLocation.text.toString(),
         numberOfTeams = binding.etNewRaceTeams.text.toString().toInt(),
-        allStintNumber = binding.etNewRaceTeams.text.toString().toInt() + 1,
+        allStintNumber = numberOfStints(binding.etNewRaceTeams.text.toString().toInt()),
         hasStintReady = false,
         hasRaceDone = false,
         petrolDone = false,
         hasTeamsDone = 0,
         hasResultsDone = false,
         hasQualiDone = 0,
-        numberOfRace = binding.etNameRace.text.toString().toInt()
+        numberOfRace = binding.etNameRace.text.toString().toInt(),
+        hasGroupDone = false
     )
+
+    private fun numberOfStints(numberOfTeams: Int): Int {
+        return when (numberOfTeams) {
+            5 -> 6
+            6 -> 7
+            7 -> 8
+            8 -> 9
+            9 -> 10
+            10 -> 6
+            11 -> 7
+            12 -> 7
+            13 -> 8
+            14 -> 8
+            else -> 0
+        }
+    }
 }

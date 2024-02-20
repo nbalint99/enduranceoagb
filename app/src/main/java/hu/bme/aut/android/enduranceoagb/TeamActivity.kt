@@ -23,6 +23,8 @@ import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityTeamBinding
 import hu.bme.aut.android.enduranceoagb.fragments.QualiFragment
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, QualiFragment.QualiListener {
     private lateinit var binding : ActivityTeamBinding
@@ -52,6 +54,151 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
         initRecyclerView()
 
+        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+        dbRef.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val teamsDone = p0.result.child("Info").child("hasTeamsDone").value.toString().toInt()
+                val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                val groupDone = p0.result.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull()
+                binding.divideButton.isVisible = teamsDone == numberOfTeams && groupDone == false
+            }
+        }
+
+        binding.divideButton.setOnClickListener {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+            builder.setTitle("Figyelem!")
+            builder.setMessage("Biztos, hogy meg akarod csinálni a csoportbontást?")
+
+            builder.setPositiveButton(R.string.button_ok) { _, _ ->
+
+                dbRef =
+                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                        .getReference("Races").child(raceId.toString())
+
+                val items: MutableList<Teams> = mutableListOf()
+
+                dbRef.get().addOnCompleteListener { p0 ->
+                    if (p0.isSuccessful) {
+                        dbRef2 =
+                            FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                .getReference(year.toString())
+
+                        dbRef2.get().addOnCompleteListener { p1 ->
+                            if (p1.isSuccessful) {
+                                for (element in p0.result.child("Teams").children) {
+                                    val addTeam = Teams(
+                                        element.child("Info").child("nameTeam").value.toString(),
+                                        element.child("Info").child("people").value.toString()
+                                            .toInt(),
+                                        element.child("Info").child("teamNumber").value.toString()
+                                            .toIntOrNull(),
+                                        element.child("Info").child("avgWeight").value.toString()
+                                            .toDoubleOrNull(),
+                                        element.child("Info")
+                                            .child("hasDriversDone").value.toString().toInt(),
+                                        element.child("Info")
+                                            .child("startKartNumber").value.toString()
+                                            .toIntOrNull(),
+                                        element.child("Info").child("hasQualiDone").value.toString()
+                                            .toBoolean(),
+                                        element.child("Info").child("stintsDone").value.toString()
+                                            .toIntOrNull(),
+                                        element.child("Info").child("gp2").value.toString()
+                                            .toBooleanStrictOrNull(),
+                                        element.child("Info").child("points").value.toString()
+                                            .toIntOrNull(),
+                                        element.child("Info")
+                                            .child("shortTeamName").value.toString(),
+                                        element.child("Info").child("group").value.toString()
+                                            .toIntOrNull()
+                                    )
+                                    items.add(addTeam)
+                                }
+
+                                val sortedItems = items.sortedWith(compareByDescending{ it.points })
+                                val numberOfTeams =
+                                    p0.result.child("Info").child("numberOfTeams").value.toString()
+                                        .toInt()
+                                var setSecondGroup = false
+                                if (numberOfTeams >= 10) {
+                                    val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
+                                    var firstTeam = 1
+                                    var group1 = 0
+                                    var group2 = 0
+                                    for (e in sortedItems) {
+                                        if (firstTeam < divideGroup.toInt()) {
+                                            dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                .child("group").setValue(1)
+                                            sortedItems[firstTeam-1].group = 1
+                                            group1++
+                                            firstTeam++
+                                        } else if (firstTeam > divideGroup.toInt()) {
+                                            dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                .child("group").setValue(2)
+                                            if (!setSecondGroup) {
+                                                dbRef.child("Info").child("secondGroup").setValue(firstTeam)
+                                                setSecondGroup = true
+                                            }
+                                            sortedItems[firstTeam-1].group = 2
+                                            group2++
+                                            firstTeam++
+                                        } else if (firstTeam == divideGroup.toInt()) {
+                                            if (e.gp2 == true) {
+                                                dbRef.child("Teams").child(e.nameTeam)
+                                                    .child("Info").child("group")
+                                                    .setValue(2)
+                                                if (!setSecondGroup) {
+                                                    dbRef.child("Info").child("secondGroup").setValue(firstTeam)
+                                                    setSecondGroup = true
+                                                }
+                                                sortedItems[firstTeam-1].group = 2
+                                                group2++
+                                                firstTeam++
+                                            } else if (e.gp2 == false) {
+                                                dbRef.child("Teams").child(e.nameTeam)
+                                                    .child("Info").child("group")
+                                                    .setValue(1)
+                                                sortedItems[firstTeam-1].group = 1
+                                                group1++
+                                                firstTeam++
+                                            }
+                                        }
+                                    }
+                                    if (group1 > group2) {
+                                        dbRef.child("Info").child("firstMore").setValue(true)
+                                        dbRef.child("Info").child("secondMore").setValue(false)
+                                        dbRef.child("Info").child("equalGroup").setValue(false)
+                                    }
+                                    else if (group1 < group2) {
+                                        dbRef.child("Info").child("firstMore").setValue(false)
+                                        dbRef.child("Info").child("secondMore").setValue(true)
+                                        dbRef.child("Info").child("equalGroup").setValue(false)
+                                    }
+                                    else if (group1 == group2) {
+                                        dbRef.child("Info").child("firstMore").setValue(false)
+                                        dbRef.child("Info").child("secondMore").setValue(false)
+                                        dbRef.child("Info").child("equalGroup").setValue(true)
+                                    }
+                                }
+                                else {
+                                    dbRef.child("Info").child("secondGroup").setValue(1)
+                                }
+                                dbRef.child("Info").child("hasGroupDone").setValue(true)
+
+                                runOnUiThread {
+                                    adapter.update2(sortedItems.toMutableList())
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            builder.setNeutralButton(R.string.button_megse, null)
+            builder.show()
+        }
+
         binding.fab.setOnClickListener {
             dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
@@ -71,7 +218,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                             element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                             element.child("Info").child("points").value.toString().toIntOrNull(),
-                            element.child("Info").child("shortTeamName").value.toString()
+                            element.child("Info").child("shortTeamName").value.toString(),
+                            element.child("Info").child("group").value.toString().toIntOrNull()
                         )
                         items.add(addTeam)
                     }
@@ -329,7 +477,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                                 element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                                 element.child("Info").child("points").value.toString().toIntOrNull(),
-                                element.child("Info").child("shortTeamName").value.toString()
+                                element.child("Info").child("shortTeamName").value.toString(),
+                                element.child("Info").child("group").value.toString().toIntOrNull()
                             )
                             items.add(addTeam)
                         }
@@ -361,7 +510,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         dbRef2.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val points = p0.result.child("Teams").child(nameTeam).child("points").value.toString().toIntOrNull()
-                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points)
+                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points, null,0)
                 dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
 
                 runOnUiThread {
@@ -371,7 +520,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         }
     }
 
-    override fun onTeamSelected(nameTeam: String?, teamNumber: String?, people: Int?, startKartNumber: Int?, gp2: Boolean?) {
+    override fun onTeamSelected(nameTeam: String?, teamNumber: String?, people: Int?, startKartNumber: Int?, gp2: Boolean?, group: Int?) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
         dbRef.get().addOnCompleteListener { p0 ->
@@ -384,8 +533,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     builder.setPositiveButton(R.string.button_ok, null)
                     builder.show()
                 }
+                val groupDone = p0.result.child("Info").child("hasGroupDone").value.toString().toBoolean()
+                if (!groupDone) {
+                    builder.setTitle("Figyelem!")
+                    builder.setMessage("Még nem adhatsz meg csapatszámot, illetve gép számot, amíg nem csináltad meg a csoportosztást!")
+                    builder.setPositiveButton(R.string.button_ok, null)
+                    builder.show()
+                }
                 else {
-                    val fragment = QualiFragment.newInstance(nameTeam.toString(), teamNumber.toString(), people.toString(), startKartNumber.toString(), gp2.toString())
+                    val fragment = QualiFragment.newInstance(nameTeam.toString(), teamNumber.toString(), people.toString(), startKartNumber.toString(), gp2.toString(), group)
                     fragment.show(supportFragmentManager, "QualiFragment")
                 }
             }
@@ -503,7 +659,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         return true
     }
 
-    override fun onQualiCreated(teamName: String, teamNumber: Int?, kartNumber: Int?) {
+    override fun onQualiCreated(teamName: String, teamNumber: Int?, kartNumber: Int?, group: Int?) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
         val teamNumbers: MutableList<Int>? = mutableListOf()
@@ -512,95 +668,163 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
             if (p0.isSuccessful) {
                 val list = p0.result.child("Teams").children
                 val list2 = p0.result.child("Teams").children
+                val list3 = p0.result.child("Teams").children
                 for (each in list2) {
                     if (each.child("Info").child("teamNumber").value.toString().toIntOrNull() != null) {
                         teamNumbers?.add(each.child("Info").child("teamNumber").value.toString().toInt())
                     }
                 }
+                var group1 = 0
+                var group2 = 0
+                for (each in list3) {
+                    if (each.child("Info").child("group").value.toString().toIntOrNull() == 1) {
+                        group1++
+                    }
+                    if (each.child("Info").child("group").value.toString().toIntOrNull() == 2) {
+                        group2++
+                    }
+                }
+                val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toDouble()
+                var divideGroup = numberOfTeams / 2.0
+                var groupEqual = false
+                if (group1 < group2) {
+                    ceil(divideGroup)
+                }
+                else if (group1 > group2) {
+                    floor(divideGroup)
+                }
+                else if (group1 == group2) {
+                    groupEqual = true
+                    divideGroup += 0.5
+                }
                 for (element in list) {
                     if (element.child("Info").child("nameTeam").value.toString() == teamName) {
+
                         if (!element.child("Info").child("teamNumber").exists() && !element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
-                                if (teamNumbers != null) {
-                                    if (teamNumbers.contains(teamNumber)) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                        if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                            teamNumbers.add(teamNumber)
-                                            val qualiDone = p0.result.child("Info")
-                                                .child("hasQualiDone").value.toString().toInt()
-                                            dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
-
-                                            dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                            finish()
-                                            startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                            snack.show()
-                                        }
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                        teamNumbers?.add(teamNumber)
-                                        val qualiDone = p0.result.child("Info")
-                                            .child("hasQualiDone").value.toString().toInt()
-                                        dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
+                                    if (teamNumbers != null) {
+                                        if (teamNumbers.contains(teamNumber)) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            val numberOfTeams = p0.result.child("Info")
+                                                .child("numberOfTeams").value.toString().toInt()
+                                            if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                                teamNumbers.add(teamNumber)
+                                                val qualiDone = p0.result.child("Info")
+                                                    .child("hasQualiDone").value.toString().toInt()
+                                                dbRef.child("Info").child("hasQualiDone")
+                                                    .setValue(qualiDone + 1)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("hasQualiDone").setValue(true)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("teamNumber").setValue(teamNumber)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("startKartNumber").setValue(kartNumber)
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalNumber,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                            teamNumbers?.add(teamNumber)
+                                            val qualiDone = p0.result.child("Info")
+                                                .child("hasQualiDone").value.toString().toInt()
+                                            dbRef.child("Info").child("hasQualiDone")
+                                                .setValue(qualiDone + 1)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("hasQualiDone").setValue(true)
+
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").setValue(kartNumber)
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
                             }
                             else if (teamNumber != null && kartNumber == null) {
-                                if (teamNumbers != null) {
-                                    if (teamNumbers.contains(teamNumber)) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                        if (teamNumber in 1..numberOfTeams) {
-                                            teamNumbers.add(teamNumber)
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
+                                }
+                                else {
+                                    if (teamNumbers != null) {
+                                        if (teamNumbers.contains(teamNumber)) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            val numberOfTeams = p0.result.child("Info")
+                                                .child("numberOfTeams").value.toString().toInt()
+                                            if (teamNumber in 1..numberOfTeams) {
+                                                teamNumbers.add(teamNumber)
 
-                                            dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("teamNumber").setValue(teamNumber)
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalNumber,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                            teamNumbers?.add(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
                                             finish()
                                             startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
                                             snack.show()
                                         }
                                     }
                                 }
-                                else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                        teamNumbers?.add(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                }
-
                             }
                             else if (teamNumber == null && kartNumber != null) {
                                 if (kartNumber in 1..20) {
@@ -622,66 +846,103 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                         else if (element.child("Info").child("teamNumber").exists() && element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
-                                if (teamNumbers!!.contains(teamNumber)) {
-                                    if (teamNumber != teamNumberPrev) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        if (kartNumber in 1..20) {
-                                            dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                            finish()
-                                            startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalKart, Snackbar.LENGTH_LONG)
-                                            snack.show()
-                                        }
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                        teamNumbers.remove(teamNumberPrev)
-                                        teamNumbers.add(teamNumber)
+                                    if (teamNumbers!!.contains(teamNumber)) {
+                                        if (teamNumber != teamNumberPrev) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            if (kartNumber in 1..20) {
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("startKartNumber").setValue(kartNumber)
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalKart,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                            teamNumbers.remove(teamNumberPrev)
+                                            teamNumbers.add(teamNumber)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").setValue(kartNumber)
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
                             }
                             else if (teamNumber != null && kartNumber == null) {
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
-                                if (teamNumbers!!.contains(teamNumber)) {
-                                    if (teamNumber != teamNumberPrev) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams) {
-                                        teamNumbers?.remove(teamNumberPrev)
-                                        teamNumbers?.add(teamNumber)
-                                        val qualiDone = p0.result.child("Info")
-                                            .child("hasQualiDone").value.toString().toInt()
-                                        dbRef.child("Info").child("hasQualiDone").setValue(qualiDone - 1)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(false)
+                                    if (teamNumbers!!.contains(teamNumber)) {
+                                        if (teamNumber != teamNumberPrev) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams) {
+                                            teamNumbers?.remove(teamNumberPrev)
+                                            teamNumbers?.add(teamNumber)
+                                            val qualiDone = p0.result.child("Info")
+                                                .child("hasQualiDone").value.toString().toInt()
+                                            dbRef.child("Info").child("hasQualiDone")
+                                                .setValue(qualiDone - 1)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("hasQualiDone").setValue(false)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").removeValue()
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").removeValue()
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
 
@@ -719,71 +980,109 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                         else if (element.child("Info").child("teamNumber").exists() && !element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
-                                if (teamNumbers!!.contains(teamNumber)) {
-                                    if (teamNumber != teamNumberPrev) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        if (kartNumber in 1..20) {
-                                            val qualiDone = p0.result.child("Info")
-                                                .child("hasQualiDone").value.toString().toInt()
-                                            dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
-
-                                            dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                            finish()
-                                            startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalKart, Snackbar.LENGTH_LONG)
-                                            snack.show()
-                                        }
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                        teamNumbers.remove(teamNumberPrev)
-                                        teamNumbers.add(teamNumber)
+                                    if (teamNumbers!!.contains(teamNumber)) {
+                                        if (teamNumber != teamNumberPrev) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            if (kartNumber in 1..20) {
+                                                val qualiDone = p0.result.child("Info")
+                                                    .child("hasQualiDone").value.toString().toInt()
+                                                dbRef.child("Info").child("hasQualiDone")
+                                                    .setValue(qualiDone + 1)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("hasQualiDone").setValue(true)
 
-                                        val qualiDone = p0.result.child("Info")
-                                            .child("hasQualiDone").value.toString().toInt()
-                                        dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("startKartNumber").setValue(kartNumber)
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalKart,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                            teamNumbers.remove(teamNumberPrev)
+                                            teamNumbers.add(teamNumber)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                            val qualiDone = p0.result.child("Info")
+                                                .child("hasQualiDone").value.toString().toInt()
+                                            dbRef.child("Info").child("hasQualiDone")
+                                                .setValue(qualiDone + 1)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("hasQualiDone").setValue(true)
+
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").setValue(kartNumber)
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
                             }
                             else if (teamNumber != null && kartNumber == null) {
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
-                                if (teamNumbers!!.contains(teamNumber)) {
-                                    if (teamNumber != teamNumberPrev) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams) {
-                                        teamNumbers?.remove(teamNumberPrev)
-                                        teamNumbers?.add(teamNumber)
+                                    if (teamNumbers!!.contains(teamNumber)) {
+                                        if (teamNumber != teamNumberPrev) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams) {
+                                            teamNumbers?.remove(teamNumberPrev)
+                                            teamNumbers?.add(teamNumber)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
                             }
@@ -805,91 +1104,138 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 startActivity(intent)
                             }
                         }
+
                         else if (!element.child("Info").child("teamNumber").exists() && element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
-                                if (teamNumbers != null) {
-                                    if (teamNumbers.contains(teamNumber)) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
+                                }
+                                else {
+                                    if (teamNumbers != null) {
+                                        if (teamNumbers.contains(teamNumber)) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            val numberOfTeams = p0.result.child("Info")
+                                                .child("numberOfTeams").value.toString().toInt()
+                                            if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
+                                                teamNumbers.add(teamNumber)
+
+                                                val qualiDone = p0.result.child("Info")
+                                                    .child("hasQualiDone").value.toString().toInt()
+                                                dbRef.child("Info").child("hasQualiDone")
+                                                    .setValue(qualiDone + 1)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("hasQualiDone").setValue(true)
+
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("teamNumber").setValue(teamNumber)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("startKartNumber").setValue(kartNumber)
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalNumber,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
                                         if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                            teamNumbers.add(teamNumber)
+                                            teamNumbers?.add(teamNumber)
 
                                             val qualiDone = p0.result.child("Info")
                                                 .child("hasQualiDone").value.toString().toInt()
-                                            dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
+                                            dbRef.child("Info").child("hasQualiDone")
+                                                .setValue(qualiDone + 1)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("hasQualiDone").setValue(true)
 
-                                            dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").setValue(kartNumber)
                                             finish()
                                             startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
                                             snack.show()
                                         }
-                                    }
-                                }
-                                else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams && kartNumber in 1..20) {
-                                        teamNumbers?.add(teamNumber)
-
-                                        val qualiDone = p0.result.child("Info")
-                                            .child("hasQualiDone").value.toString().toInt()
-                                        dbRef.child("Info").child("hasQualiDone").setValue(qualiDone + 1)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
-
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").setValue(kartNumber)
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
                                     }
                                 }
 
                             }
                             else if (teamNumber != null && kartNumber == null) {
-                                if (teamNumbers != null) {
-                                    if (teamNumbers.contains(teamNumber)) {
-                                        val snack = Snackbar.make(binding.root,R.string.alreadyContains, Snackbar.LENGTH_LONG)
-                                        snack.show()
-                                    }
-                                    else {
-                                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                        if (teamNumber in 1..numberOfTeams) {
-                                            teamNumbers.add(teamNumber)
-
-                                            dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                            dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").removeValue()
-                                            finish()
-                                            startActivity(intent)
-                                        }
-                                        else {
-                                            val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                            snack.show()
-                                        }
-                                    }
+                                if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
+                                    (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
+                                    val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
+                                    snack.show()
                                 }
                                 else {
-                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                                    if (teamNumber in 1..numberOfTeams) {
-                                        teamNumbers?.add(teamNumber)
+                                    if (teamNumbers != null) {
+                                        if (teamNumbers.contains(teamNumber)) {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.alreadyContains,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        } else {
+                                            val numberOfTeams = p0.result.child("Info")
+                                                .child("numberOfTeams").value.toString().toInt()
+                                            if (teamNumber in 1..numberOfTeams) {
+                                                teamNumbers.add(teamNumber)
 
-                                        dbRef.child("Teams").child(teamName).child("Info").child("teamNumber").setValue(teamNumber)
-                                        dbRef.child("Teams").child(teamName).child("Info").child("startKartNumber").removeValue()
-                                        finish()
-                                        startActivity(intent)
-                                    }
-                                    else {
-                                        val snack = Snackbar.make(binding.root,R.string.giveNormalNumber, Snackbar.LENGTH_LONG)
-                                        snack.show()
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("teamNumber").setValue(teamNumber)
+                                                dbRef.child("Teams").child(teamName).child("Info")
+                                                    .child("startKartNumber").removeValue()
+                                                finish()
+                                                startActivity(intent)
+                                            } else {
+                                                val snack = Snackbar.make(
+                                                    binding.root,
+                                                    R.string.giveNormalNumber,
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                snack.show()
+                                            }
+                                        }
+                                    } else {
+                                        val numberOfTeams = p0.result.child("Info")
+                                            .child("numberOfTeams").value.toString().toInt()
+                                        if (teamNumber in 1..numberOfTeams) {
+                                            teamNumbers?.add(teamNumber)
+
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("teamNumber").setValue(teamNumber)
+                                            dbRef.child("Teams").child(teamName).child("Info")
+                                                .child("startKartNumber").removeValue()
+                                            finish()
+                                            startActivity(intent)
+                                        } else {
+                                            val snack = Snackbar.make(
+                                                binding.root,
+                                                R.string.giveNormalNumber,
+                                                Snackbar.LENGTH_LONG
+                                            )
+                                            snack.show()
+                                        }
                                     }
                                 }
 

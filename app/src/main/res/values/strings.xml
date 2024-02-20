@@ -129,4 +129,12 @@
     <string name="tab_text_main_race_1">Jelenlegi verseny</string>
     <string name="tab_text_main_race_2">Lefutott versenyek</string>
     <string name="name_race_number">Verseny száma</string>
+    <string name="wrongGroup">Ilyen sorszámú csapat csak a másik csoportban lehetséges! Próbáld újra!</string>
+    <string name="divideGroup">Csoportbontás</string>
+    <string name="parkingKart12">Az 1. csoport 1. csere gokartjának a száma</string>
+    <string name="firstgroupfirst">Az 1. csoport 1. cseregokartjának megadása</string>
+    <string name="secondgroupfirst">A 2. csoport 1. cseregokartjának megadása</string>
+    <string name="secondgroupsecond">A 2. csoport 2. cseregokartjának megadása</string>
+    <string name="firstgroupsecond">Az 1. csoport 2. cseregokartjának megadása</string>
+    <string name="parkingKarts">Első cseregokartok megadása csoportonként</string>
 </resources>

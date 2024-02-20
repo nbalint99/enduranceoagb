@@ -1,6 +1,7 @@
 package hu.bme.aut.android.enduranceoagb.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,7 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
 
     interface TeamItemClickListener {
         fun onTeamCreated(nameTeam: String, people: Int, gp2: Boolean)
-        fun onTeamSelected(nameTeam: String?, teamNumber: String?, people: Int?, startKartNumber: Int?, gp2: Boolean?)
+        fun onTeamSelected(nameTeam: String?, teamNumber: String?, people: Int?, startKartNumber: Int?, gp2: Boolean?, group: Int?)
         fun onItemClick(nameTeam: String?, teamNumber: String?, gp2: Boolean?)
         fun onItemLongClick(team: Teams?): Boolean
     }
@@ -116,8 +117,20 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
                 binding.tvKartNumber.text = "Rajtolós gokartszám: " + item?.startKartNumber.toString()
             }
 
+            if (item?.group == 0 || item?.group == null) {
+                binding.tvGroupNumber.text = ""
+            }
+            else if (item?.group == 1) {
+                binding.tvGroupNumber.text = "${item?.group}. csoport"
+                binding.tvGroupNumber.setTextColor(Color.RED)
+            }
+            else if (item?.group == 2) {
+                binding.tvGroupNumber.text = "${item?.group}. csoport"
+                binding.tvGroupNumber.setTextColor(Color.RED)
+            }
+
             binding.ibAdd.setOnClickListener {
-                listener.onTeamSelected(item?.nameTeam, item?.teamNumber.toString(), item?.people.toString().toIntOrNull(), item?.startKartNumber.toString().toIntOrNull(), item?.gp2)
+                listener.onTeamSelected(item?.nameTeam, item?.teamNumber.toString(), item?.people.toString().toIntOrNull(), item?.startKartNumber.toString().toIntOrNull(), item?.gp2, item?.group)
             }
         }
     }

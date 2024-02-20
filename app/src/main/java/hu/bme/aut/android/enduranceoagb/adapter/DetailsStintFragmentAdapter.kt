@@ -290,7 +290,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             listener.onNewStintListener(position, detailsStintItem.teamNumber, detailsStintItem.teamName, detailsStintItem.hasStintDone, detailsStintItem.driverName, detailsStintItem.plusWeight, detailsStintItem.shortTeamName, detailsStintItem.driverWeight, detailsStintItem.prevAvgWeight)
         }
 
-        val item = itemsBox[position]
+        /*val item = itemsBox[position]
         val time = itemsTime[0]
 
         val minIni = (item.initialTime / 60000 % 60).toInt()
@@ -313,7 +313,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                 holder.binding.tvPrevPenalty.setTextColor(Color.RED)
                 holder.binding.tvPrevPenalty.text = "+" + initPenalty.toString() + " mp"
             }
-        }
+        }*/
 
 
         /*if (item.hasDone) {
@@ -460,7 +460,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
 
 
          */
-        if (!item.hasDone) {
+        /*if (!item.hasDone) {
             if (detailsStintItem.hasStintDone) {
                 holder.itemView.setBackgroundResource(R.color.pink)
             }
@@ -606,7 +606,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             }
         }
 
-        holder.bind(item)
+        holder.bind(item)*/
     }
 
     override fun getItemCount(): Int = items.size
@@ -683,12 +683,12 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
     }
 
     inner class DetailsStintFragmentViewHolder(val binding: DetailsstintfragmentListBinding) : RecyclerView.ViewHolder(binding.root) {
-        var item: BoxTime? = null
+        //var item: BoxTime? = null
 
         //var countDownTimer : CountDownTimer? = null
 
-        fun bind(newItem: BoxTime) {
-            item = newItem
-        }
+        //fun bind(newItem: BoxTime) {
+        //    item = newItem
+        //}
     }
 }

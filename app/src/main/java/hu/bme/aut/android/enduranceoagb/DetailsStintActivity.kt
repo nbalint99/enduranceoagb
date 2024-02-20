@@ -121,7 +121,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                             element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                             element.child("Info").child("points").value.toString().toIntOrNull(),
-                            element.child("Info").child("shortTeamName").value.toString()
+                            element.child("Info").child("shortTeamName").value.toString(),
+                            element.child("Info").child("group").value.toString().toIntOrNull()
 
                         )
 
@@ -163,26 +164,192 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     dbRef.child("AllStint").child("numberOfStint").child(stintId.toString())
                         .child("hasDetailsStintReady").setValue(true)
                     val allTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                    val firstGroupLast = secondGroupFirst?.minus(1)
+                    val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
+                    val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
+                    val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
                     if (stintId.toInt() > 1) {
-                        val prevStint = stintId.toInt() - 1
-                        val prevParkKart = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
-                        val id = p0.result.child("Id").value.toString()
-                        var idNumber : Int
-                        if (id == "-1") {
-                            idNumber = 0
+                        if (firstMore == true) {
+                            val prevStint = stintId.toInt() - 1
+                            val prevParkKart11 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart12 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-box11").child("kartNumber").value.toString().toInt()
+                            val prevParkKart21 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$firstGroupLast").child("kartNumber").value.toString().toInt()
+                            val prevParkKart22 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$firstGroupLast").child("kartNumber").value.toString().toInt()
+                            val id = p0.result.child("Id").value.toString()
+                            var idNumber : Int
+                            if (id == "-1") {
+                                idNumber = 0
+                            }
+                            else {
+                                idNumber = id.toInt()
+                                idNumber++
+                            }
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box11")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart11)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box12")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart12)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box21")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart21)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box22")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart22)
+                        }
+                        else if (secondMore == true) {
+                            val prevStint = stintId.toInt() - 1
+                            val prevParkKart11 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart12 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart21 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$firstGroupLast").child("kartNumber").value.toString().toInt()
+                            val prevParkKart22 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-box21").child("kartNumber").value.toString().toInt()
+                            val id = p0.result.child("Id").value.toString()
+                            var idNumber : Int
+                            if (id == "-1") {
+                                idNumber = 0
+                            }
+                            else {
+                                idNumber = id.toInt()
+                                idNumber++
+                            }
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box11")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart11)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box12")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart12)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box21")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart21)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box22")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart22)
+                        }
+                        else if (equalGroup == true) {
+                            val prevStint = stintId.toInt() - 1
+                            val prevParkKart11 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart12 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart21 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$firstGroupLast").child("kartNumber").value.toString().toInt()
+                            val prevParkKart22 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$firstGroupLast").child("kartNumber").value.toString().toInt()
+                            val id = p0.result.child("Id").value.toString()
+                            var idNumber : Int
+                            if (id == "-1") {
+                                idNumber = 0
+                            }
+                            else {
+                                idNumber = id.toInt()
+                                idNumber++
+                            }
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box11")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart11)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box12")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart12)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box21")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart21)
+                            idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box22")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart22)
                         }
                         else {
-                            idNumber = id.toInt()
+                            val prevStint = stintId.toInt() - 1
+                            val prevParkKart11 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val prevParkKart12 = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
+                            val id = p0.result.child("Id").value.toString()
+                            var idNumber : Int
+                            if (id == "-1") {
+                                idNumber = 0
+                            }
+                            else {
+                                idNumber = id.toInt()
+                                idNumber++
+                            }
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box11")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart11)
                             idNumber++
+
+                            dbRef.child("Id").setValue(idNumber)
+                            dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
+                            dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box12")
+                            dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                            dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(prevParkKart12)
                         }
-                        dbRef.child("Id").setValue(idNumber)
-                        val teamStintId = idNumber
-                        dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue("${stintId.toInt()}. etap")
-                        dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue("box")
-                        dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue("-")
-                        dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
-                        dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
-                        dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue(prevParkKart)
                     }
                 }
                 else {
@@ -200,7 +367,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             element.child("Info").child("stintsDone").value.toString().toIntOrNull(),
                             element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                             element.child("Info").child("points").value.toString().toIntOrNull(),
-                            element.child("Info").child("shortTeamName").value.toString()
+                            element.child("Info").child("shortTeamName").value.toString(),
+                            element.child("Info").child("group").value.toString().toIntOrNull()
 
                         )
                         itemsTeams?.add(addTeam)
@@ -260,6 +428,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         val nameTeam = element.child("Info").child("nameTeam").value.toString()
                         val teamNumber =
                             element.child("Info").child("teamNumber").value.toString().toInt()
+                        //val groupNumber =
+                        //    element.child("Info").child("group").value.toString().toIntOrNull()
                         val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                         val driverWeight = p0.result.child("Teams").child(nameTeam).child("Drivers").child(nameDriver).child("weight").value.toString().toDoubleOrNull()
                         if (teamNumber == iterator) {
@@ -319,9 +489,10 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                     val prevPlusWeight =
                                         p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("plusWeight").value.toString().toDoubleOrNull()
                                     val prevAvgWeight = ready.child("prevAvgWeight").value.toString().toDoubleOrNull()
-                                    /*val prevWeight = prevPlusWeight?.let { driverWeight?.plus(it) }
-                                    val avgWeight = prevWeight?.let { prevAvgWeight?.plus(it) }*/
-                                    if (teamNumber > 1) {
+
+                                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+
+                                    if (teamNumber > 1 && teamNumber != secondGroupFirst) {
                                         if (teamNum.toString().toIntOrNull() != null) {
                                             val changePrevTeam = (stintId.toString()
                                                 .toInt() - 1).toString() + "-" + (teamNum.toString()
@@ -349,8 +520,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                 )
                                                 items?.add(addStint)
                                             }
-                                        } else {
-                                            val changePrevTeam = (stintId.toString()
+                                        } else if (teamNumber == 1) {
+                                            /*val changePrevTeam = (stintId.toString()
                                                 .toInt() - 1).toString() + "-box"
                                             val expectedKartNumber =
                                                 p0.result.child("Stints").child(changePrevStint)
@@ -374,12 +545,42 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                                     kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                                 )
                                                 items?.add(addStint)
-                                            }
+                                            }*/
+
+                                            println("HIBA!")
                                         }
 
                                     } else if (teamNumber == 1) {
                                         val changePrevTeam = (stintId.toString()
-                                            .toInt() - 1).toString() + "-" + "box"
+                                            .toInt() - 1).toString() + "-" + "box12"
+                                        val expectedKartNumber =
+                                            p0.result.child("Stints").child(changePrevStint)
+                                                .child("Info").child(changePrevTeam)
+                                                .child("kartNumber").value.toString()
+                                                .toIntOrNull()
+
+
+                                        if (teamNum == teamNumber && stintNum == stintId.toString()
+                                                .toInt()
+                                        ) {
+                                            val addStint = Stint(
+                                                nameTeam,
+                                                teamNumber,
+                                                nameDriver,
+                                                stintId.toString().toInt(),
+                                                shortTeamName,
+                                                plus,
+                                                info,
+                                                prevInfo,
+                                                hasStintD, prevAvgWeight, driverWeight,
+                                                kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
+                                            )
+                                            items?.add(addStint)
+                                        }
+                                    }
+                                    else if (teamNumber == secondGroupFirst) {
+                                        val changePrevTeam = (stintId.toString()
+                                            .toInt() - 1).toString() + "-" + "box22"
                                         val expectedKartNumber =
                                             p0.result.child("Stints").child(changePrevStint)
                                                 .child("Info").child(changePrevTeam)
@@ -419,6 +620,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
         }
     }
 
+    //EZT KI KELL VENNI 2024-BEN
     private fun loadBackgroundBoxItems() {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
@@ -459,7 +661,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         el.child("Info").child("teamNumber").value.toString().toInt(), el.child("Info").child("avgWeight").value.toString().toDoubleOrNull(),
                         el.child("Info").child("hasDriversDone").value.toString().toInt(), el.child("Info").child("startKartNumber").value.toString().toInt(),
                         el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
-                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString())
+                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString(), el.child("Info").child("group").value.toString().toIntOrNull())
                     itemsTeams?.add(teamsGet)
                 }
                 val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt().toDouble()
@@ -873,24 +1075,93 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
                     val numberOfTeams =
                         p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                    if (teamNumber == numberOfTeams) {
-                        var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
-                        val allStintNumber =
-                            p0.result.child("Info").child("allStintNumber").value.toString().toInt()
-                        if ((stintId.toString().toInt() + 1) <= allStintNumber) {
-                            val teamStintNext = "${stintId.toString().toInt() + 1}-box"
-                            dbRef.child("Stints").child(changeNext).child("Info")
-                                .child(teamStintNext).child("kartNumber").setValue(kartNumber)
-                            if (stintId.toString().toInt() in 1..9) {
-                                changeNext = "Etap: 0${stintId.toString().toInt() + 1}"
-                                dbRef.child("Cserék").child(changeNext).child("5 - Parkol")
-                                    .child("Parkol").setValue(kartNumber)
-                            } else {
-                                dbRef.child("Cserék").child(changeNext).child("5 - Parkol")
-                                    .child("Parkol").setValue(kartNumber)
+                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                    val firstGroupLast = secondGroupFirst?.minus(1)
+                    val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
+                    val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
+                    val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
+
+                    val allStintNumber =
+                        p0.result.child("Info").child("allStintNumber").value.toString().toInt()
+
+                    if ((stintId.toString().toInt() + 1) <= allStintNumber) {
+                        if (firstMore == true) {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
+                            }
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                val prevBoxKart = p0.result.child("Stints").child(change).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").value.toString().toIntOrNull()
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(prevBoxKart)
+                            }
+                        }
+                        else if (secondMore == true) {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                val prevBoxKart = p0.result.child("Stints").child(change).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").value.toString().toIntOrNull()
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(prevBoxKart)
+                            }
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(kartNumber)
+                            }
+                        }
+                        else if (equalGroup == true) {
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(kartNumber)
+                            }
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
+                            }
+                        }
+                        else {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
                             }
                         }
                     }
+
                     /*requireActivity().runOnUiThread {
                         adapter.addItemStints(stint)
                     }*/
@@ -921,16 +1192,6 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         dbRef.child("Stints").child(nextStint.toString()).child("Info").child(teamStint).child("prevAvgWeight")
                             .setValue(newTotalWeight)
                     }
-                    /*val prevDriverName = p0.result.child("Stints").child(changePrevStint).child("Info")
-                        .child(changePrev).child("driverName").value.toString()
-                    val prevDriverWeight = p0.result.child("Teams").child(teamName).child("Drivers").child(prevDriverName)
-                        .child("weight").value.toString().toDouble()
-                    val prevPlusWeight = p0.result.child("Stints").child(changePrevStint).child("Info")
-                        .child(changePrev).child("plusWeight").value.toString().toDouble()
-                    val prevDriverTotalWeight = prevDriverWeight + prevPlusWeight
-                    val totalAvgWeight = prevAvgWeight?.plus(prevDriverTotalWeight)
-                    val driverTotalWeight = driverWeight?.plus(weight)
-                    val newTotalWeight = driverTotalWeight?.let { prevAvgWeight?.plus(it) } */
 
                     val stint = Stint(
                         teamName,
@@ -991,21 +1252,89 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
                     val numberOfTeams =
                         p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                    if (teamNumber == numberOfTeams) {
-                        val allStintNumber =
-                            p0.result.child("Info").child("allStintNumber").value.toString().toInt()
-                        if ((stintId.toString().toInt() + 1) <= allStintNumber) {
-                            val teamStintNext = "${stintId.toString().toInt() + 1}-box"
-                            val changeNext = "Etap: ${stintId.toString().toInt() + 1}"
-                            dbRef.child("Stints").child(changeNext).child("Info")
-                                .child(teamStintNext).child("kartNumber").setValue(kartNumber)
-                            if (stintId.toString().toInt() in 1..8) {
-                                val changeNextZero = "Etap: 0${stintId.toString().toInt() + 1}"
-                                dbRef.child("Cserék").child(changeNextZero).child("5 - Parkol")
-                                    .child("Parkol").setValue(kartNumber)
-                            } else {
-                                dbRef.child("Cserék").child(changeNext).child("5 - Parkol")
-                                    .child("Parkol").setValue(kartNumber)
+                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                    val firstGroupLast = secondGroupFirst?.minus(1)
+                    val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
+                    val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
+                    val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
+
+                    val allStintNumber =
+                        p0.result.child("Info").child("allStintNumber").value.toString().toInt()
+
+                    if ((stintId.toString().toInt() + 1) <= allStintNumber) {
+                        if (firstMore == true) {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
+                            }
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                val prevBoxKart = p0.result.child("Stints").child(change).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").value.toString().toIntOrNull()
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(prevBoxKart)
+                            }
+                        }
+                        else if (secondMore == true) {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                val prevBoxKart = p0.result.child("Stints").child(change).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").value.toString().toIntOrNull()
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(prevBoxKart)
+                            }
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(kartNumber)
+                            }
+                        }
+                        else if (equalGroup == true) {
+                            if (teamNumber == firstGroupLast) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
+                                val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext21).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext22).child("kartNumber").setValue(kartNumber)
+                            }
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
+                            }
+                        }
+                        else {
+                            if (teamNumber == numberOfTeams) {
+                                var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
+                                val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
+                                val teamStintNext12 = "${stintId.toString().toInt() + 1}-box12"
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext11).child("kartNumber").setValue(kartNumber)
+                                dbRef.child("Stints").child(changeNext).child("Info")
+                                    .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
                             }
                         }
                     }
@@ -1182,32 +1511,6 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
             }
         }
-        /*dbRef.get().addOnCompleteListener { p0 ->
-            if (p0.isSuccessful) {
-                for (elem in p0.result.child("Stints").child("Etap: $stintId").child("Info").children) {
-                    val addStint = Stint(elem.child("teamName").toString(),
-                        elem.child("teamNumber").toString().toInt(),
-                        elem.child("driverName").toString(),
-                        elem.child("numberStint").toString().toInt(),
-                        elem.child("shortTeamName").toString(),
-                        elem.child("plusWeight").toString().toDoubleOrNull(),
-                        elem.child("info").toString(),
-                        elem.child("previousInfo").toString(),
-                        elem.child("hasStintDone").toString().toBoolean(),
-                        elem.child("prevAvgWeight").toString().toDoubleOrNull(),
-                        elem.child("kartNumber").toString().toIntOrNull(),
-                        elem.child("expectedKartNumber").toString().toIntOrNull(),
-                        elem.child("prevDriverName").toString(),
-                        elem.child("prevPlusWeight").toString().toDoubleOrNull(),
-                        elem.child("prevKartNumber").toString().toIntOrNull()
-                    )
-                    items?.add(addStint)
-                }
-                requireActivity().runOnUiThread {
-                    adapter.update2(items!!)
-                }
-            }
-        }*/
     }
 
     private fun stintDoneCheck(raceIdpass: String?, stintIdpass: String?) {

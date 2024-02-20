@@ -110,64 +110,596 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
 
                 if(items?.get(0)?.numberOfStint == position.toString().toInt()) {
                     if (position == 2) {
-                        val change = "Etap: ${position.toString().toInt()-1}"
-                        val teamStint = "${position.toString().toInt()-1}-box"
-                        if (!p0.result.child("Stints").child(change).child("Info").child(teamStint).child("kartNumber").exists()) {
-                            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
-                                requireContext(),
-                                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
-                            )
+                        val changeCheck = "Etap: ${position.toString().toInt()-1}"
+                        val teamStintCheck = "${position.toString().toInt()-1}-box11"
+                        if (!p0.result.child("Stints").child(changeCheck).child("Info").child(teamStintCheck).child("kartNumber").exists()) {
 
-                            val inflater = this.layoutInflater
-                            val dialogView: View =
-                                inflater.inflate(R.layout.parking_kart_fragment, null)
-                            dialogBuilder.setView(dialogView)
-                            dialogBuilder.setTitle(R.string.parkingKart)
+                            val numberOfTeams =
+                                p0.result.child("Info").child("numberOfTeams").value.toString()
+                                    .toInt()
+                            val firstMore =
+                                p0.result.child("Info").child("firstMore").value.toString()
+                                    .toBooleanStrictOrNull()
+                            val secondMore =
+                                p0.result.child("Info").child("secondMore").value.toString()
+                                    .toBooleanStrictOrNull()
+                            val equalGroup =
+                                p0.result.child("Info").child("equalGroup").value.toString()
+                                    .toBooleanStrictOrNull()
+                            if (numberOfTeams < 10) {
+                                val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
+                                    requireContext(),
+                                    android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                                )
 
-                            val parkingKart = dialogView.findViewById<EditText>(R.id.etParkingKart)
+                                val inflater = this.layoutInflater
+                                val dialogView: View =
+                                    inflater.inflate(
+                                        hu.bme.aut.android.enduranceoagb.R.layout.parking_kart_fragment,
+                                        null
+                                    )
+                                dialogBuilder.setView(dialogView)
+                                dialogBuilder.setTitle(hu.bme.aut.android.enduranceoagb.R.string.parkingKart)
 
-                            dialogBuilder.setPositiveButton(R.string.button_ok) { _, _ ->
-                                if (parkingKart.text.toString()
-                                        .isNotEmpty()
-                                ) {
-                                    dbRef.child("Stints").child("Etap: 1").child("Info").child("1-box").child("kartNumber").setValue(parkingKart.text.toString())
-                                    dbRef.child("Cserék").child("Etap: 01").child("5 - Parkol").child("Parkol")
-                                        .setValue(parkingKart.text.toString())
-                                    val id = p0.result.child("Id").value.toString()
-                                    var idNumber : Int
-                                    if (id == "-1") {
-                                        idNumber = 0
-                                    }
-                                    else {
-                                        idNumber = id.toInt()
+                                val parkingKart =
+                                    dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart)
+
+                                val kartNumberOri =
+                                    p0.result.child("Stints").child("Etap: 1").child("Info")
+                                        .child("1-box12")
+                                        .child("kartNumber").value.toString().toIntOrNull()
+                                if (kartNumberOri != null || kartNumberOri.toString() != "null") {
+                                    parkingKart.setText(kartNumberOri.toString())
+                                }
+
+                                dialogBuilder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                    if (parkingKart.text.toString()
+                                            .isNotEmpty()
+                                    ) {
+                                        dbRef.child("Stints").child("Etap: 1").child("Info")
+                                            .child("1-box11")
+                                            .child("kartNumber")
+                                            .setValue(parkingKart.text.toString())
+                                        dbRef.child("Stints").child("Etap: 1").child("Info")
+                                            .child("1-box12")
+                                            .child("kartNumber")
+                                            .setValue(parkingKart.text.toString())
+                                        val id = p0.result.child("Id").value.toString()
+                                        var idNumber: Int
+                                        if (id == "-1") {
+                                            idNumber = 0
+                                        } else {
+                                            idNumber = id.toInt()
+                                            idNumber++
+                                        }
+                                        dbRef.child("Id").setValue(idNumber)
+                                        //val teamStintId = idNumber
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("stintNumber").setValue("1. etap")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("teamNumber").setValue("box11")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("driver").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("plusWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("totalWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("kartNumber")
+                                            .setValue(parkingKart.text.toString())
                                         idNumber++
+
+                                        dbRef.child("Id").setValue(idNumber)
+                                        //val teamStintId = idNumber
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("stintNumber").setValue("1. etap")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("teamNumber").setValue("box12")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("driver").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("plusWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("totalWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString())
+                                            .child("kartNumber")
+                                            .setValue(parkingKart.text.toString())
+
+                                    } else {
+                                        AlertDialog.Builder(requireContext())
+                                            .setTitle(hu.bme.aut.android.enduranceoagb.R.string.warning)
+                                            .setMessage(hu.bme.aut.android.enduranceoagb.R.string.validAll)
+                                            .setPositiveButton(
+                                                hu.bme.aut.android.enduranceoagb.R.string.button_ok,
+                                                null
+                                            )
+                                            .setNegativeButton("", null)
+                                            .show()
                                     }
-                                    dbRef.child("Id").setValue(idNumber)
-                                    val teamStintId = idNumber
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("stintNumber").setValue("1. etap")
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("teamNumber").setValue("box")
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("driver").setValue("-")
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
-                                    dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue(parkingKart.text.toString())
+                                }
+                                dialogBuilder.setNegativeButton(
+                                    hu.bme.aut.android.enduranceoagb.R.string.button_megse,
+                                    null
+                                )
+                                val alertDialog = dialogBuilder.create()
+                                alertDialog.show()
+                            } else {
+                                //ha firstmore, akkor legyen egy olyan layout, ahol 1 első csoport, 2 másik
+                                //ha secondmore, akkor legyen egy olyan layout, ahol 2 első csoport, 1 másik
+                                //ha equalGroup, akkor legyen egy olyan layout, ahol 1 első csoport, 1 másik
+                                val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
+                                    requireContext(),
+                                    android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                                )
 
-                                    showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
-                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
-                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
-                                    startActivity(showDetailsIntent)
+                                if (firstMore == true) {
+                                    val inflater = this.layoutInflater
+                                    val dialogView: View =
+                                        inflater.inflate(
+                                            hu.bme.aut.android.enduranceoagb.R.layout.parking_kart_fragment_firstmore,
+                                            null
+                                        )
+                                    dialogBuilder.setView(dialogView)
+                                    dialogBuilder.setTitle(hu.bme.aut.android.enduranceoagb.R.string.parkingKarts)
 
+                                    val parkingKart11 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart11)
+                                    val parkingKart21 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart21)
+                                    val parkingKart22 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart22)
+
+
+                                    dialogBuilder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                        if (parkingKart11.text.toString()
+                                                .isNotEmpty() && parkingKart21.text.toString()
+                                                .isNotEmpty() && parkingKart22.text.toString()
+                                                .isNotEmpty()
+                                        ) {
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box11")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box12")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box21")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box22")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart22.text.toString())
+                                            val id = p0.result.child("Id").value.toString()
+                                            var idNumber: Int
+                                            if (id == "-1") {
+                                                idNumber = 0
+                                            } else {
+                                                idNumber = id.toInt()
+                                                idNumber++
+                                            }
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box11")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box12")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box21")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box22")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart22.text.toString())
+
+                                        } else {
+                                            AlertDialog.Builder(requireContext())
+                                                .setTitle(hu.bme.aut.android.enduranceoagb.R.string.warning)
+                                                .setMessage(hu.bme.aut.android.enduranceoagb.R.string.validNot)
+                                                .setPositiveButton(
+                                                    hu.bme.aut.android.enduranceoagb.R.string.button_ok,
+                                                    null
+                                                )
+                                                .setNegativeButton("", null)
+                                                .show()
+                                        }
+                                    }
+                                    dialogBuilder.setNegativeButton(
+                                        hu.bme.aut.android.enduranceoagb.R.string.button_megse,
+                                        null
+                                    )
+                                    val alertDialog = dialogBuilder.create()
+                                    alertDialog.show()
+                                } else if (secondMore == true) {
+                                    val inflater = this.layoutInflater
+                                    val dialogView: View =
+                                        inflater.inflate(
+                                            hu.bme.aut.android.enduranceoagb.R.layout.parking_kart_fragment_secondmore,
+                                            null
+                                        )
+                                    dialogBuilder.setView(dialogView)
+                                    dialogBuilder.setTitle(hu.bme.aut.android.enduranceoagb.R.string.parkingKarts)
+
+                                    val parkingKart11 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart11)
+                                    val parkingKart12 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart12)
+                                    val parkingKart21 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart21)
+
+
+                                    dialogBuilder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                        if (parkingKart11.text.toString()
+                                                .isNotEmpty() && parkingKart12.text.toString()
+                                                .isNotEmpty() && parkingKart21.text.toString()
+                                                .isNotEmpty()
+                                        ) {
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box11")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box12")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart12.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box21")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box22")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            val id = p0.result.child("Id").value.toString()
+                                            var idNumber: Int
+                                            if (id == "-1") {
+                                                idNumber = 0
+                                            } else {
+                                                idNumber = id.toInt()
+                                                idNumber++
+                                            }
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box11")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box12")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart12.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box21")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box22")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+
+                                        } else {
+                                            AlertDialog.Builder(requireContext())
+                                                .setTitle(hu.bme.aut.android.enduranceoagb.R.string.warning)
+                                                .setMessage(hu.bme.aut.android.enduranceoagb.R.string.validNot)
+                                                .setPositiveButton(
+                                                    hu.bme.aut.android.enduranceoagb.R.string.button_ok,
+                                                    null
+                                                )
+                                                .setNegativeButton("", null)
+                                                .show()
+                                        }
+                                    }
+                                    dialogBuilder.setNegativeButton(
+                                        hu.bme.aut.android.enduranceoagb.R.string.button_megse,
+                                        null
+                                    )
+                                    val alertDialog = dialogBuilder.create()
+                                    alertDialog.show()
+                                } else if (equalGroup == true) {
+                                    val inflater = this.layoutInflater
+                                    val dialogView: View =
+                                        inflater.inflate(
+                                            hu.bme.aut.android.enduranceoagb.R.layout.parking_kart_fragment_equalgroup,
+                                            null
+                                        )
+                                    dialogBuilder.setView(dialogView)
+                                    dialogBuilder.setTitle(hu.bme.aut.android.enduranceoagb.R.string.parkingKarts)
+
+                                    val parkingKart11 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart11)
+                                    val parkingKart21 =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart21)
+
+
+                                    dialogBuilder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                        if (parkingKart11.text.toString()
+                                                .isNotEmpty() && parkingKart21.text.toString()
+                                                .isNotEmpty()
+                                        ) {
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box11")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box12")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box21")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box22")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            val id = p0.result.child("Id").value.toString()
+                                            var idNumber: Int
+                                            if (id == "-1") {
+                                                idNumber = 0
+                                            } else {
+                                                idNumber = id.toInt()
+                                                idNumber++
+                                            }
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box11")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box12")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart11.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box21")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box22")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart21.text.toString())
+
+                                        } else {
+                                            AlertDialog.Builder(requireContext())
+                                                .setTitle(hu.bme.aut.android.enduranceoagb.R.string.warning)
+                                                .setMessage(hu.bme.aut.android.enduranceoagb.R.string.validNot)
+                                                .setPositiveButton(
+                                                    hu.bme.aut.android.enduranceoagb.R.string.button_ok,
+                                                    null
+                                                )
+                                                .setNegativeButton("", null)
+                                                .show()
+                                        }
+                                    }
+                                    dialogBuilder.setNegativeButton(
+                                        hu.bme.aut.android.enduranceoagb.R.string.button_megse,
+                                        null
+                                    )
+                                    val alertDialog = dialogBuilder.create()
+                                    alertDialog.show()
                                 } else {
-                                    AlertDialog.Builder(requireContext())
-                                        .setTitle(R.string.warning)
-                                        .setMessage(R.string.validAll)
-                                        .setPositiveButton(R.string.button_ok, null)
-                                        .setNegativeButton("", null)
-                                        .show()
+                                    val inflater = this.layoutInflater
+                                    val dialogView: View =
+                                        inflater.inflate(
+                                            hu.bme.aut.android.enduranceoagb.R.layout.parking_kart_fragment,
+                                            null
+                                        )
+                                    dialogBuilder.setView(dialogView)
+                                    dialogBuilder.setTitle(hu.bme.aut.android.enduranceoagb.R.string.parkingKart)
+
+                                    val parkingKart =
+                                        dialogView.findViewById<EditText>(hu.bme.aut.android.enduranceoagb.R.id.etParkingKart)
+
+                                    dialogBuilder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.button_ok) { _, _ ->
+                                        if (parkingKart.text.toString()
+                                                .isNotEmpty()
+                                        ) {
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box11")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart.text.toString())
+                                            dbRef.child("Stints").child("Etap: 1").child("Info")
+                                                .child("1-box12")
+                                                .child("kartNumber")
+                                                .setValue(parkingKart.text.toString())
+                                            val id = p0.result.child("Id").value.toString()
+                                            var idNumber: Int
+                                            if (id == "-1") {
+                                                idNumber = 0
+                                            } else {
+                                                idNumber = id.toInt()
+                                                idNumber++
+                                            }
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box11")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart.text.toString())
+                                            idNumber++
+
+                                            dbRef.child("Id").setValue(idNumber)
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("stintNumber").setValue("1. etap")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("teamNumber").setValue("box12")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("driver").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("plusWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("totalWeight").setValue("-")
+                                            dbRef.child("Excel").child(idNumber.toString())
+                                                .child("kartNumber")
+                                                .setValue(parkingKart.text.toString())
+
+                                        } else {
+                                            AlertDialog.Builder(requireContext())
+                                                .setTitle(hu.bme.aut.android.enduranceoagb.R.string.warning)
+                                                .setMessage(hu.bme.aut.android.enduranceoagb.R.string.validNot)
+                                                .setPositiveButton(
+                                                    hu.bme.aut.android.enduranceoagb.R.string.button_ok,
+                                                    null
+                                                )
+                                                .setNegativeButton("", null)
+                                                .show()
+                                        }
+                                    }
+                                    dialogBuilder.setNegativeButton(
+                                        hu.bme.aut.android.enduranceoagb.R.string.button_megse,
+                                        null
+                                    )
+                                    val alertDialog = dialogBuilder.create()
+                                    alertDialog.show()
                                 }
                             }
-                            dialogBuilder.setNegativeButton(R.string.button_megse, null)
-                            val alertDialog = dialogBuilder.create()
-                            alertDialog.show()
                         }
                         else {
                             showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)

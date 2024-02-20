@@ -17,5 +17,10 @@ data class Races(
     @ColumnInfo(name = "hasTeamsDone") var hasTeamsDone: Int,
     @ColumnInfo(name = "hasResultsDone") var hasResultsDone: Boolean,
     @ColumnInfo(name = "hasRaceDone") var hasQualiDone: Int,
-    @ColumnInfo(name = "numberOfRace") var numberOfRace: Int? = null
+    @ColumnInfo(name = "numberOfRace") var numberOfRace: Int? = null,
+    @ColumnInfo(name = "hasGroupDone") var hasGroupDone: Boolean? = null,
+    @ColumnInfo(name = "secondGroup") var secondGroup: Int? = null,
+    @ColumnInfo(name = "firstMore") var firstMore: Boolean? = null,
+    @ColumnInfo(name = "secondMore") var secondMore: Boolean? = null,
+    @ColumnInfo(name = "equalGroup") var equalGroup: Boolean? = null
 )

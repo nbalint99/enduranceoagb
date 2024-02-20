@@ -78,7 +78,7 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
                                         element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
-                                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull())
+                                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull(), element.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull())
                     if (!element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }
@@ -111,7 +111,7 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
                         element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
-                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull())
+                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull(), element.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull())
                     if (!element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
                         items?.add(addRace)
                     }
@@ -216,11 +216,12 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
 
                     dialogBuilder.setPositiveButton(R.string.button_ok) { _, _ ->
                         if (nameRaceEdit.text.toString()
-                                .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..15
+                                .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..14
                         ) {
                             dbRef.child(key).child("Info").child("numberOfRace").setValue(nameRaceEdit.text.toString())
                             dbRef.child(key).child("Info").child("nameR").setValue(year2 + " - " + nameRaceEdit.text.toString() + ". verseny")
                             dbRef.child(key).child("Info").child("numberOfTeams").setValue(numberOfTeamsEdit.text.toString())
+                            dbRef.child(key).child("Info").child("allStintNumber").setValue(numberOfStints(numberOfTeamsEdit.text.toString().toInt()).toString())
 
                             if (cbActual.isChecked) {
                                 dbRef.child("Actual").child("key").setValue(key)
@@ -254,6 +255,22 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
             }
 
 
+        }
+    }
+
+    private fun numberOfStints(numberOfTeams: Int): Int {
+        return when (numberOfTeams) {
+            5 -> 6
+            6 -> 7
+            7 -> 8
+            8 -> 9
+            9 -> 10
+            10 -> 6
+            11 -> 7
+            12 -> 7
+            13 -> 8
+            14 -> 8
+            else -> 0
         }
     }
 

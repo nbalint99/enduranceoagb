@@ -262,12 +262,23 @@ class AllTeamActivity : AppCompatActivity(), AllTeamAdapter.AllTeamItemClickList
     override fun onTeamCreated(nameTeam: String, people: Int?, gp2: Boolean) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference(year.toString())
 
-        val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = gp2, 0, 0, 0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0)
-        dbRef.child("Teams").child(nameTeam).setValue(newItem)
-        runOnUiThread {
-            adapter.addItem(newItem)
+        if (gp2) {
+            val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = gp2, 0, 0, 0,
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0)
+            dbRef.child("Teams").child(nameTeam).setValue(newItem)
+            runOnUiThread {
+                adapter.addItem(newItem)
+            }
+        }
+        else {
+            val newItem = AllTeams(nameTeam, people, 0, hasJokerRaced = false, 0, 0, null, null, gp2 = gp2, 0, 0, null,
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,
+                null,null,null,null,null,null,null,null,null,null)
+            dbRef.child("Teams").child(nameTeam).setValue(newItem)
+            runOnUiThread {
+                adapter.addItem(newItem)
+            }
         }
     }
 

@@ -15,7 +15,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.QualiTeamFragmentBinding
 
 class QualiFragment : DialogFragment() {
     interface QualiListener {
-        fun onQualiCreated(teamName: String, teamNumber: Int?, kartNumber: Int?)
+        fun onQualiCreated(teamName: String, teamNumber: Int?, kartNumber: Int?, group: Int?)
     }
 
     private lateinit var listener: QualiListener
@@ -39,6 +39,7 @@ class QualiFragment : DialogFragment() {
         val dataPassedPeople: String? = arguments?.getString("people")
         val dataPassedKart: String? = arguments?.getString("startKartNumber")
         val dataPassedGP2: String? = arguments?.getString("gp2")
+        val dataPassedGroup: String? = arguments?.getString("group")
 
         if (dataPassedGP2 == "true") {
             binding.tvNameTeamQuali.text = "$dataPassedTeamName (GP2)"
@@ -71,7 +72,7 @@ class QualiFragment : DialogFragment() {
                 val teamNumber: Int? = binding.etQualiResult.text.toString().toIntOrNull()
                 val kartNumber: Int? = binding.etKartNumberQuali.text.toString().toIntOrNull()
 
-                listener.onQualiCreated(dataPassedTeamName.toString(), teamNumber, kartNumber)
+                listener.onQualiCreated(dataPassedTeamName.toString(), teamNumber, kartNumber, dataPassedGroup.toString().toIntOrNull())
             }
             .setNegativeButton(R.string.button_megse, null)
             .create()
@@ -80,13 +81,14 @@ class QualiFragment : DialogFragment() {
     companion object {
 
         @JvmStatic //This can be avoided if you are in a complete Kotlin project
-        fun newInstance(teamName: String, teamNumber: String?, people: String, startKartNumber: String?, gp2: String): QualiFragment {
+        fun newInstance(teamName: String, teamNumber: String?, people: String, startKartNumber: String?, gp2: String, group: Int?): QualiFragment {
             val args = Bundle()
             args.putString("teamName", teamName)
             args.putString("teamNumber", teamNumber.toString())
             args.putString("people", people)
             args.putString("startKartNumber", startKartNumber)
             args.putString("gp2", gp2)
+            args.putString("group", group.toString())
             val fragment = QualiFragment()
             fragment.arguments = args
             return fragment
