@@ -881,6 +881,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
             if (p0.isSuccessful) {
                 val change = "Etap: ${stintId.toString().toInt()+1}"
                 val teamStint = "${stintId.toString().toInt()+1}-$teamNumber"
+                val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                 if (p0.result.child("Stints").child(change).child("Info").child(teamStint).child("driverName").exists()) {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("Figyelem!")
@@ -895,7 +896,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     builder.setMessage("Ezt az etapot egyszer már létrehoztad. Biztos, hogy módosítani szeretnéd?")
 
                     builder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { dialog, which ->
-                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString())
+                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString(), secondGroupFirst.toString())
                         fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                     }
                     builder.setNeutralButton(hu.bme.aut.android.enduranceoagb.R.string.button_megse, null)
@@ -912,7 +913,8 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         plusWeight.toString(),
                         shortTeamName,
                         driverWeight.toString(),
-                        prevTotalWeight.toString()
+                        prevTotalWeight.toString(),
+                        secondGroupFirst.toString()
                     )
                     fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                 }
@@ -1371,6 +1373,14 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                 val outputSumWeight = sumWeightStr.replace('.', ',')
                                 dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
                                 dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                if (driver != driverName) {
+                                    val prevDriverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driverName.toString()).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driverName.toString()).child("stints").setValue(prevDriverStints - 1)
+                                    val driverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+                                }
                                 break
                             }
                         }
@@ -1425,6 +1435,10 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             .setValue(outputSumWeight)
                         dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
                             .setValue(kartNumber)
+                        val driverStints = p0.result.child("Teams")
+                            .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                        dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+
                     }
                 } else {
                     val getStintDone = p0.result.child("Stints").child("Etap: $stintId").child("Info").child("$stintId-$teamNumber").child("hasStintDone").value.toString().toBoolean()
@@ -1452,6 +1466,14 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                 val outputSumWeight = sumWeightStr.replace('.', ',')
                                 dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
                                 dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                if (driver != driverName) {
+                                    val prevDriverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driverName.toString()).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driverName.toString()).child("stints").setValue(prevDriverStints - 1)
+                                    val driverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+                                }
                                 break
                             }
                         }
@@ -1506,6 +1528,11 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             .setValue(outputSumWeight)
                         dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
                             .setValue(kartNumber)
+
+                        val driverStints = p0.result.child("Teams")
+                            .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                        dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+
                     }
                 }
 

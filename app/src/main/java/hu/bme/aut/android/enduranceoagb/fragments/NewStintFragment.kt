@@ -62,6 +62,7 @@ class NewStintFragment : DialogFragment() {
         val dataPassedShortTeamName: String? = arguments?.getString("shortTeamName")
         val dataPassedDriverWeight: String? = arguments?.getString("driverWeight")
         val dataPassedTotalWeight: String? = arguments?.getString("prevTotalWeight")
+        val dataPassedSecondGroup: String? = arguments?.getString("secondGroup")
 
         binding.tvNameTeamStint.text = dataPassedTeamName
 
@@ -73,7 +74,9 @@ class NewStintFragment : DialogFragment() {
             if (p0.isSuccessful) {
                 for (element in p0.result.child("Teams").child(dataPassedTeamName.toString()).child("Drivers").children) {
                     val addDriver = element.child("nameDriver").value.toString()
-                    items.add(addDriver)
+                    val driverStint = element.child("stints").value.toString()
+                    val addDriverFull = "$addDriver - $driverStint"
+                    items.add(addDriverFull)
                 }
 
                 binding.spPeople.adapter = ArrayAdapter(
@@ -89,11 +92,16 @@ class NewStintFragment : DialogFragment() {
                 else if (dataPassedStint.toString().toInt() > 1) {
                     val change = "Etap: " + (dataPassedStint.toString().toInt()-1)
                     if (dataPassedTeamId.toString().toInt() == 1) {
-                        val stintTeam = (dataPassedStint.toString().toInt()-1).toString() + "-" + "box"
+                        val stintTeam = (dataPassedStint.toString().toInt()-1).toString() + "-" + "box22"
                         val kartNum = p0.result.child("Stints").child(change).child("Info").child(stintTeam).child("kartNumber").value.toString()
                         binding.etKartNumberStint.setText(kartNum)
                     }
-                    else if (dataPassedTeamId.toString().toInt() > 1) {
+                    else if (dataPassedTeamId.toString().toInt() == dataPassedSecondGroup.toString().toInt()) {
+                        val stintTeam = (dataPassedStint.toString().toInt()-1).toString() + "-" + "box12"
+                        val kartNum = p0.result.child("Stints").child(change).child("Info").child(stintTeam).child("kartNumber").value.toString()
+                        binding.etKartNumberStint.setText(kartNum)
+                    }
+                    else if (dataPassedTeamId.toString().toInt() > 1 && dataPassedTeamId.toString().toInt() != dataPassedSecondGroup.toString().toInt()) {
                         val stintTeam = (dataPassedStint.toString().toInt()-1).toString() + "-" + (dataPassedTeamId.toString().toInt()-1).toString()
                         val kartNum = p0.result.child("Stints").child(change).child("Info").child(stintTeam).child("kartNumber").value.toString()
                         binding.etKartNumberStint.setText(kartNum)
@@ -117,9 +125,13 @@ class NewStintFragment : DialogFragment() {
                 if (isValid() && isValidWeight()) {
                     val itemId = binding.spWeight.selectedItemId.toInt()
                     val selectedWeight = selectWeight(itemId)
-                    val selectedDriver: String = binding.spPeople.selectedItem.toString()
+                    //val selectedDriver: String = binding.spPeople.selectedItem.toString()
                     val info: String? = binding.etStintInfo.text.toString()
                     val kartNumber: Int = binding.etKartNumberStint.text.toString().toInt()
+
+                    val selectedDriverSpinner: String = binding.spPeople.selectedItem.toString()
+                    val n = 4
+                    val selectedDriver = selectedDriverSpinner.dropLast(n)
 
                     if (dataPassedStintDone == "false") {
                         if (selectedWeight == 100.0) {
@@ -270,7 +282,8 @@ class NewStintFragment : DialogFragment() {
             plusWeightDriver: String?,
             shortTeamName: String?,
             driverWeight: String?,
-            prevTotalWeight: String?
+            prevTotalWeight: String?,
+            secondGroup: String?
         ): NewStintFragment {
             val args = Bundle()
             args.putString("position", position)
@@ -283,6 +296,7 @@ class NewStintFragment : DialogFragment() {
             args.putString("shortTeamName", shortTeamName)
             args.putString("driverWeight", driverWeight)
             args.putString("prevTotalWeight", prevTotalWeight)
+            args.putString("secondGroup", secondGroup)
             val fragment = NewStintFragment()
             fragment.arguments = args
             return fragment

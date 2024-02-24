@@ -138,4 +138,11 @@
     <string name="firstgroupsecond">Az 1. csoport 2. cseregokartjának megadása</string>
     <string name="parkingKarts">Első cseregokartok megadása csoportonként</string>
     <string name="qualiResultEnd">Időmérő edzés végeredménye</string>
+    <string name="startTime">A verseny rajtjának a megadása</string>
+    <string name="hour">Óra</string>
+    <string name="minutes">Perc</string>
+    <string name="seconds">Másodperc</string>
+    <string name="milliseconds">Ezredmásodperc</string>
+    <string name="qualiResults">Az időmérő eredménye</string>
+    <string name="placeHolderQuali">Időmérő eredmény megadása</string>
 </resources>

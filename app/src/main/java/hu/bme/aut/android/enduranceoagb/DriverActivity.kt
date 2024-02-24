@@ -226,6 +226,7 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
             dbRef.child("Teams").child(teamName.toString()).child("Info").child("hasDriversDone").setValue(ServerValue.increment(1))
         }
 
+
         dbRef2 =
             FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference(year.toString())
@@ -298,6 +299,8 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
                 }
             }
         }
+
+        dbRef.child("Teams").child(teamName.toString()).child("Drivers").child(driverName).child("stints").setValue(0)
 
         runOnUiThread {
             adapter.addItem(newItem)
@@ -542,6 +545,7 @@ class DriverActivity : AppCompatActivity(), DriverAdapter.DriverItemClickListene
                             val snack = Snackbar.make(binding.root, R.string.fail, Snackbar.LENGTH_LONG)
                             snack.show()
                         }
+                        dbRef.child("Teams").child(teamName.toString()).child("Drivers").child(driverEdit.text.toString()).child("stints").setValue(0)
                     }
                     dialogBuilder.setNegativeButton(R.string.button_megse, null)
                     val alertDialog = dialogBuilder.create()

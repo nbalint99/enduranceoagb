@@ -22,6 +22,8 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
     private val itemsTeams = mutableListOf<Teams>()
 
+    private val group = mutableListOf<Int>()
+
     private var positionDefault = -1
 
 
@@ -35,8 +37,15 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         for (element in itemsTeams) {
             if (element.teamNumber == item.teamNumber) {
-                holder.binding.tvNumberOfTeamWatch.text = item.teamNumber.toString() + ". csapat - " + element.nameTeam
-                break
+                if (element.shortTeamName != null) {
+                    holder.binding.tvNumberOfTeamWatch.text = item.teamNumber.toString() + ". csapat - " + element.shortTeamName
+                    break
+                }
+                else {
+                    holder.binding.tvNumberOfTeamWatch.text =
+                        item.teamNumber.toString() + ". csapat - " + element.nameTeam
+                    break
+                }
             }
         }
 
@@ -67,6 +76,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
         holder.binding.startButton.setOnClickListener {
             if (holder.binding.timeTV.text != "MEHET!") {
                 if (!counting) {
+                    listener.startTimer(position)
                     counting = true
                     holder.binding.startButton.text = "Stop"
                     holder.binding.startButton.setTextColor(Color.WHITE)
@@ -124,6 +134,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
         holder.binding.timeTV.setOnClickListener {
             if (holder.binding.timeTV.text != "MEHET!") {
                 if (!counting) {
+                    listener.startTimer(position)
                     counting = true
                     holder.binding.startButton.text = "Stop"
                     holder.binding.startButton.setTextColor(Color.WHITE)
@@ -489,6 +500,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
         fun dataChanged(position: Int, initTime: Double)
         fun dataChangedBool(position: Int)
         fun dataChangedBoolFalse(position: Int)
+        fun startTimer(position: Int)
     }
 
     fun addItem(item: Watch) {
@@ -517,6 +529,13 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun update2Group(groupNumber: MutableList<Int>) {
+        group.clear()
+        group.addAll(groupNumber)
+        notifyDataSetChanged()
+    }
+
     inner class Watch2ViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
         var binding = WatchListBinding.bind(itemView)
         var item: Watch? = null
@@ -525,6 +544,9 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         fun bind(newItem: Watch) {
             item = newItem
+            if (item!!.teamNumber == group[0]) {
+                itemView.setBackgroundResource(R.color.pink)
+            }
         }
     }
 }

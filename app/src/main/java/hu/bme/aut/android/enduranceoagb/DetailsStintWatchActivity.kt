@@ -16,6 +16,9 @@ import hu.bme.aut.android.enduranceoagb.databinding.ActivityBoxtimeBinding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatch2Binding
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityDetailsstintwatchBinding
 import hu.bme.aut.android.enduranceoagb.fragments.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintListener/*, NewBoxFragment.NewBoxListener*/ {
@@ -503,50 +506,55 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                         if (doneStint) {
                             val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                             val teams = p0.result.child("Teams").children
+                            val quali = p0.result.child("Quali").children
                             for (element in teams) {
-                                val teamName = element.child("Info").child("nameTeam").value.toString()
-                                val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
-                                val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
-                                val childTeam = "1-$teamNumber"
-                                val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)
-                                    .child("kartNumber").value.toString().toIntOrNull()
-                                var init = 1
-                                for (i in numberOfTeams downTo 1) {
-                                    if (init == teamNumber) {
-                                        if (i < 10) {
-                                            var place = i.toString()
-                                            place = "0$place"
-                                            if (shortTeamName != null) {
-                                                val string =
-                                                    "$place. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
-                                                items?.add(string)
-                                                break
-                                            }
-                                            else {
-                                                val string =
-                                                    "$place. hely - Gokart: $kartNumber - Csapat: $teamName"
-                                                items?.add(string)
-                                                break
-                                            }
+                                for (el in quali) {
+                                    val teamName = element.child("Info").child("nameTeam").value.toString()
+                                    val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
+                                    val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
+                                    val qualiTeamName = el.child("longTeamName").value.toString()
+                                    if (teamName == qualiTeamName) {
+                                        val resultQuali = el.child("result").value.toString().toInt()
+                                        val childTeam = "1-$teamNumber"
+                                        val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)
+                                            .child("kartNumber").value.toString().toIntOrNull()
+                                        for (i in 1..numberOfTeams) {
+                                                if (resultQuali < 10) {
+                                                    var place = resultQuali.toString()
+                                                    place = "0$place"
+                                                    if (shortTeamName != null) {
+                                                        val string =
+                                                            "$place. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
+                                                        items?.add(string)
+                                                        break
+                                                    }
+                                                    else {
+                                                        val string =
+                                                            "$place. hely - Gokart: $kartNumber - Csapat: $teamName"
+                                                        items?.add(string)
+                                                        break
+                                                    }
 
-                                        }
-                                        else {
-                                            if (shortTeamName != null) {
-                                                val string =
-                                                    "$i. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
-                                                items?.add(string)
-                                                break
-                                            }
-                                            else {
-                                                val string =
-                                                    "$i. hely - Gokart: $kartNumber - Csapat: $teamName"
-                                                items?.add(string)
-                                                break
-                                            }
+                                                }
+                                                else {
+                                                    if (shortTeamName != null) {
+                                                        val string =
+                                                            "$resultQuali. hely - Gokart: $kartNumber - Csapat: $shortTeamName"
+                                                        items?.add(string)
+                                                        break
+                                                    }
+                                                    else {
+                                                        val string =
+                                                            "$resultQuali. hely - Gokart: $kartNumber - Csapat: $teamName"
+                                                        items?.add(string)
+                                                        break
+                                                    }
+                                                }
                                         }
                                     }
-                                    init += 1
                                 }
+
+
                             }
                             val sortedItems = items?.sorted()
                             val pushItems: MutableList<String>? = mutableListOf()
@@ -595,6 +603,41 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
             setContentView(binding2.root)
 
             binding2.tvNumberOfStint.text = "$stintId. etap"
+
+            dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+            dbRef.get().addOnCompleteListener { p0 ->
+                if (p0.isSuccessful) {
+                    val raceDone = p0.result.child("Info").child("hasRaceDone").value.toString().toBoolean()
+                    if (!raceDone) {
+                        val hours = p0.result.child("Info").child("hours").value.toString().toInt()
+                        val minutes =
+                            p0.result.child("Info").child("minutes").value.toString().toInt()
+                        val seconds =
+                            p0.result.child("Info").child("seconds").value.toString().toInt()
+                        val milliseconds =
+                            p0.result.child("Info").child("milliseconds").value.toString().toInt()
+                        val timer = Timer()
+                        timer.scheduleAtFixedRate(object : TimerTask() {
+                            override fun run() {
+                                runOnUiThread {
+                                    val cal = Calendar.getInstance()
+                                    cal[Calendar.HOUR_OF_DAY] = hours
+                                    cal[Calendar.MINUTE] = minutes
+                                    cal[Calendar.SECOND] = seconds
+                                    cal[Calendar.MILLISECOND] = milliseconds
+                                    //println(Date().time - cal.timeInMillis)
+                                    binding2.tcClock.text =
+                                        "${SimpleDateFormat("HH:mm:ss").format(((Date().time) - 3600000) - cal.timeInMillis)}"
+                                }
+                            }
+                        }, 0, 1000)
+                    }
+                    else if (raceDone) {
+                        binding2.tcClock.text = "Vége a versenynek!"
+                    }
+                }
+            }
         }
 
 

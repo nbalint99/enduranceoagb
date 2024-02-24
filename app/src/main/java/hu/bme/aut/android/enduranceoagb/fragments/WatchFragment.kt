@@ -1,6 +1,11 @@
 package hu.bme.aut.android.enduranceoagb.fragments
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -10,6 +15,8 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +40,9 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
     private lateinit var adapter: WatchAdapter2
 
+    private val CHANNEL_ID = "channel_id_01"
+    private val notificationId = 101
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +59,8 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         binding.rvWatch.adapter = adapter
 
         binding.rvWatch.setItemViewCacheSize(16)
+
+        createNotificationChannel2()
 
         return binding.root
     }
@@ -72,6 +84,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
         val items : MutableList<Watch>? = mutableListOf()
         val itemsTeams : MutableList<Teams>? = mutableListOf()
+        val groups : MutableList<Int>? = mutableListOf()
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
@@ -103,8 +116,12 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                     itemsTeams?.add(teamsGet)
                 }
 
+                val secondGroup = p0.result.child("Info").child("secondGroup").value.toString().toInt()
+                groups?.add(secondGroup)
+
                 adapter.update2(items!!)
                 adapter.update2Teams(itemsTeams!!)
+                adapter.update2Group(groups!!)
 
             }
         }
@@ -138,6 +155,25 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         }
     }
 
+    override fun startTimer(position: Int) {
+        val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
+        val raceId: String = activity?.getMyData().toString()
+        val stintId: String = activity?.getMyDataStint().toString()
+
+        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+        dbRef.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val secondGroup = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                val firstGroupLast = secondGroup?.minus(1)
+                if (position+1 == firstGroupLast) {
+                    sendNotification2()
+                }
+
+            }
+        }
+    }
+
     override fun dataChangedBoolFalse(position: Int) {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
@@ -151,6 +187,33 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 dbRef.child("Watch").child(stintId).child((position+1).toString()).child("hasDone").setValue(false)
                 dbRef.child("Watch").child(stintId).child((position+1).toString()).child("initialTime").setValue(changeTime)
             }
+        }
+    }
+
+    private fun createNotificationChannel2() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Endurance OAGB"
+            val descriptonText = "Jön a melegítős gokart a boxba!"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptonText
+            }
+            val notificationManager: NotificationManager = requireActivity().getSystemService(
+                Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendNotification2() {
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+            .setSmallIcon(R.drawable.endu)
+            .setContentTitle("Endurance OAGB")
+            .setContentText("Jön a melegítős gokart a boxba!")
+            .setAutoCancel(true)
+            .setSound(soundUri)
+        with(NotificationManagerCompat.from(requireContext())) {
+            notify(notificationId, notificationBuilder.build())
         }
     }
 }

@@ -37,6 +37,10 @@
             android:exported="true"
             android:label="@string/result" />
         <activity
+            android:name=".QualiActivity"
+            android:exported="true"
+            android:label="@string/qualiResults" />
+        <activity
             android:name=".DetailsTeamCheckActivity"
             android:exported="true"
             android:label="@string/teamsDetailsCheck" />

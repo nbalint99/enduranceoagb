@@ -202,7 +202,7 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
         startActivity(showDetailsIntent)
     }
 
-    override fun onItemClick(position: String?, number: String?, gp2: Boolean?) {
+    override fun onItemClick(position: String?, number: String?, gp2: Boolean?, itemId: Int?) {
         dbRef =
             FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference("Races").child(raceId.toString())

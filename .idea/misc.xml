@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/layout/change_time_dialog.xml" value="0.1671654553227875" />
         <entry key="app/src/main/res/layout/detailsstint_list.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/layout/detailsstintfragment_list.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/detailsstintfragmentwatch_list.xml" value="0.10272277227722772" />
         <entry key="app/src/main/res/layout/detailsteamcheck_list.xml" value="0.184375" />
         <entry key="app/src/main/res/layout/drivers_list.xml" value="0.184375" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.3609375" />
@@ -59,6 +60,7 @@
         <entry key="app/src/main/res/layout/podium_gp2_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/podium_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/quali_team_fragment.xml" value="0.14110186286167262" />
+        <entry key="app/src/main/res/layout/qualification_fragment.xml" value="0.11654290429042904" />
         <entry key="app/src/main/res/layout/race_watch.xml" value="0.1" />
         <entry key="app/src/main/res/layout/racedonefragment.xml" value="0.3609375" />
         <entry key="app/src/main/res/layout/raceleftfragment.xml" value="0.3609375" />
@@ -66,6 +68,7 @@
         <entry key="app/src/main/res/layout/result_fragment.xml" value="0.21" />
         <entry key="app/src/main/res/layout/result_list.xml" value="0.13" />
         <entry key="app/src/main/res/layout/special_weight_fragment.xml" value="0.3609375" />
+        <entry key="app/src/main/res/layout/start_time_fragment.xml" value="0.10677083333333333" />
         <entry key="app/src/main/res/layout/stint_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stintdata.xml" value="0.1" />
         <entry key="app/src/main/res/layout/stintdonefragment.xml" value="0.18489583333333334" />

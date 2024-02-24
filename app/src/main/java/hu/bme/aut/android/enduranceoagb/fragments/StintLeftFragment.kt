@@ -701,6 +701,50 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                                 }
                             }
                         }
+                        if (!p0.result.child("AllStint").child("numberOfStint").child("2").child("hasDetailsStintReady").value.toString().toBoolean()) {
+                            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
+                                requireContext(),
+                                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                            )
+
+                            val inflater = this.layoutInflater
+                            val dialogView: View =
+                                inflater.inflate(R.layout.start_time_fragment, null)
+                            dialogBuilder.setView(dialogView)
+                            dialogBuilder.setTitle(R.string.startTime)
+
+                            val hours = dialogView.findViewById<EditText>(R.id.etHours)
+                            val minutes = dialogView.findViewById<EditText>(R.id.etMinutes)
+                            val seconds = dialogView.findViewById<EditText>(R.id.etSeconds)
+                            val milliseconds = dialogView.findViewById<EditText>(R.id.etMilliseconds)
+
+                            dialogBuilder.setPositiveButton(R.string.button_ok) { _, _ ->
+                                if (hours.text.toString().isNotEmpty() && minutes.text.toString().isNotEmpty() && seconds.text.toString().isNotEmpty() && milliseconds.text.toString().isNotEmpty()
+                                ) {
+
+                                    dbRef.child("Info").child("hours").setValue(hours.text.toString())
+                                    dbRef.child("Info").child("minutes").setValue(minutes.text.toString())
+                                    dbRef.child("Info").child("seconds").setValue(seconds.text.toString())
+                                    dbRef.child("Info").child("milliseconds").setValue(milliseconds.text.toString())
+
+                                    showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                    startActivity(showDetailsIntent)
+
+                                } else {
+                                    AlertDialog.Builder(requireContext())
+                                        .setTitle(R.string.warning)
+                                        .setMessage(R.string.fail)
+                                        .setPositiveButton(R.string.button_ok, null)
+                                        .setNegativeButton("", null)
+                                        .show()
+                                }
+                            }
+                            dialogBuilder.setNegativeButton(R.string.button_megse, null)
+                            val alertDialog = dialogBuilder.create()
+                            alertDialog.show()
+                        }
                         else {
                             showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
                             showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())

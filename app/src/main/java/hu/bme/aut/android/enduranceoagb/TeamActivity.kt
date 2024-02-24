@@ -22,6 +22,7 @@ import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityTeamBinding
 import hu.bme.aut.android.enduranceoagb.fragments.QualiFragment
+import hu.bme.aut.android.enduranceoagb.fragments.QualificationFragment
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -62,8 +63,35 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                 val groupDone = p0.result.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull()
                 binding.divideButton.isVisible = teamsDone == numberOfTeams && groupDone == false
+                binding.btnQuali.isVisible = groupDone == true
             }
         }
+
+        binding.btnQuali.setOnClickListener {
+            dbRef.get().addOnCompleteListener { p0 ->
+                if (p0.isSuccessful) {
+                    val numberOfTeams =
+                        p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+
+                    for (ele in 1..numberOfTeams) {
+                        if (!p0.result.child("Quali")
+                                .child(ele.toString())
+                                .exists()
+                        ) {
+                            dbRef.child("Quali").child(ele.toString())
+                                .child("team")
+                                .setValue("Nincs még eredmény!")
+                        }
+                    }
+                    val showDetailsIntent = Intent()
+                    showDetailsIntent.setClass(this@TeamActivity, QualiActivity::class.java)
+                    showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                    startActivity(showDetailsIntent)
+                }
+            }
+        }
+
+
 
         binding.divideButton.setOnClickListener {
             val builder = androidx.appcompat.app.AlertDialog.Builder(this)
@@ -189,6 +217,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 runOnUiThread {
                                     adapter.update2(sortedItems.toMutableList())
                                 }
+
+                                recreate()
                             }
                         }
 

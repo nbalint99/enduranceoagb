@@ -42,7 +42,7 @@ class ResultAdapter(private val listener: ResultItemClickListener) :
 
     interface ResultItemClickListener {
         fun onTeamSelected(position: String?, number: String?, gp2: Boolean?)
-        fun onItemClick(position: String?, number: String?, gp2: Boolean?)
+        fun onItemClick(position: String?, number: String?, gp2: Boolean?, itemPosition: Int?)
     }
 
     fun addItem(item: Teams) {
@@ -83,7 +83,7 @@ class ResultAdapter(private val listener: ResultItemClickListener) :
         var item: Teams? = null
 
         init {
-            binding.root.setOnClickListener { listener.onItemClick(item?.nameTeam, item?.teamNumber.toString(), item?.gp2) }
+            binding.root.setOnClickListener { listener.onItemClick(item?.nameTeam, item?.teamNumber.toString(), item?.gp2, adapterPosition+1) }
         }
 
         fun bind(newItem: Teams) {

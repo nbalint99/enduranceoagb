@@ -11,6 +11,7 @@ import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.data.Stint
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintfragmentListBinding
+import hu.bme.aut.android.enduranceoagb.databinding.DetailsstintfragmentwatchListBinding
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -35,11 +36,11 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DetailsStintFragmentViewHolder(
-        DetailsstintfragmentListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        DetailsstintfragmentwatchListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceAsColor")
     override fun onBindViewHolder(holder: DetailsStintFragmentViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val detailsStintItem = items[position]
 
@@ -77,6 +78,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
         }
 
         if (detailsStintItem.hasStintDone) {
+            holder.itemView.setBackgroundResource(R.color.pink)
             holder.binding.tvInfoText.text = "Megjegyzés: "
             holder.binding.tvStintDriverName.text = detailsStintItem.driverName
             holder.binding.tvStintPlusWeightValue.text = detailsStintItem.plusWeight.toString() + " kg"
@@ -190,13 +192,13 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
             }
             for (i in itemsTeams) {
                 if (detailsStintItem.teamNumber == i.teamNumber) {
-                    println(detailsStintItem.teamNumber)
+                    //println(detailsStintItem.teamNumber)
                     val prevAvgWeight = detailsStintItem.prevAvgWeight
                             if ((numberOfStint[0] == detailsStintItem.numberStint) && !detailsStintItem.hasStintDone) {
                                 val requiredWeight = 90.0 * detailsStintItem.numberStint
                                 val needWeight = requiredWeight - prevAvgWeight!!
-                                println(detailsStintItem.teamNumber)
-                                println("hasNOTStintDone")
+                                //println(detailsStintItem.teamNumber)
+                                //println("hasNOTStintDone")
                                 if (needWeight < 0) {
                                     holder.binding.tvAvgWeight.text = "Már megvan a minimum súly!"
                                 }
@@ -212,8 +214,8 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
                                 //val newWeight = driverWeight + plusWeight!!
                                 //val totalWeight = prevAvgWeight?.plus(newWeight)
                                 val avgWeight = prevAvgWeight?.div(i.stintsDone.toString().toDouble())
-                                println(detailsStintItem.teamNumber)
-                                println("hasNOTStintDone else")
+                                //println(detailsStintItem.teamNumber)
+                                //println("hasNOTStintDone else")
                                 if (avgWeight != null) {
                                     holder.binding.tvAvgWeight.text = "Átlag súly: ${((avgWeight * 100.0).roundToInt() / 100.0)} kg"
                                 }
@@ -682,7 +684,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
         notifyDataSetChanged()
     }
 
-    inner class DetailsStintFragmentViewHolder(val binding: DetailsstintfragmentListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class DetailsStintFragmentViewHolder(val binding: DetailsstintfragmentwatchListBinding) : RecyclerView.ViewHolder(binding.root) {
         //var item: BoxTime? = null
 
         //var countDownTimer : CountDownTimer? = null

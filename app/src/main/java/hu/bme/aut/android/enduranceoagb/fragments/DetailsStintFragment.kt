@@ -534,7 +534,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                                     plus,
                                                     info,
                                                     prevInfo,
-                                                    hasStintD, prevAvgWeight, driverWeight,
+                                                    hasStintD, /*prevAvgWeight*/ prevTotal, driverWeight,
                                                     kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                                 )
                                                 items?.add(addStint)
@@ -571,34 +571,6 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                                     } else if (teamNumber == 1) {
                                         val changePrevTeam = (stintId.toString()
-                                            .toInt() - 1).toString() + "-" + "box12"
-                                        val expectedKartNumber =
-                                            p0.result.child("Stints").child(changePrevStint)
-                                                .child("Info").child(changePrevTeam)
-                                                .child("kartNumber").value.toString()
-                                                .toIntOrNull()
-
-
-                                        if (teamNum == teamNumber && stintNum == stintId.toString()
-                                                .toInt()
-                                        ) {
-                                            val addStint = Stint(
-                                                nameTeam,
-                                                teamNumber,
-                                                nameDriver,
-                                                stintId.toString().toInt(),
-                                                shortTeamName,
-                                                plus,
-                                                info,
-                                                prevInfo,
-                                                hasStintD, prevAvgWeight, driverWeight,
-                                                kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
-                                            )
-                                            items?.add(addStint)
-                                        }
-                                    }
-                                    else if (teamNumber == secondGroupFirst) {
-                                        val changePrevTeam = (stintId.toString()
                                             .toInt() - 1).toString() + "-" + "box22"
                                         val expectedKartNumber =
                                             p0.result.child("Stints").child(changePrevStint)
@@ -619,7 +591,35 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                                 plus,
                                                 info,
                                                 prevInfo,
-                                                hasStintD, prevAvgWeight, driverWeight,
+                                                hasStintD, /*prevAvgWeight*/ prevTotal, driverWeight,
+                                                kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
+                                            )
+                                            items?.add(addStint)
+                                        }
+                                    }
+                                    else if (teamNumber == secondGroupFirst) {
+                                        val changePrevTeam = (stintId.toString()
+                                            .toInt() - 1).toString() + "-" + "box12"
+                                        val expectedKartNumber =
+                                            p0.result.child("Stints").child(changePrevStint)
+                                                .child("Info").child(changePrevTeam)
+                                                .child("kartNumber").value.toString()
+                                                .toIntOrNull()
+
+
+                                        if (teamNum == teamNumber && stintNum == stintId.toString()
+                                                .toInt()
+                                        ) {
+                                            val addStint = Stint(
+                                                nameTeam,
+                                                teamNumber,
+                                                nameDriver,
+                                                stintId.toString().toInt(),
+                                                shortTeamName,
+                                                plus,
+                                                info,
+                                                prevInfo,
+                                                hasStintD, /*prevAvgWeight*/ prevTotal, driverWeight,
                                                 kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
                                             )
                                             items?.add(addStint)
@@ -900,6 +900,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
             if (p0.isSuccessful) {
                 val change = "Etap: ${stintId.toString().toInt()+1}"
                 val teamStint = "${stintId.toString().toInt()+1}-$teamNumber"
+                val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                 if (p0.result.child("Stints").child(change).child("Info").child(teamStint).child("driverName").exists()) {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("Figyelem!")
@@ -914,7 +915,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                     builder.setMessage("Ezt az etapot egyszer már létrehoztad. Biztos, hogy módosítani szeretnéd?")
 
                     builder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { dialog, which ->
-                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString())
+                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString(), secondGroupFirst.toString())
                         fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                     }
                     builder.setNeutralButton(hu.bme.aut.android.enduranceoagb.R.string.button_megse, null)
@@ -931,7 +932,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                         plusWeight.toString(),
                         shortTeamName,
                         driverWeight.toString(),
-                        prevTotalWeight.toString()
+                        prevTotalWeight.toString(),
+                        secondGroupFirst.toString()
                     )
                     fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                 }
@@ -1384,6 +1386,14 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 val outputSumWeight = sumWeightStr.replace('.', ',')
                                 dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
                                 dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                if (driver != driverName) {
+                                    val prevDriverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driverName.toString()).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driverName.toString()).child("stints").setValue(prevDriverStints - 1)
+                                    val driverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+                                }
                                 break
                             }
                         }
@@ -1438,6 +1448,9 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                             .setValue(outputSumWeight)
                         dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
                             .setValue(kartNumber)
+                        val driverStints = p0.result.child("Teams")
+                            .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                        dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
                     }
                 } else {
                     val getStintDone = p0.result.child("Stints").child("Etap: $stintId").child("Info").child("$stintId-$teamNumber").child("hasStintDone").value.toString().toBoolean()
@@ -1465,6 +1478,14 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 val outputSumWeight = sumWeightStr.replace('.', ',')
                                 dbRef.child("Excel").child(i.toString()).child("totalWeight").setValue(outputSumWeight)
                                 dbRef.child("Excel").child(i.toString()).child("kartNumber").setValue(kartNumber)
+                                if (driver != driverName) {
+                                    val prevDriverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driverName.toString()).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driverName.toString()).child("stints").setValue(prevDriverStints - 1)
+                                    val driverStints = p0.result.child("Teams")
+                                        .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                                    dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
+                                }
                                 break
                             }
                         }
@@ -1519,6 +1540,10 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                             .setValue(outputSumWeight)
                         dbRef.child("Excel").child(teamStint.toString()).child("kartNumber")
                             .setValue(kartNumber)
+
+                        val driverStints = p0.result.child("Teams")
+                            .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
+                        dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
                     }
                 }
 
@@ -1600,7 +1625,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
     private fun sendNotification() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-            .setSmallIcon(hu.bme.aut.android.enduranceoagb.R.mipmap.endu_logo_round)
+            .setSmallIcon(R.drawable.endu)
             .setContentTitle("Endurance OAGB")
             .setContentText("A következő cserénél tankolni kell!")
             .setAutoCancel(true)
