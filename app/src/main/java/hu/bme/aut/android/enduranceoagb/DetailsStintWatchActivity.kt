@@ -505,20 +505,28 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                         val doneStint = p0.result.child("AllStint").child("numberOfStint").child("1").child("hasStintDone").value.toString().toBoolean()
                         if (doneStint) {
                             val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                            val teams = p0.result.child("Teams").children
                             val quali = p0.result.child("Quali").children
-                            for (element in teams) {
+                            //for (element in teams) {
                                 for (el in quali) {
-                                    val teamName = element.child("Info").child("nameTeam").value.toString()
-                                    val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
-                                    val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
-                                    val qualiTeamName = el.child("longTeamName").value.toString()
-                                    if (teamName == qualiTeamName) {
-                                        val resultQuali = el.child("result").value.toString().toInt()
-                                        val childTeam = "1-$teamNumber"
-                                        val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)
-                                            .child("kartNumber").value.toString().toIntOrNull()
-                                        for (i in 1..numberOfTeams) {
+                                    val teams = p0.result.child("Teams").children
+                                    println(el)
+                                    println(quali)
+                                    //val teamName = element.child("Info").child("nameTeam").value.toString()
+                                    //val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
+                                    //val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
+                                    for (element in teams) {
+                                        println(element)
+                                        val qualiTeamName = el.child("longTeamName").value.toString()
+                                        val teamName = element.child("Info").child("nameTeam").value.toString()
+                                        val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
+                                        val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
+                                        if (teamName == qualiTeamName) {
+                                            println(teamName)
+                                            val resultQuali = el.child("result").value.toString().toInt()
+                                            val childTeam = "1-$teamNumber"
+                                            val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)
+                                                .child("kartNumber").value.toString().toIntOrNull()
+                                            for (i in 1..numberOfTeams) {
                                                 if (resultQuali < 10) {
                                                     var place = resultQuali.toString()
                                                     place = "0$place"
@@ -550,12 +558,14 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                                         break
                                                     }
                                                 }
+                                            }
                                         }
                                     }
+
                                 }
 
 
-                            }
+                            //}
                             val sortedItems = items?.sorted()
                             val pushItems: MutableList<String>? = mutableListOf()
                             if (sortedItems != null) {
