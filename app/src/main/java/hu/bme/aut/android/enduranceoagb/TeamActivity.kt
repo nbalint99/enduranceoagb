@@ -139,7 +139,9 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                         element.child("Info")
                                             .child("shortTeamName").value.toString(),
                                         element.child("Info").child("group").value.toString()
-                                            .toIntOrNull()
+                                            .toIntOrNull(),
+                                        element.child("Info").child("hasQualiResultDone").value.toString()
+                                            .toBooleanStrictOrNull()
                                     )
                                     items.add(addTeam)
                                 }
@@ -249,7 +251,9 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                             element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                             element.child("Info").child("points").value.toString().toIntOrNull(),
                             element.child("Info").child("shortTeamName").value.toString(),
-                            element.child("Info").child("group").value.toString().toIntOrNull()
+                            element.child("Info").child("group").value.toString().toIntOrNull(),
+                            element.child("Info").child("hasQualiResultDone").value.toString()
+                                .toBooleanStrictOrNull()
                         )
                         items.add(addTeam)
                     }
@@ -508,7 +512,9 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 element.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
                                 element.child("Info").child("points").value.toString().toIntOrNull(),
                                 element.child("Info").child("shortTeamName").value.toString(),
-                                element.child("Info").child("group").value.toString().toIntOrNull()
+                                element.child("Info").child("group").value.toString().toIntOrNull(),
+                                element.child("Info").child("hasQualiResultDone").value.toString()
+                                    .toBooleanStrictOrNull()
                             )
                             items.add(addTeam)
                         }
@@ -540,7 +546,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         dbRef2.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val points = p0.result.child("Teams").child(nameTeam).child("points").value.toString().toIntOrNull()
-                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points, null,0)
+                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points, null,0, false)
                 dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
 
                 runOnUiThread {

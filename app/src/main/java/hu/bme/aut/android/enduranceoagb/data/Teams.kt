@@ -18,5 +18,6 @@ data class Teams(
     @ColumnInfo(name = "gp2") var gp2: Boolean? = null,
     @ColumnInfo(name = "points") var points: Int? = null,
     @ColumnInfo(name = "shortTeamName") var shortTeamName: String? = null,
-    @ColumnInfo(name = "group") var group: Int? = null
+    @ColumnInfo(name = "group") var group: Int? = null,
+    @ColumnInfo(name = "hasQualiResultDone") var hasQualiResultDone: Boolean? = null
 )
