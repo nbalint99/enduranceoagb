@@ -162,6 +162,20 @@ class RaceActivity : AppCompatActivity() {
                                                 dbRef.child("Excel").child(teamStintId.toString()).child("plusWeight").setValue("-")
                                                 dbRef.child("Excel").child(teamStintId.toString()).child("totalWeight").setValue("-")
                                                 dbRef.child("Excel").child(teamStintId.toString()).child("kartNumber").setValue("-")
+
+                                                idNumber++
+                                                dbRef.child("Id").setValue(idNumber)
+                                                val teamStintIdPlus = idNumber
+                                                val startKartNumber = i.child("Info").child("startKartNumber").value.toString().toInt()
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("stintNumber").setValue("Etap 1")
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("teamNumber").setValue(
+                                                    "$teamNumber. csapat"
+                                                )
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("driver").setValue("-")
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(teamStintIdPlus.toString()).child("kartNumber").setValue(startKartNumber)
+
                                             }
                                             val teamsOther = p0.result.child("Teams").children
                                             for (e in teamsOther) {

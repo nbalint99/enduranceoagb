@@ -61,14 +61,19 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 for (element in p0.result.children) {
-                    val addRace = Races(element.key, element.child("Info").child("nameR").value.toString(), element.child("Info").child("location").value.toString(),
-                        element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
-                        element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
-                        element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
-                        element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
-                        element.child("Info").child("numberOfRace").value.toString().toIntOrNull(), element.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull())
+                    val addRace = element.child("Info").child("numberOfTeams").value.toString().toIntOrNull()
+                        ?.let {
+                            Races(element.key, element.child("Info").child("nameR").value.toString(), element.child("Info").child("location").value.toString(),
+                                it, element.child("Info").child("allStintNumber").value.toString().toInt(),
+                                element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
+                                element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
+                                element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),
+                                element.child("Info").child("numberOfRace").value.toString().toIntOrNull(), element.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull())
+                        }
                     if (element.child("Info").child("hasRaceDone").value.toString().toBoolean()){
-                        items?.add(addRace)
+                        if (addRace != null) {
+                            items?.add(addRace)
+                        }
                     }
                 }
                 requireActivity().runOnUiThread {

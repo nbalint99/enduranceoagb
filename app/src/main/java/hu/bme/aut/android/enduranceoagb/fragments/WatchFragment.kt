@@ -166,7 +166,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
             if (p0.isSuccessful) {
                 val secondGroup = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                 val firstGroupLast = secondGroup?.minus(1)
-                if (position+1 == firstGroupLast) {
+                if (position+1 == secondGroup) {
                     sendNotification2()
                 }
 

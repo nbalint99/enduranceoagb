@@ -718,10 +718,10 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                 var divideGroup = numberOfTeams / 2.0
                 var groupEqual = false
                 if (group1 < group2) {
-                    ceil(divideGroup)
+                    divideGroup = ceil(divideGroup)
                 }
                 else if (group1 > group2) {
-                    floor(divideGroup)
+                    divideGroup = floor(divideGroup)
                 }
                 else if (group1 == group2) {
                     groupEqual = true

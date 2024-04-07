@@ -271,6 +271,8 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                             .child("kartNumber").setValue(parkingKart21.text.toString())
                                         dbRef.child("Stints").child("Etap: 1").child("Info").child("1-box22")
                                             .child("kartNumber").setValue(parkingKart21.text.toString())
+                                        dbRef.child("Stints").child("Etap: 2").child("Info").child("2-box12")
+                                            .child("kartNumber").setValue(parkingKart11.text.toString())
                                         val id = p0.result.child("Id").value.toString()
                                         var idNumber : Int
                                         if (id == "-1") {
@@ -314,6 +316,16 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                         dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
                                         dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
                                         dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(parkingKart21.text.toString())
+
+                                        idNumber++
+                                        dbRef.child("Id").setValue(idNumber)
+                                        dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("2. etap")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box12")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(parkingKart11.text.toString())
+
 
                                     } else {
                                         AlertDialog.Builder(this)
@@ -619,7 +631,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
             dbRef.get().addOnCompleteListener { p0 ->
                 if (p0.isSuccessful) {
                     val raceDone = p0.result.child("Info").child("hasRaceDone").value.toString().toBoolean()
-                    if (!raceDone) {
+                    //if (!raceDone) {
                         val hours = p0.result.child("Info").child("hours").value.toString().toInt()
                         val minutes =
                             p0.result.child("Info").child("minutes").value.toString().toInt()
@@ -636,16 +648,23 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                     cal[Calendar.MINUTE] = minutes
                                     cal[Calendar.SECOND] = seconds
                                     cal[Calendar.MILLISECOND] = milliseconds
-                                    //println(Date().time - cal.timeInMillis)
-                                    binding2.tcClock.text =
-                                        "${SimpleDateFormat("HH:mm:ss").format(((Date().time) - 3600000) - cal.timeInMillis)}"
+                                    val elapsed = Date().time - cal.timeInMillis
+                                    if (elapsed < 10800000) {
+                                        binding2.tcClock.text =
+                                            "${SimpleDateFormat("HH:mm:ss").format(((Date().time) - 3600000) - cal.timeInMillis)}"
+                                    }
+                                    else {
+                                        binding2.tcClock.text = "Vége a versenynek!"
+                                    }
+
+                                    //println(cal.timeInMillis)
                                 }
                             }
                         }, 0, 1000)
-                    }
-                    else if (raceDone) {
-                        binding2.tcClock.text = "Vége a versenynek!"
-                    }
+                    //}
+                    //else if (raceDone) {
+                    //    binding2.tcClock.text = "Vége a versenynek!"
+                    //}
                 }
             }
         }

@@ -17,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.android.enduranceoagb.data.Stint
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityStint2Binding
 import hu.bme.aut.android.enduranceoagb.ui.stint.SectionsPagerAdapterStint
+import java.text.SimpleDateFormat
+import java.util.*
 
 class StintActivity2 : FragmentActivity() {
 
@@ -56,6 +58,52 @@ class StintActivity2 : FragmentActivity() {
                 if (p0.result.child("Info").child("hasRaceDone").value.toString().toBoolean()) {
                     binding.technicalProblem.isVisible = false
                 }
+            }
+        }
+
+        dbRef.get().addOnCompleteListener { p1 ->
+            if (p1.isSuccessful) {
+                val raceDone = p1.result.child("Info").child("hasRaceDone").value.toString().toBoolean()
+                //if (!raceDone) {
+                val hours = p1.result.child("Info").child("hours").value.toString().toIntOrNull()
+                val minutes =
+                    p1.result.child("Info").child("minutes").value.toString().toIntOrNull()
+                val seconds =
+                    p1.result.child("Info").child("seconds").value.toString().toIntOrNull()
+                val milliseconds =
+                    p1.result.child("Info").child("milliseconds").value.toString().toIntOrNull()
+                val timer = Timer()
+                if (hours != null && minutes != null && seconds != null && milliseconds != null) {
+                    timer.scheduleAtFixedRate(object : TimerTask() {
+                        override fun run() {
+                            runOnUiThread {
+                                val cal = Calendar.getInstance()
+                                cal[Calendar.HOUR_OF_DAY] = hours
+                                cal[Calendar.MINUTE] = minutes
+                                cal[Calendar.SECOND] = seconds
+                                cal[Calendar.MILLISECOND] = milliseconds
+                                val elapsed = Date().time - cal.timeInMillis
+                                if (elapsed < 10800000) {
+                                    binding.tcClockAll.text =
+                                        "${SimpleDateFormat("HH:mm:ss").format(((Date().time) - 3600000) - cal.timeInMillis)}"
+                                }
+                                else {
+                                    binding.tcClockAll.text = "Vége a versenynek!"
+                                }
+
+                                //println(cal.timeInMillis)
+                            }
+                        }
+                    }, 0, 1000)
+                }
+                else {
+                    binding.tcClockAll.text = "Még nem indult el a verseny!"
+                }
+
+                //}
+                //else if (raceDone) {
+                //    binding2.tcClock.text = "Vége a versenynek!"
+                //}
             }
         }
 
