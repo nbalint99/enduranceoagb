@@ -114,6 +114,9 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
                 binding.tvKartNumber.text = "Időmérős gépszám: " + item?.startKartNumber.toString()
             }
             else if (item?.teamNumber != null) {
+                if (item?.hasQualiDone != true) {
+                    itemView.setBackgroundResource(R.color.pink)
+                }
                 binding.tvKartNumber.text = "Rajtolós gokartszám: " + item?.startKartNumber.toString()
             }
 

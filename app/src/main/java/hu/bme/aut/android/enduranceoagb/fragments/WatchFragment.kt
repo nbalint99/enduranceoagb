@@ -116,8 +116,24 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                     itemsTeams?.add(teamsGet)
                 }
 
-                val secondGroup = p0.result.child("Info").child("secondGroup").value.toString().toInt()
-                groups?.add(secondGroup)
+                val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                //?.plus(1)
+                //A:7
+                //B:6
+                //C:7 (all: 12)
+                val firstGroupAll = secondGroupFirstOri?.minus(1)
+                //A: x = 7 - 1 = 6
+                //B: x = 6 - 1 = 5
+                //C: x = 7 - 1 = 6
+                val secondGroupLast = numberOfTeams - firstGroupAll!!
+                //A: x = 11 - 6 = 5
+                //B: x = 11 - 5 = 6
+                //C: x = 12 - 6 = 6
+                val secondGroupFirstx = secondGroupLast + 1
+                //A: x = 5 + 1 = 6
+                //B: X = 6 + 1 = 7
+                //C: x = 6 + 1 = 7
+                groups?.add(secondGroupFirstx)
 
                 adapter.update2(items!!)
                 adapter.update2Teams(itemsTeams!!)
@@ -164,9 +180,27 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
-                val secondGroup = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                val firstGroupLast = secondGroup?.minus(1)
-                if (position+1 == secondGroup) {
+                val numberOfTeams =
+                    p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                //?.plus(1)
+                //A:7
+                //B:6
+                //C:7 (all: 12)
+                val firstGroupAll = secondGroupFirstOri?.minus(1)
+                //A: x = 7 - 1 = 6
+                //B: x = 6 - 1 = 5
+                //C: x = 7 - 1 = 6
+                val secondGroupLast = numberOfTeams - firstGroupAll!!
+                //A: x = 11 - 6 = 5
+                //B: x = 11 - 5 = 6
+                //C: x = 12 - 6 = 6
+                val secondGroupFirstx = secondGroupLast + 1
+                //A: x = 5 + 1 = 6
+                //B: X = 6 + 1 = 7
+                //C: x = 6 + 1 = 7
+
+                if (position+1 == secondGroupLast) {
                     sendNotification2()
                 }
 

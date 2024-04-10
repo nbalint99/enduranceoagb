@@ -24,6 +24,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.ActivityTeamBinding
 import hu.bme.aut.android.enduranceoagb.fragments.QualiFragment
 import hu.bme.aut.android.enduranceoagb.fragments.QualificationFragment
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -32,6 +33,9 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
     private lateinit var dbRef: DatabaseReference
     private lateinit var dbRef2: DatabaseReference
+    private lateinit var dbRef3: DatabaseReference
+    private lateinit var dbRef4: DatabaseReference
+    private lateinit var dbRef5: DatabaseReference
 
     private lateinit var adapter: TeamAdapter
 
@@ -62,6 +66,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                 val teamsDone = p0.result.child("Info").child("hasTeamsDone").value.toString().toInt()
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                 val groupDone = p0.result.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull()
+                binding.importButton.isVisible = teamsDone != numberOfTeams
                 binding.divideButton.isVisible = teamsDone == numberOfTeams && groupDone == false
                 binding.btnQuali.isVisible = groupDone == true
             }
@@ -89,6 +94,252 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     startActivity(showDetailsIntent)
                 }
             }
+        }
+
+        binding.importButton.setOnClickListener {
+            val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+            builder.setTitle("Figyelem!")
+            builder.setMessage("Biztos, hogy importálni akarod a csapatokat?")
+
+            builder.setPositiveButton(R.string.button_ok) { _, _ ->
+
+
+                dbRef =
+                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                        .getReference("Races").child(raceId.toString())
+
+                //val items: MutableList<Teams> = mutableListOf()
+
+                dbRef.get().addOnCompleteListener { p0 ->
+                    if (p0.isSuccessful) {
+                        dbRef2 =
+                            FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                .getReference(year.toString())
+
+                        dbRef2.get().addOnCompleteListener { p1 ->
+                            if (p1.isSuccessful) {
+
+                                dbRef3 =
+                                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                        .getReference("/")
+
+                                dbRef3.get().addOnCompleteListener { p2 ->
+                                    if (p2.isSuccessful) {
+
+
+                                        for (element in p2.result.child("nyers").children) {
+                                            val team = element.child("team").value.toString()
+                                            val gp2 = element.child("gp2").value.toString()
+                                            var gp2Pass = false
+                                            if (gp2 == "GP2") {
+                                                gp2Pass = true
+                                            }
+                                            val people = element.child("people").value.toString().toIntOrNull()
+                                            val driver = element.child("driver").value.toString()
+                                            val weight = element.child("weight").value.toString().toDoubleOrNull()
+
+                                            if (team != "null" && team != "") {
+                                                var exists = false
+
+                                                for (element in p1.result.child("Teams").children) {
+                                                    val addTeam2 = AllTeams(
+                                                        element.child("nameTeam").value.toString(),
+                                                        element.child("people").value.toString()
+                                                            .toIntOrNull(),
+                                                        element.child("joker").value.toString()
+                                                            .toIntOrNull(),
+                                                        element.child("hasJokerRaced").value.toString()
+                                                            .toBooleanStrictOrNull(),
+                                                        element.child("points").value.toString().toIntOrNull(),
+                                                        element.child("oldPoints").value.toString().toIntOrNull(),
+                                                        element.child("gp2Points").value.toString().toIntOrNull(),
+                                                        element.child("oldGp2Points").value.toString().toIntOrNull(),
+                                                        element.child("gp2").value.toString()
+                                                            .toBooleanStrictOrNull(),
+                                                        element.child("racesTeam").value.toString()
+                                                            .toInt(),
+                                                        element.child("totalPoints").value.toString().toIntOrNull(),
+                                                        element.child("totalGp2Points").value.toString().toIntOrNull(),
+                                                        element.child("one").value.toString().toIntOrNull(),
+                                                        element.child("two").value.toString().toIntOrNull(),
+                                                        element.child("three").value.toString().toIntOrNull(),
+                                                        element.child("four").value.toString().toIntOrNull(),
+                                                        element.child("five").value.toString().toIntOrNull(),
+                                                        element.child("six").value.toString().toIntOrNull(),
+                                                        element.child("seven").value.toString().toIntOrNull(),
+                                                        element.child("eight").value.toString().toIntOrNull(),
+                                                        element.child("nine").value.toString().toIntOrNull(),
+                                                        element.child("ten").value.toString().toIntOrNull(),
+                                                        element.child("eleven").value.toString().toIntOrNull(),
+                                                        element.child("twelve").value.toString().toIntOrNull(),
+                                                        element.child("thirteen").value.toString().toIntOrNull(),
+                                                        element.child("fourteen").value.toString().toIntOrNull(),
+                                                        element.child("fifteen").value.toString().toIntOrNull(),
+                                                        element.child("oneGp2").value.toString().toIntOrNull(),
+                                                        element.child("twoGp2").value.toString().toIntOrNull(),
+                                                        element.child("threeGp2").value.toString().toIntOrNull(),
+                                                        element.child("fourGp2").value.toString().toIntOrNull(),
+                                                        element.child("fiveGp2").value.toString().toIntOrNull(),
+                                                        element.child("sixGp2").value.toString().toIntOrNull(),
+                                                        element.child("sevenGp2").value.toString().toIntOrNull(),
+                                                        element.child("eightGp2").value.toString().toIntOrNull(),
+                                                        element.child("nineGp2").value.toString().toIntOrNull(),
+                                                        element.child("tenGp2").value.toString().toIntOrNull(),
+                                                        element.child("elevenGp2").value.toString().toIntOrNull(),
+                                                        element.child("twelveGp2").value.toString().toIntOrNull(),
+                                                        element.child("thirteenGp2").value.toString().toIntOrNull(),
+                                                        element.child("fourteenGp2").value.toString().toIntOrNull(),
+                                                        element.child("fifteenGp2").value.toString().toIntOrNull()
+                                                    )
+
+                                                    if (team == addTeam2.nameTeam) {
+                                                        exists = true
+                                                        addTeam2.gp2?.let { it1 ->
+                                                            if (people != null) {
+                                                                onTeamCreated(team, people,
+                                                                    it1
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if (!exists) {
+                                                    if (gp2 == "GP2") {
+                                                        val newItem = AllTeams(team, people, 0, hasJokerRaced = false, 0, 0, 0, 0, gp2 = true, 0, 0, 0,
+                                                            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                                            0,0,0,0,0,0,0,0,0,0)
+                                                        dbRef2.child("Teams").child(team).setValue(newItem)
+
+                                                    }
+                                                    else {
+                                                        val newItem = AllTeams(team, people, 0, hasJokerRaced = false, 0, 0, null, null, gp2 = false, 0, 0, null,
+                                                            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,null,null,null,null,null,
+                                                            null,null,null,null,null,null,null,null,null,null)
+                                                        dbRef2.child("Teams").child(team).setValue(newItem)
+
+                                                    }
+                                                }
+
+                                                dbRef4 =
+                                                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                                        .getReference("Races").child(raceId.toString())
+
+                                                val items2: MutableList<Drivers> = mutableListOf()
+
+                                                dbRef4.get().addOnCompleteListener { p5 ->
+                                                    if (p5.isSuccessful) {
+                                                        val newItem = Drivers(driver, weight)
+                                                        dbRef4.child("Teams").child(team).child("Drivers").child(driver).setValue(newItem)
+                                                        dbRef4.child("Teams").child(team).child("Drivers").child(driver).child("stints").setValue(0)
+                                                        dbRef4.child("Drivers").child(dbRef.push().key.toString()).setValue(newItem)
+                                                        val hasDriversDone = p5.result.child("Teams").child(team).child("Info").child("hasDriversDone").value.toString()
+                                                        if (hasDriversDone == "null" || hasDriversDone == "") {
+                                                            dbRef4.child("Teams").child(team).child("Info").child("hasDriversDone").setValue(0)
+                                                        }
+                                                        if (weight != null) {
+                                                            dbRef4.child("Teams").child(team).child("Info").child("hasDriversDone").setValue(ServerValue.increment(1))
+                                                            if (people != null) {
+                                                                onTeamCreated(team, people, gp2Pass)
+                                                            }
+                                                        }
+
+
+
+                                                        for (element in p5.result.child("Teams")
+                                                            .child(team.toString())
+                                                            .child("Drivers").children) {
+                                                            val addDriver = Drivers(
+                                                                element.child("nameDriver").value.toString(),
+                                                                element.child("weight").value.toString()
+                                                                    .toDoubleOrNull(),
+                                                                element.child("races").value.toString()
+                                                                    .toIntOrNull(),
+                                                                element.child("joker").value.toString()
+                                                                    .toBooleanStrictOrNull()
+                                                            )
+
+                                                            items2.add(addDriver)
+                                                        }
+
+                                                        val doneDrivers = p5.result.child("Teams")
+                                                            .child(team.toString()).child("Info")
+                                                            .child("hasDriversDone").value.toString()
+                                                            .toIntOrNull()
+
+                                                        if (doneDrivers == people) {
+                                                            dbRef4.child("Info").child("hasTeamsDone")
+                                                                .setValue(ServerValue.increment(1))
+                                                            var teamMembers: String? = null
+                                                            val itemsSorted =
+                                                                items2.sortedWith(compareBy { it.nameDriver })
+                                                            for (i in itemsSorted) {
+                                                                val arr = i.nameDriver.split(" ")
+                                                                    .toTypedArray()
+                                                                teamMembers = if (teamMembers == null) {
+                                                                    arr[0]
+                                                                } else {
+                                                                    var teamMembersOri = teamMembers
+                                                                    var new = arr[0]
+                                                                    "$teamMembersOri-$new"
+                                                                }
+                                                            }
+                                                            dbRef4.child("Teams")
+                                                                .child(team)
+                                                                .child("Info").child("shortTeamName")
+                                                                .setValue(teamMembers)
+                                                        }
+                                                    }
+                                                }
+
+                                                dbRef5 =
+                                                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                                        .getReference(year.toString())
+                                                /*dbRef5.get().addOnCompleteListener { p6 ->
+                                                    if (p6.isSuccessful) {*/
+                                                        val driverRaced = p1.result.child("Teams").child(team.toString()).child("Drivers").child(driver).child("races").value.toString()
+                                                        if (driverRaced == "null" || driverRaced == "") {
+                                                            dbRef2.child("Teams").child(team.toString()).child("Drivers").child(driver).child("nameDriver").setValue(driver)
+                                                            dbRef2.child("Teams").child(team.toString()).child("Drivers").child(driver).child("races").setValue(1)
+                                                        }
+                                                        else {
+                                                            dbRef2.child("Teams").child(team.toString()).child("Drivers").child(driver).child("nameDriver").setValue(driver)
+                                                            dbRef2.child("Teams").child(team.toString()).child("Drivers").child(driver).child("races").setValue(ServerValue.increment(1))
+                                                            dbRef2.child("Teams").child(team).child("joker").setValue(ServerValue.increment(1))
+                                                        }
+                                                //    }
+                                                //}
+
+                                                dbRef5.get().addOnCompleteListener { p7 ->
+                                                    if (p7.isSuccessful) {
+                                                        val jokers = p7.result.child("Teams").child(team).child("joker").value.toString().toIntOrNull()
+                                                        if (jokers == 4) {
+                                                            for (element in p7.result.child("Teams").child(team).child("Drivers").children) {
+                                                                val raceNumberByDriver = element.child("races").value.toString().toInt()
+                                                                if (raceNumberByDriver == 0 || raceNumberByDriver == 1) {
+                                                                    val driverName = element.child("nameDriver").value.toString()
+                                                                    dbRef5.child("Teams").child(team).child("Drivers").child(driverName).child("joker").setValue(true)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        binding.importButton.isVisible = false
+                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                        dbRef.child("Info").child("hasTeamsDone")
+                            .setValue(numberOfTeams)
+                        binding.divideButton.isVisible = true
+
+                    }
+                }
+            }
+            builder.setNeutralButton(R.string.button_megse, null)
+            builder.show()
         }
 
 
@@ -153,6 +404,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 var setSecondGroup = false
                                 if (numberOfTeams >= 10) {
                                     val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
+                                    println(divideGroup)
                                     var firstTeam = 1
                                     var group1 = 0
                                     var group2 = 0
@@ -174,7 +426,14 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                             group2++
                                             firstTeam++
                                         } else if (firstTeam == divideGroup.toInt()) {
-                                            if (e.gp2 == true) {
+                                            if (firstTeam*2.0 == numberOfTeams.toDouble()) {
+                                                dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                    .child("group").setValue(1)
+                                                sortedItems[firstTeam-1].group = 1
+                                                group1++
+                                                firstTeam++
+                                            }
+                                            else if (e.gp2 == true) {
                                                 dbRef.child("Teams").child(e.nameTeam)
                                                     .child("Info").child("group")
                                                     .setValue(2)
@@ -519,7 +778,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                             items.add(addTeam)
                         }
 
-                        val sortedItems = items.sortedWith(compareBy<Teams> { it.teamNumber }.thenByDescending { it.points })
+                        val sortedItems = items.sortedWith(compareByDescending<Teams> { it.teamNumber }.thenByDescending { it.points })
                         runOnUiThread {
                             adapter.update2(sortedItems.toMutableList())
                         }
@@ -539,18 +798,86 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
     override fun onTeamCreated(nameTeam: String, people: Int, gp2: Boolean) {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
+        val items2: MutableList<Drivers> = mutableListOf()
+
         dbRef2 =
             FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference(year.toString())
         //dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
-        dbRef2.get().addOnCompleteListener { p0 ->
+        dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
-                val points = p0.result.child("Teams").child(nameTeam).child("points").value.toString().toIntOrNull()
-                val newItem = Teams(nameTeam, people, null, null, 0, null, false, null, gp2, points, null,0, false)
-                dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
+                dbRef2.get().addOnCompleteListener { p1 ->
+                    if (p1.isSuccessful) {
+                        var driversDone = 0
+                        for (element in p0.result.child("Teams")
+                            .child(nameTeam.toString())
+                            .child("Drivers").children) {
 
-                runOnUiThread {
-                    adapter.addItem(newItem)
+                            val addDriver = Drivers(
+                                element.child("nameDriver").value.toString(),
+                                element.child("weight").value.toString()
+                                    .toDoubleOrNull(),
+                                element.child("races").value.toString()
+                                    .toIntOrNull(),
+                                element.child("joker").value.toString()
+                                    .toBooleanStrictOrNull()
+                            )
+                            if (addDriver.weight != null) {
+                                driversDone++
+                            }
+
+                            items2.add(addDriver)
+                        }
+
+
+                        var teamMembers: String? = null
+                        if (driversDone == people) {
+
+                            val itemsSorted =
+                                items2.sortedWith(compareBy { it.nameDriver })
+                            for (i in itemsSorted) {
+                                val arr = i.nameDriver.split(" ")
+                                    .toTypedArray()
+                                teamMembers = if (teamMembers == null) {
+                                    arr[0]
+                                } else {
+                                    var teamMembersOri = teamMembers
+                                    var new = arr[0]
+                                    "$teamMembersOri-$new"
+                                }
+                            }
+                            /*dbRef.child("Teams")
+                                .child(nameTeam)
+                                .child("Info").child("shortTeamName")
+                                .setValue(teamMembers)*/
+                        }
+                        val points = p1.result.child("Teams").child(nameTeam)
+                            .child("points").value.toString().toIntOrNull()
+
+                        val newItem = Teams(
+                            nameTeam,
+                            people,
+                            null,
+                            null,
+                            driversDone,
+                            null,
+                            false,
+                            null,
+                            gp2,
+                            points,
+                            teamMembers,
+                            0,
+                            false
+                        )
+                        dbRef.child("Teams").child(nameTeam).child("Info").setValue(newItem)
+
+                        runOnUiThread {
+                            if (driversDone == people) {
+                                adapter.addItem(newItem)
+                            }
+                            //recreate()
+                        }
+                    }
                 }
             }
         }
@@ -738,6 +1065,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
                         if (!element.child("Info").child("teamNumber").exists() && !element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
+                                dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
                                 if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
                                     (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
                                     val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)
@@ -881,6 +1209,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
                         else if (element.child("Info").child("teamNumber").exists() && element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
+                                dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
                                 if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
                                     (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
@@ -1015,6 +1344,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
                         else if (element.child("Info").child("teamNumber").exists() && !element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
+                                dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
                                 val teamNumberPrev = element.child("Info").child("teamNumber").value.toString().toInt()
                                 if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
                                     (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
@@ -1143,6 +1473,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
 
                         else if (!element.child("Info").child("teamNumber").exists() && element.child("Info").child("startKartNumber").exists()) {
                             if (teamNumber != null && kartNumber != null) {
+                                dbRef.child("Teams").child(teamName).child("Info").child("hasQualiDone").setValue(true)
                                 if ((!groupEqual && ((group!!.toInt() == 1 && teamNumber <= divideGroup) || (group!!.toInt() == 2 && teamNumber > divideGroup))) ||
                                     (groupEqual && ((group!!.toInt() == 1 && teamNumber.toDouble() < divideGroup) || (group!!.toInt() == 2 && teamNumber.toDouble() > divideGroup)))) {
                                     val snack = Snackbar.make(binding.root,R.string.wrongGroup, Snackbar.LENGTH_LONG)

@@ -145,4 +145,5 @@
     <string name="milliseconds">Ezredmásodperc</string>
     <string name="qualiResults">Az időmérő eredménye</string>
     <string name="placeHolderQuali">Időmérő eredmény megadása</string>
+    <string name="importTeams">Csapatok importálása</string>
 </resources>

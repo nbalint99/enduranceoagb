@@ -61,10 +61,30 @@ class QualiActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListener
         teamId = intent.getStringExtra(EXTRA_TEAM_NUMBER)
         teamName = intent.getStringExtra(EXTRA_NAMETEAM)
 
-        binding.btnQualiEnd.visibility = View.INVISIBLE
+        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+        dbRef.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val hasQualiDone = p0.result.child("Info").child("hasQualiDone").value.toString().toIntOrNull()
+                if (hasQualiDone != null) {
+                    if (hasQualiDone > 0) {
+                        binding.btnQualiEnd.visibility = View.INVISIBLE
+                    }
+                    else {
+                        binding.btnQualiEnd.visibility = View.VISIBLE
+                    }
+                }
+                else {
+                    binding.btnQualiEnd.visibility = View.VISIBLE
+                }
+            }
+
+
+        }
 
         binding.btnQualiEnd.setOnClickListener {
             qualiResult()
+            binding.btnQualiEnd.visibility = View.INVISIBLE
         }
 
         initRecyclerView()
@@ -231,7 +251,7 @@ class QualiActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListener
                     if (team == teamName) {
                         val longTeamName = i.child("Info").child("nameTeam").value.toString()
                         val gp2 = i.child("Info").child("gp2").value.toString().toBoolean()
-                        val group = i.child("Info").child("group").value.toString().toBoolean()
+                        val group = i.child("Info").child("group").value.toString().toInt()
                         dbRef.child("Quali").child(result.toString()).child("gp2").setValue(gp2)
                         dbRef.child("Quali").child(result.toString()).child("longTeamName").setValue(longTeamName)
                         dbRef.child("Quali").child(result.toString()).child("result").setValue(result)
@@ -256,6 +276,7 @@ class QualiActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListener
 
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
+                println("loadResult")
                 val quali = p0.result.child("Quali").children
                 for (element in quali) {
                     val addTeam = Quali(
@@ -266,31 +287,45 @@ class QualiActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListener
                         element.child("group").value.toString().toIntOrNull()
                     )
 
+                    println(addTeam)
+
                     items?.add(addTeam)
                 }
                 val sortedItems = items?.sortedBy { it.result }
 
-                val teams = p0.result.child("Teams").children
-
                 val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toInt()
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                 var group1 = numberOfTeams
-                var group2 = secondGroupFirst-1
+                var group2 = numberOfTeams-(secondGroupFirst-1)
+
+                println(group1)
+                println(group2)
 
                 if (sortedItems != null) {
+                    //println("sorted not null")
                     for (el in sortedItems) {
+                        val teams = p0.result.child("Teams").children
                         for (i in teams) {
+                        //println(el)
+                            //println(i)
                             val teamName = i.child("Info").child("shortTeamName").value.toString()
                             if (teamName == el.team) {
+                                println(teamName)
                                 if (el.group == 1) {
+                                    println("group1")
+                                    println(group1)
                                     dbRef.child("Teams").child(el.longTeamName).child("Info").child("teamNumber").setValue(group1)
                                     dbRef.child("Teams").child(el.longTeamName).child("Info").child("hasQualiResultDone").setValue(true)
+                                    dbRef.child("Info").child("hasQualiDone").setValue(ServerValue.increment(1))
                                     group1--
                                     break
                                 }
                                 else if (el.group == 2) {
+                                    println("group2")
+                                    println(group2)
                                     dbRef.child("Teams").child(el.longTeamName).child("Info").child("teamNumber").setValue(group2)
                                     dbRef.child("Teams").child(el.longTeamName).child("Info").child("hasQualiResultDone").setValue(true)
+                                    dbRef.child("Info").child("hasQualiDone").setValue(ServerValue.increment(1))
                                     group2--
                                     break
                                 }

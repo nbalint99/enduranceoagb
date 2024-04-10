@@ -174,7 +174,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                         .child("hasDetailsStintReady").setValue(true)
                     val allTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
                     val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                    val firstGroupLast = secondGroupFirst
+                    val firstGroupLast = allTeams - (secondGroupFirst?.minus(1)!!)
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
@@ -414,6 +414,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
 
+                val allTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+
                 for (elem in p0.result.child("Drivers").children) {
 
                     val nameDriver = elem.child("nameDriver").value.toString()
@@ -474,7 +476,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                         items?.add(addStint)
                                     }
                                 }
-                            } else if (stintId.toString().toInt() > 1) {
+                            }
+                            else if (stintId.toString().toInt() > 1) {
                                 val hasStintDone =
                                     p0.result.child("Stints").child(change).child("Info").children
                                 for (ready in hasStintDone) {
@@ -509,8 +512,23 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                         ready.child("prevAvgWeight").value.toString().toDoubleOrNull()
                                     /*val prevWeight = prevPlusWeight?.let { driverWeight?.plus(it) }
                                     val avgWeight = prevWeight?.let { prevAvgWeight?.plus(it) }*/
-                                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                                        ?.plus(1)
+                                    val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                                        //?.plus(1)
+                                    //A:7
+                                    //B:6
+                                    //C:7 (all: 12)
+                                    val firstGroupAll = secondGroupFirstOri?.minus(1)
+                                    //A: x = 7 - 1 = 6
+                                    //B: x = 6 - 1 = 5
+                                    //C: x = 7 - 1 = 6
+                                    val secondGroupLast = allTeams - firstGroupAll!!
+                                    //A: x = 11 - 6 = 5
+                                    //B: x = 11 - 5 = 6
+                                    //C: x = 12 - 6 = 6
+                                    val secondGroupFirst = secondGroupLast + 1
+                                    //A: x = 5 + 1 = 6
+                                    //B: X = 6 + 1 = 7
+                                    //C: x = 6 + 1 = 7
 
                                     if (teamNumber > 1 && teamNumber != secondGroupFirst) {
                                         if (teamNum.toString().toIntOrNull() != null) {
@@ -902,9 +920,25 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
             if (p0.isSuccessful) {
                 val change = "Etap: ${stintId.toString().toInt()+1}"
                 val teamStint = "${stintId.toString().toInt()+1}-$teamNumber"
-                val secondGroupFirst =
-                    p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                        ?.plus(1)
+                val numberOfTeams =
+                    p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                //?.plus(1)
+                //A:7
+                //B:6
+                //C:7 (all: 12)
+                val firstGroupAll = secondGroupFirstOri?.minus(1)
+                //A: x = 7 - 1 = 6
+                //B: x = 6 - 1 = 5
+                //C: x = 7 - 1 = 6
+                val secondGroupLast = numberOfTeams - firstGroupAll!!
+                //A: x = 11 - 6 = 5
+                //B: x = 11 - 5 = 6
+                //C: x = 12 - 6 = 6
+                val secondGroupFirstx = secondGroupLast + 1
+                //A: x = 5 + 1 = 6
+                //B: X = 6 + 1 = 7
+                //C: x = 6 + 1 = 7
                 if (p0.result.child("Stints").child(change).child("Info").child(teamStint).child("driverName").exists()) {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("Figyelem!")
@@ -919,7 +953,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                     builder.setMessage("Ezt az etapot egyszer már létrehoztad. Biztos, hogy módosítani szeretnéd?")
 
                     builder.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { dialog, which ->
-                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString(), secondGroupFirst.toString())
+                        val fragment = NewStintFragment.newInstance(position.toString(), stintId.toString(), teamName, teamNumber.toString(), stintDone.toString(), driverName, plusWeight.toString(), shortTeamName, driverWeight.toString(), prevTotalWeight.toString(), secondGroupFirstx.toString())
                         fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                     }
                     builder.setNeutralButton(hu.bme.aut.android.enduranceoagb.R.string.button_megse, null)
@@ -937,7 +971,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                         shortTeamName,
                         driverWeight.toString(),
                         prevTotalWeight.toString(),
-                        secondGroupFirst.toString()
+                        secondGroupFirstx.toString()
                     )
                     fragment.show(requireActivity().supportFragmentManager, "NewStintFragment")
                 }
@@ -1095,10 +1129,23 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                     val numberOfTeams =
                         p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                    val secondGroupFirst =
-                        p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                    val firstGroupLast = secondGroupFirst
-                    val firstGroupLastReal = secondGroupFirst?.minus(1)
+                    val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                    //?.plus(1)
+                    //A:7
+                    //B:6
+                    //C:7 (all: 12)
+                    val firstGroupAll = secondGroupFirstOri?.minus(1)
+                    //A: x = 7 - 1 = 6
+                    //B: x = 6 - 1 = 5
+                    //C: x = 7 - 1 = 6
+                    val secondGroupLast = numberOfTeams - firstGroupAll!!
+                    //A: x = 11 - 6 = 5
+                    //B: x = 11 - 5 = 6
+                    //C: x = 12 - 6 = 6
+                    val secondGroupFirst = secondGroupLast + 1
+                    //A: x = 5 + 1 = 6
+                    //B: X = 6 + 1 = 7
+                    //C: x = 6 + 1 = 7
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
@@ -1117,7 +1164,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 dbRef.child("Stints").child(changeNext).child("Info")
                                     .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
                             }
-                            if (teamNumber == secondGroupFirst) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 var changeNext2 = "Etap: ${stintId.toString().toInt() + 2}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
@@ -1149,7 +1196,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 dbRef.child("Stints").child(changeNext2).child("Info")
                                     .child(teamStintNext121).child("kartNumber").setValue(kartNumber)
                             }
-                            if (teamNumber == secondGroupFirst) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
                                 val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
@@ -1160,7 +1207,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                             }
                         }
                         else if (equalGroup == true) {
-                            if (teamNumber == firstGroupLastReal) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
                                 val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
@@ -1283,9 +1330,23 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                     val numberOfTeams =
                         p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                    val secondGroupFirst = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                    val firstGroupLast = secondGroupFirst
-                    val firstGroupLastReal = secondGroupFirst?.minus(1)
+                    val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
+                    //?.plus(1)
+                    //A:7
+                    //B:6
+                    //C:7 (all: 12)
+                    val firstGroupAll = secondGroupFirstOri?.minus(1)
+                    //A: x = 7 - 1 = 6
+                    //B: x = 6 - 1 = 5
+                    //C: x = 7 - 1 = 6
+                    val secondGroupLast = numberOfTeams - firstGroupAll!!
+                    //A: x = 11 - 6 = 5
+                    //B: x = 11 - 5 = 6
+                    //C: x = 12 - 6 = 6
+                    val secondGroupFirstx = secondGroupLast + 1
+                    //A: x = 5 + 1 = 6
+                    //B: X = 6 + 1 = 7
+                    //C: x = 6 + 1 = 7
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
@@ -1304,7 +1365,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 dbRef.child("Stints").child(changeNext).child("Info")
                                     .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
                             }
-                            if (teamNumber == secondGroupFirst) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 var changeNext2 = "Etap: ${stintId.toString().toInt() + 2}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
@@ -1338,7 +1399,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                                 dbRef.child("Stints").child(changeNext2).child("Info")
                                     .child(teamStintNext121).child("kartNumber").setValue(kartNumber)
                             }
-                            if (teamNumber == secondGroupFirst) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
                                 val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
@@ -1349,7 +1410,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                             }
                         }
                         else if (equalGroup == true) {
-                            if (teamNumber == firstGroupLastReal) {
+                            if (teamNumber == secondGroupLast) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
                                 val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"

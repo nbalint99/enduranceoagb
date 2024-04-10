@@ -178,6 +178,8 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                             .child("kartNumber").setValue(parkingKart11.text.toString())
                                         dbRef.child("Stints").child("Etap: 1").child("Info").child("1-box21")
                                             .child("kartNumber").setValue(parkingKart21.text.toString())
+                                        dbRef.child("Stints").child("Etap: 2").child("Info").child("2-box22")
+                                            .child("kartNumber").setValue(parkingKart21.text.toString())
                                         dbRef.child("Stints").child("Etap: 1").child("Info").child("1-box22")
                                             .child("kartNumber").setValue(parkingKart22.text.toString())
                                         val id = p0.result.child("Id").value.toString()
@@ -216,6 +218,15 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                                         dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(parkingKart21.text.toString())
                                         idNumber++
 
+                                        dbRef.child("Id").setValue(idNumber)
+                                        dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("2. etap")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box22")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue(parkingKart21.text.toString())
+
+                                        idNumber++
                                         dbRef.child("Id").setValue(idNumber)
                                         dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("1. etap")
                                         dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue("box22")
