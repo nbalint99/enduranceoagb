@@ -116,8 +116,11 @@ class TeamAdapter(private val listener: TeamItemClickListener) :
             else if (item?.teamNumber != null) {
                 if (item?.hasQualiDone != true) {
                     itemView.setBackgroundResource(R.color.pink)
+                    binding.tvKartNumber.text = "Időmérős gépszám: " + item?.startKartNumber.toString()
                 }
-                binding.tvKartNumber.text = "Rajtolós gokartszám: " + item?.startKartNumber.toString()
+                else {
+                    binding.tvKartNumber.text = "Rajtolós gokartszám: " + item?.startKartNumber.toString()
+                }
             }
 
             if (item?.group == 0 || item?.group == null) {

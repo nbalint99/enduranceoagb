@@ -50,13 +50,6 @@ class QualiFragment : DialogFragment() {
 
         binding.tvPeopleTeamQuali.text = "$dataPassedPeople fő"
 
-        if (dataPassedTeamNumber == "null") {
-            binding.etQualiResult.setText("")
-        }
-        else {
-            binding.etQualiResult.setText(dataPassedTeamNumber)
-        }
-
         if (dataPassedKart == "null") {
             binding.etKartNumberQuali.setText("")
         }
@@ -66,13 +59,12 @@ class QualiFragment : DialogFragment() {
 
 
         return AlertDialog.Builder(requireContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
-            .setTitle(R.string.qualiNumber)
+            .setTitle(R.string.qualiNumberFragment)
             .setView(binding.root)
             .setPositiveButton(R.string.button_ok) { _, _ ->
-                val teamNumber: Int? = binding.etQualiResult.text.toString().toIntOrNull()
                 val kartNumber: Int? = binding.etKartNumberQuali.text.toString().toIntOrNull()
 
-                listener.onQualiCreated(dataPassedTeamName.toString(), teamNumber, kartNumber, dataPassedGroup.toString().toIntOrNull())
+                listener.onQualiCreated(dataPassedTeamName.toString(), null, kartNumber, dataPassedGroup.toString().toIntOrNull())
             }
             .setNegativeButton(R.string.button_megse, null)
             .create()

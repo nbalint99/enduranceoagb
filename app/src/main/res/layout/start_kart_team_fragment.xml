@@ -43,14 +43,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/qualiKartNumber"/>
+            android:text="@string/qualiResult"/>
 
-        <EditText
-            android:id="@+id/etKartNumberQuali"
+        <TextView
+            android:id="@+id/tvQualiResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:inputType="numberSigned"/>
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:importantForAutofill="no"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/qualiKartNumber"/>
+
+        <TextView
+            android:id="@+id/tvQualiKartNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textStyle="italic"
+            android:importantForAutofill="no"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="@string/startKartNumber"/>
+
+        <Spinner
+            android:id="@+id/spStartKartNumber"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="start"/>
 
 
     </LinearLayout>

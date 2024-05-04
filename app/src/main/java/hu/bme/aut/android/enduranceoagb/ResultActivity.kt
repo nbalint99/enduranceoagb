@@ -288,6 +288,66 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                                 }
                                 result++
                                 dbRef2.child("Teams").child(nameTeam).child("racesTeam").setValue(ServerValue.increment(1))
+
+                                val teams = p0.result.child("Teams").children
+                                for (j in teams) {
+                                    val thisTeam = j.child("Info").child("nameTeam").value.toString()
+                                    if (thisTeam == nameTeam) {
+                                        val drivers = p0.result.child("Teams").child(thisTeam).child("Drivers").children
+                                        for (e in drivers) {
+                                            val driver = e.child("nameDriver").value.toString()
+
+                                            val driverRaced =
+                                                p1.result.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver)
+                                                    .child("races").value.toString()
+                                            if (driverRaced == "null" || driverRaced == "") {
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver)
+                                                    .child("nameDriver").setValue(driver)
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver).child("races")
+                                                    .setValue(1)
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver).child("joker")
+                                                    .setValue(false)
+                                            } else {
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver)
+                                                    .child("nameDriver").setValue(driver)
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver).child("races")
+                                                    .setValue(ServerValue.increment(1))
+                                                dbRef2.child("Teams").child(thisTeam).child("joker")
+                                                    .setValue(ServerValue.increment(1))
+                                                dbRef2.child("Teams").child(thisTeam.toString())
+                                                    .child("Drivers").child(driver).child("joker")
+                                                    .setValue(false)
+                                            }
+                                        }
+                                        val jokers =
+                                            p1.result.child("Teams").child(thisTeam)
+                                                .child("joker").value.toString()
+                                                .toIntOrNull()
+                                        if (jokers == 4) {
+                                            for (element in p1.result.child("Teams")
+                                                .child(thisTeam)
+                                                .child("Drivers").children) {
+                                                val raceNumberByDriver =
+                                                    element.child("races").value.toString()
+                                                        .toInt()
+                                                if (raceNumberByDriver == 0 || raceNumberByDriver == 1) {
+                                                    val driverName =
+                                                        element.child("nameDriver").value.toString()
+                                                    dbRef2.child("Teams").child(thisTeam)
+                                                        .child("Drivers")
+                                                        .child(driverName)
+                                                        .child("joker").setValue(true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

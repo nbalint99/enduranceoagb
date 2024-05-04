@@ -146,4 +146,7 @@
     <string name="qualiResults">Az időmérő eredménye</string>
     <string name="placeHolderQuali">Időmérő eredmény megadása</string>
     <string name="importTeams">Csapatok importálása</string>
+    <string name="startKartNumber">Rajtolós gokart szám</string>
+    <string name="qualiNumberFragment">Időmérős gokartszám megadása</string>
+    <string name="startKartNumberFragment">Rajtolós gokart szám megadása</string>
 </resources>
