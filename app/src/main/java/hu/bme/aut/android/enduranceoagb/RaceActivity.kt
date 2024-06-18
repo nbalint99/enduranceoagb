@@ -35,10 +35,33 @@ class RaceActivity : AppCompatActivity() {
         raceId = intent.getStringExtra(TeamActivity.EXTRA_RACE_NAME)
 
         binding.btnTeam.setOnClickListener {
-            val showDetailsIntent = Intent()
-            showDetailsIntent.setClass(this@RaceActivity, TeamActivity::class.java)
-            showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
-            startActivity(showDetailsIntent)
+            dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
+
+            dbRef.get().addOnCompleteListener { p0 ->
+                if (p0.isSuccessful) {
+                    val hasTeamsCreated =
+                        p0.result.child("Info").child("hasTeamsCreated").value.toString()
+                            .toBooleanStrictOrNull()
+                    val hasFinalTeamsCreated =
+                        p0.result.child("Info").child("hasFinalTeamsCreated").value.toString()
+                            .toBooleanStrictOrNull()
+
+                    if (hasTeamsCreated == true && hasFinalTeamsCreated == false) {
+                        val showDetailsIntent = Intent()
+                        showDetailsIntent.setClass(this@RaceActivity, TeamActivity::class.java)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, false)
+                        startActivity(showDetailsIntent)
+                    }
+                    else {
+                        val showDetailsIntent = Intent()
+                        showDetailsIntent.setClass(this@RaceActivity, TeamActivity::class.java)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, true)
+                        startActivity(showDetailsIntent)
+                    }
+                }
+            }
         }
 
 

@@ -104,7 +104,9 @@ class NewRaceFragment : DialogFragment() {
         hasResultsDone = false,
         hasQualiDone = 0,
         numberOfRace = binding.etNameRace.text.toString().toInt(),
-        hasGroupDone = false
+        hasGroupDone = false,
+        hasTeamsCreated = false,
+        hasFinalTeamsCreated = false
     )
 
     private fun numberOfStints(numberOfTeams: Int): Int {
