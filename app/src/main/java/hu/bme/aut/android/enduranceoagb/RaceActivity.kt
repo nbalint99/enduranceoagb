@@ -50,14 +50,14 @@ class RaceActivity : AppCompatActivity() {
                         val showDetailsIntent = Intent()
                         showDetailsIntent.setClass(this@RaceActivity, TeamActivity::class.java)
                         showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
-                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, false)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, "false")
                         startActivity(showDetailsIntent)
                     }
                     else {
                         val showDetailsIntent = Intent()
                         showDetailsIntent.setClass(this@RaceActivity, TeamActivity::class.java)
                         showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
-                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, true)
+                        showDetailsIntent.putExtra(TeamActivity.EXTRA_FINAL_CREATED, "true")
                         startActivity(showDetailsIntent)
                     }
                 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -17,7 +18,7 @@ import hu.bme.aut.android.enduranceoagb.databinding.StartKartTeamFragmentBinding
 
 class StartKartFragment : DialogFragment() {
     interface QualiListener {
-        fun onQualiCreated2(teamName: String, teamNumber: Int?, kartNumber: Int?, group: Int?)
+        fun onQualiCreated2(teamName: String, teamNumber: Int?, kartNumber: Int?, group: Int?, prevKartNumber: Int?)
     }
 
     private lateinit var listener: QualiListener
@@ -42,6 +43,7 @@ class StartKartFragment : DialogFragment() {
         val dataPassedKart: String? = arguments?.getString("startKartNumber")
         val dataPassedGP2: String? = arguments?.getString("gp2")
         val dataPassedGroup: String? = arguments?.getString("group")
+        val dataPassedHasQualiDone: String? = arguments?.getString("hasQualiDone")
 
         if (dataPassedGP2 == "true") {
             binding.tvNameTeamQuali.text = "$dataPassedTeamName (GP2)"
@@ -68,19 +70,23 @@ class StartKartFragment : DialogFragment() {
             if (p0.isSuccessful) {
 
                 for (ele in p0.result.children) {
-                    val kart = ele.child("kart").value.toString().toInt()
+                    val kart = ele.child("kart").value.toString()
                     val id = ele.child("id").value.toString().toInt()
                     val group = ele.child("group").value.toString()
                     val oriGroup = ele.child("ori_group").value.toString()
                     val alreadyAdded = ele.child("selected").value.toString().toBooleanStrictOrNull()
                     if (dataPassedGroup?.toInt() == 1) {
                         if (oriGroup == 1.toString() && alreadyAdded != true) {
-                            alreadyOnTheList?.add(kart)
+                            if (kart != "") {
+                                alreadyOnTheList?.add(kart.toInt())
+                            }
                         }
                     }
                     else if (dataPassedGroup?.toInt() == 2) {
                         if (oriGroup == 2.toString() && alreadyAdded != true) {
-                            alreadyOnTheList?.add(kart)
+                            if (kart != "") {
+                                alreadyOnTheList?.add(kart.toInt())
+                            }
                         }
                     }
                 }
@@ -113,8 +119,13 @@ class StartKartFragment : DialogFragment() {
             .setView(binding.root)
             .setPositiveButton(R.string.button_ok) { _, _ ->
                 val kartNumber: Int = binding.spStartKartNumber.selectedItem.toString().toInt()
+                if (dataPassedHasQualiDone == "true") {
+                    listener.onQualiCreated2(dataPassedTeamName.toString(), dataPassedTeamNumber?.toIntOrNull(), kartNumber, dataPassedGroup.toString().toIntOrNull(), dataPassedKart.toString().toIntOrNull())
+                }
+                else {
+                    listener.onQualiCreated2(dataPassedTeamName.toString(), dataPassedTeamNumber?.toIntOrNull(), kartNumber, dataPassedGroup.toString().toIntOrNull(), null)
 
-                listener.onQualiCreated2(dataPassedTeamName.toString(), dataPassedTeamNumber?.toIntOrNull(), kartNumber, dataPassedGroup.toString().toIntOrNull())
+                }
             }
             .setNegativeButton(R.string.button_megse, null)
             .create()
@@ -123,7 +134,7 @@ class StartKartFragment : DialogFragment() {
     companion object {
 
         @JvmStatic //This can be avoided if you are in a complete Kotlin project
-        fun newInstance(teamName: String, teamNumber: String?, people: String, startKartNumber: String?, gp2: String, group: Int?): StartKartFragment {
+        fun newInstance(teamName: String, teamNumber: String?, people: String, startKartNumber: String?, gp2: String, group: Int?, hasQualiDone: String?): StartKartFragment {
             val args = Bundle()
             args.putString("teamName", teamName)
             args.putString("teamNumber", teamNumber.toString())
@@ -131,6 +142,7 @@ class StartKartFragment : DialogFragment() {
             args.putString("startKartNumber", startKartNumber)
             args.putString("gp2", gp2)
             args.putString("group", group.toString())
+            args.putString("hasQualiDone", hasQualiDone)
             val fragment = StartKartFragment()
             fragment.arguments = args
             return fragment

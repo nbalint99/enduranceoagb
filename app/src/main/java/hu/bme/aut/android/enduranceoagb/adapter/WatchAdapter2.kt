@@ -544,8 +544,10 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         fun bind(newItem: Watch) {
             item = newItem
-            if (item!!.teamNumber == group[0]) {
-                itemView.setBackgroundResource(R.color.pink)
+            if (group.isNotEmpty()) {
+                if (item!!.teamNumber == group[0]) {
+                    itemView.setBackgroundResource(R.color.pink)
+                }
             }
         }
     }

@@ -117,27 +117,33 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 }
 
                 val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                //?.plus(1)
-                //A:7
-                //B:6
-                //C:7 (all: 12)
-                val firstGroupAll = secondGroupFirstOri?.minus(1)
-                //A: x = 7 - 1 = 6
-                //B: x = 6 - 1 = 5
-                //C: x = 7 - 1 = 6
-                val secondGroupLast = numberOfTeams - firstGroupAll!!
-                //A: x = 11 - 6 = 5
-                //B: x = 11 - 5 = 6
-                //C: x = 12 - 6 = 6
-                val secondGroupFirstx = secondGroupLast + 1
-                //A: x = 5 + 1 = 6
-                //B: X = 6 + 1 = 7
-                //C: x = 6 + 1 = 7
-                groups?.add(secondGroupFirstx)
+                if (numberOfTeams < 10) {
+                    adapter.update2(items!!)
+                    adapter.update2Teams(itemsTeams!!)
+                }
+                else {
+                    //?.plus(1)
+                    //A:7
+                    //B:6
+                    //C:7 (all: 12)
+                    val firstGroupAll = secondGroupFirstOri?.minus(1)
+                    //A: x = 7 - 1 = 6
+                    //B: x = 6 - 1 = 5
+                    //C: x = 7 - 1 = 6
+                    val secondGroupLast = numberOfTeams - firstGroupAll!!
+                    //A: x = 11 - 6 = 5
+                    //B: x = 11 - 5 = 6
+                    //C: x = 12 - 6 = 6
+                    val secondGroupFirstx = secondGroupLast + 1
+                    //A: x = 5 + 1 = 6
+                    //B: X = 6 + 1 = 7
+                    //C: x = 6 + 1 = 7
+                    groups?.add(secondGroupFirstx)
 
-                adapter.update2(items!!)
-                adapter.update2Teams(itemsTeams!!)
-                adapter.update2Group(groups!!)
+                    adapter.update2(items!!)
+                    adapter.update2Teams(itemsTeams!!)
+                    adapter.update2Group(groups!!)
+                }
 
             }
         }
@@ -200,8 +206,13 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 //B: X = 6 + 1 = 7
                 //C: x = 6 + 1 = 7
 
-                if (position+1 == secondGroupLast) {
-                    sendNotification2()
+                if (numberOfTeams < 10) {
+                    //do nothing
+                }
+                else {
+                    if (position + 1 == secondGroupLast) {
+                        sendNotification2()
+                    }
                 }
 
             }
