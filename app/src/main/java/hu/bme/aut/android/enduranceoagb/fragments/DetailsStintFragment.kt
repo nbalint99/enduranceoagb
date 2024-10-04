@@ -43,6 +43,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
     private lateinit var binding: ActivityDetailsstintfragmentBinding
 
     private lateinit var dbRef: DatabaseReference
+    private lateinit var dbRef2: DatabaseReference
     private lateinit var adapter: DetailsStintFragmentAdapter
 
     private val CHANNEL_ID = "channel_id_01"
@@ -1225,6 +1226,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
+        dbRef2 = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
+
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
                 val driverWeightReal = p0.result.child("Teams").child(teamName).child("Drivers").child(driver).child("weight").value.toString().toDoubleOrNull()
@@ -1403,6 +1406,18 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                     }*/
                 }
                 else if (stintId.toString().toInt() > 1) {
+                    dbRef2.get().addOnCompleteListener { p1 ->
+                        if (p1.isSuccessful) {
+                            if (weight == 0.0) {
+                                dbRef2.child("endTime").child(teamNumber.toString()).child("weight").setValue("-")
+                            }
+                            else {
+                                val weightPush = "+$weight kg"
+                                dbRef2.child("endTime").child(teamNumber.toString()).child("weight").setValue(weightPush)
+                            }
+                            dbRef2.child("endTime").child(teamNumber.toString()).child("driver").setValue(driver)
+                        }
+                    }
                     val teamStint = "$stintId-$teamNumber"
                     val change = "Etap: $stintId"
                     val changePrevStint = "Etap: " + (stintId.toString().toInt() - 1).toString()
@@ -1725,7 +1740,8 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                             .child(teamName).child("Drivers").child(driver).child("stints").value.toString().toInt()
                         dbRef.child("Teams").child(teamName).child("Drivers").child(driver).child("stints").setValue(driverStints + 1)
                     }
-                } else {
+                }
+                else {
                     val getStintDone = p0.result.child("Stints").child("Etap: $stintId").child("Info").child("$stintId-$teamNumber").child("hasStintDone").value.toString().toBoolean()
                     if (getStintDone) {
                         val getId = p0.result.child("Id").value.toString()

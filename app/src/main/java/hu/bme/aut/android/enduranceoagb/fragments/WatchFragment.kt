@@ -3,40 +3,32 @@ package hu.bme.aut.android.enduranceoagb.fragments
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
 import hu.bme.aut.android.enduranceoagb.DetailsStintWatchActivity
 import hu.bme.aut.android.enduranceoagb.R
-import hu.bme.aut.android.enduranceoagb.StintActivity2
-import hu.bme.aut.android.enduranceoagb.adapter.StintAdapter
 import hu.bme.aut.android.enduranceoagb.adapter.WatchAdapter2
-import hu.bme.aut.android.enduranceoagb.data.DoneStint
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.data.Watch
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityWatchBinding
-import hu.bme.aut.android.enduranceoagb.databinding.StintleftfragmentBinding
 
 class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
     private lateinit var dbRef: DatabaseReference
+    private lateinit var dbRef2: DatabaseReference
 
     private lateinit var adapter: WatchAdapter2
 
@@ -161,6 +153,15 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 dbRef.child("Watch").child(stintId).child((position+1).toString()).child("initialTime").setValue(initTime)
             }
         }
+
+        dbRef2 = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
+
+        dbRef2.get().addOnCompleteListener { p1 ->
+            if (p1.isSuccessful) {
+                val team = position + 1
+                dbRef2.child("endTime").child(team.toString()).child("duration").setValue(initTime)
+            }
+        }
     }
 
     override fun dataChangedBool(position: Int) {
@@ -219,6 +220,22 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         }
     }
 
+    override fun serverTime(position: Int, time: Double, unixTime: Long, counting: Boolean) {
+        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
+
+        dbRef.get().addOnCompleteListener { p0 ->
+            if (p0.isSuccessful) {
+                val team = position + 1
+
+                dbRef.child("endTime").child(team.toString()).child("serverTime").setValue(unixTime)
+                dbRef.child("endTime").child(team.toString()).child("duration").setValue(time)
+                dbRef.child("endTime").child(team.toString()).child("position").setValue(team)
+                dbRef.child("endTime").child(team.toString()).child("counting").setValue(counting)
+            }
+        }
+    }
+
+
     override fun dataChangedBoolFalse(position: Int) {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
@@ -262,3 +279,4 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         }
     }
 }
+

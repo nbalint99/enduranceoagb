@@ -54,7 +54,7 @@ class RaceDoneFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
     private fun getData() {
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").orderByKey().ref
 
-        dbRef.keepSynced(true)
+        //dbRef.keepSynced(true)
 
         val items : MutableList<Races>? = mutableListOf()
 

@@ -38,6 +38,57 @@
             {
               "client_id": "511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "511625415336-22s501ot60o9gj7d7u5e4cv01b0qrmno.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hu.nbh.Endurance-OAGB"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511625415336:android:962b300f9eb122a57ed09d",
+        "android_client_info": {
+          "package_name": "hu.bme.aut.android.wintercup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511625415336-13ijpmb2vs53lbt1qjne074q8uge26ph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hu.bme.aut.android.wintercup",
+            "certificate_hash": "a5e4e09fddf2649dfc9d59b3750bf7b2a428d0ff"
+          }
+        },
+        {
+          "client_id": "511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa_OJ04F4pJMz_tb1mT1SJ7sB4Sh1Enas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "511625415336-22s501ot60o9gj7d7u5e4cv01b0qrmno.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "hu.nbh.Endurance-OAGB"
+              }
             }
           ]
         }

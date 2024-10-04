@@ -32,6 +32,8 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
 
     private lateinit var dbRef2: DatabaseReference
 
+    private lateinit var dbRef3: DatabaseReference
+
     private val c = Calendar.getInstance()
 
     private val year = c.get(Calendar.YEAR)
@@ -351,6 +353,16 @@ class ResultActivity : AppCompatActivity(), ResultAdapter.ResultItemClickListene
                             }
                         }
                     }
+                    dbRef3 =
+                        FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                            .getReference("/")
+                    dbRef3.get().addOnCompleteListener { p2 ->
+                        if (p2.isSuccessful) {
+                            dbRef3.child("endTime").child("info").child("title").setValue("Endurance OAGB - Boxutca")
+                            dbRef3.child("endTime").child("raceTime").child("serverTime").removeValue()
+                        }
+                    }
+
                     dbRef.child("Info").child("hasResultsDone").setValue(true)
                     val showDetailsIntent = Intent()
                     showDetailsIntent.setClass(this@ResultActivity, PodiumActivity::class.java)

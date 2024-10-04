@@ -38,6 +38,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
     private lateinit var dbRef3: DatabaseReference
     private lateinit var dbRef4: DatabaseReference
     private lateinit var dbRef5: DatabaseReference
+    private lateinit var dbRef6: DatabaseReference
 
     private lateinit var adapter: TeamAdapter
 
@@ -216,20 +217,35 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                             }
                                         }
                                     }
-                                    if (group1 > group2) {
-                                        dbRef.child("Info").child("firstMore").setValue(true)
-                                        dbRef.child("Info").child("secondMore").setValue(false)
-                                        dbRef.child("Info").child("equalGroup").setValue(false)
-                                    }
-                                    else if (group1 < group2) {
-                                        dbRef.child("Info").child("firstMore").setValue(false)
-                                        dbRef.child("Info").child("secondMore").setValue(true)
-                                        dbRef.child("Info").child("equalGroup").setValue(false)
-                                    }
-                                    else if (group1 == group2) {
-                                        dbRef.child("Info").child("firstMore").setValue(false)
-                                        dbRef.child("Info").child("secondMore").setValue(false)
-                                        dbRef.child("Info").child("equalGroup").setValue(true)
+                                    dbRef6 = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
+
+                                    dbRef6.get().addOnCompleteListener { p6 ->
+                                        if (p6.isSuccessful) {
+                                            if (group1 > group2) {
+                                                dbRef.child("Info").child("firstMore")
+                                                    .setValue(true)
+                                                dbRef.child("Info").child("secondMore")
+                                                    .setValue(false)
+                                                dbRef.child("Info").child("equalGroup")
+                                                    .setValue(false)
+                                                dbRef6.child("raceInfo").child("group").setValue(1)
+                                            } else if (group1 < group2) {
+                                                dbRef.child("Info").child("firstMore")
+                                                    .setValue(false)
+                                                dbRef.child("Info").child("secondMore")
+                                                    .setValue(true)
+                                                dbRef.child("Info").child("equalGroup")
+                                                    .setValue(false)
+                                                dbRef6.child("raceInfo").child("group").setValue(2)
+                                            } else if (group1 == group2) {
+                                                dbRef.child("Info").child("firstMore")
+                                                    .setValue(false)
+                                                dbRef.child("Info").child("secondMore")
+                                                    .setValue(false)
+                                                dbRef.child("Info").child("equalGroup")
+                                                    .setValue(true)
+                                            }
+                                        }
                                     }
                                 }
                                 else {

@@ -1,10 +1,11 @@
 package hu.bme.aut.android.enduranceoagb.fragments
 
 import android.content.Intent
-import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,15 +16,14 @@ import com.google.firebase.database.FirebaseDatabase
 import hu.bme.aut.android.enduranceoagb.*
 import hu.bme.aut.android.enduranceoagb.adapter.StintAdapter
 import hu.bme.aut.android.enduranceoagb.data.DoneStint
-import hu.bme.aut.android.enduranceoagb.data.Drivers
-import hu.bme.aut.android.enduranceoagb.data.Races
 import hu.bme.aut.android.enduranceoagb.databinding.StintleftfragmentBinding
-import kotlin.concurrent.thread
+import java.util.Calendar
 
 
 class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
 
     private lateinit var dbRef: DatabaseReference
+    private lateinit var dbRef2: DatabaseReference
     private lateinit var adapter: StintAdapter
 
     override fun onCreateView(
@@ -727,10 +727,51 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                                     dbRef.child("Info").child("seconds").setValue(seconds.text.toString())
                                     dbRef.child("Info").child("milliseconds").setValue(milliseconds.text.toString())
 
-                                    showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
-                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
-                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
-                                    startActivity(showDetailsIntent)
+                                    dbRef2 =
+                                        FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                            .getReference("/")
+                                    dbRef2.get().addOnCompleteListener { p1 ->
+                                        if (p1.isSuccessful) {
+                                            val startTime = convertToEpoch(hours.text.toString().toInt(), minutes.text.toString().toInt(), seconds.text.toString().toInt(), milliseconds.text.toString().toInt())
+                                            val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                                            val duration = raceDuration(numberOfTeams)
+
+                                            dbRef2.child("endTime").child("raceTime").child("serverTime").setValue(startTime)
+                                            dbRef2.child("endTime").child("raceTime").child("duration").setValue(duration)
+
+                                            val builder2: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(
+                                                requireContext(),
+                                                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                                            )
+
+                                            builder2.setTitle("Beállítod, hogy ez az etap látszódjon a boxutca kijelzőjén?")
+                                            builder2.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { _, _ ->
+
+                                                val numberOfRace = p0.result.child("Info").child("numberOfRace").value.toString() + ". futam"
+                                                val venue = p0.result.child("Info").child("location").value.toString()
+                                                val stint = items.get(0)?.numberOfStint
+                                                val title = "Endurance OAGB - $numberOfRace - $venue / $stint. etap"
+                                                dbRef2.child("endTime").child("info").child("title").setValue(title)
+                                                for (i in 1..numberOfTeams) {
+                                                    dbRef2.child("endTime").child(i.toString()).child("counting").setValue(false)
+                                                    dbRef2.child("endTime").child(i.toString()).child("driver").removeValue()
+                                                    dbRef2.child("endTime").child(i.toString()).child("weight").removeValue()
+                                                }
+
+                                                showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                                startActivity(showDetailsIntent)
+                                            }
+                                            builder2.setNegativeButton(R.string.no) { _, _ ->
+                                                showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                                startActivity(showDetailsIntent)
+                                            }
+                                            builder2.show()
+                                        }
+                                    }
 
                                 } else {
                                     AlertDialog.Builder(requireContext())
@@ -746,17 +787,83 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                             alertDialog.show()
                         }
                         else {
+                            val builder2: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(
+                                requireContext(),
+                                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                            )
+
+                            builder2.setTitle("Beállítod, hogy ez az etap látszódjon a boxutca kijelzőjén?")
+                            builder2.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { _, _ ->
+                                dbRef2 =
+                                    FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                        .getReference("/")
+                                dbRef2.get().addOnCompleteListener { p1 ->
+                                    if (p1.isSuccessful) {
+                                        val numberOfRace = p0.result.child("Info").child("numberOfRace").value.toString() + ". futam"
+                                        val venue = p0.result.child("Info").child("location").value.toString()
+                                        val stint = items.get(0)?.numberOfStint
+                                        val title = "Endurance OAGB - $numberOfRace - $venue / $stint. etap"
+                                        dbRef2.child("endTime").child("info").child("title").setValue(title)
+                                        val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                                        for (i in 1..numberOfTeams) {
+                                            dbRef2.child("endTime").child(i.toString()).child("counting").setValue(false)
+                                            dbRef2.child("endTime").child(i.toString()).child("driver").removeValue()
+                                            dbRef2.child("endTime").child(i.toString()).child("weight").removeValue()
+                                        }
+                                        showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                        showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                        showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                        startActivity(showDetailsIntent)
+                                    }
+                                }
+                            }
+                            builder2.setNegativeButton(R.string.no) { _, _ ->
+                                showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                startActivity(showDetailsIntent)
+                            }
+                            builder2.show()
+                        }
+                    }
+                    else {
+                        val builder2: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(
+                            requireContext(),
+                            android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+                        )
+
+                        builder2.setTitle("Beállítod, hogy ez az etap látszódjon a boxutca kijelzőjén?")
+                        builder2.setPositiveButton(hu.bme.aut.android.enduranceoagb.R.string.yes) { _, _ ->
+                            dbRef2 =
+                                FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app")
+                                    .getReference("/")
+                            dbRef2.get().addOnCompleteListener { p1 ->
+                                if (p1.isSuccessful) {
+                                    val numberOfRace = p0.result.child("Info").child("numberOfRace").value.toString() + ". futam"
+                                    val venue = p0.result.child("Info").child("location").value.toString()
+                                    val stint = items.get(0)?.numberOfStint
+                                    val title = "Endurance OAGB - $numberOfRace - $venue / $stint. etap"
+                                    dbRef2.child("endTime").child("info").child("title").setValue(title)
+                                    val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                                    for (i in 1..numberOfTeams) {
+                                        dbRef2.child("endTime").child(i.toString()).child("counting").setValue(false)
+                                        dbRef2.child("endTime").child(i.toString()).child("driver").removeValue()
+                                        dbRef2.child("endTime").child(i.toString()).child("weight").removeValue()
+                                    }
+                                    showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
+                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
+                                    showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
+                                    startActivity(showDetailsIntent)
+                                }
+                            }
+                        }
+                        builder2.setNegativeButton(R.string.no) { _, _ ->
                             showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
                             showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
                             showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
                             startActivity(showDetailsIntent)
                         }
-                    }
-                    else {
-                        showDetailsIntent.setClass(requireActivity(), DetailsStintWatchActivity::class.java)
-                        showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_STINT_NUMBER, position.toString())
-                        showDetailsIntent.putExtra(DetailsStintWatchActivity.EXTRA_RACE_NAME, raceId)
-                        startActivity(showDetailsIntent)
+                        builder2.show()
                     }
 
                 }
@@ -765,6 +872,82 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                     snack.show()
                 }
 
+            }
+        }
+    }
+
+    private fun convertToEpoch(hour: Int, minute: Int, second: Int, millisecond: Int): Long {
+        // A mai nap éjfél
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val midnightMillis: Long = calendar.getTimeInMillis()
+
+        val totalMillis =
+            midnightMillis + (hour * 3600000) + (minute * 60000) + (second * 1000) + millisecond
+
+        return totalMillis
+    }
+
+    private fun raceDuration(numberOfTeams: Int): Int {
+        val minute = 60000
+        val hour = 60 * minute
+        when (numberOfTeams) {
+            5 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            6 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            7 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            8 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            9 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            10 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            11 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            12 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            13 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            14 -> {
+                val duration = 3 * hour
+                return duration
+            }
+
+            else -> {
+                return 0
             }
         }
     }

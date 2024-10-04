@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         val gso =
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.button_ok))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 
@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
         super.onStart()
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
 
-        if (currentUser!=null) {
+        if (currentUser != null) {
             if (currentUser.email == "novak.balint.huba@gmail.com") {
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)

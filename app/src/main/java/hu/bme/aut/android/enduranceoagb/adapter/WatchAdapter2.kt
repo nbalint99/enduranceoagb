@@ -6,8 +6,8 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ServerValue
 import hu.bme.aut.android.enduranceoagb.R
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.data.Watch
@@ -75,9 +75,11 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         holder.binding.startButton.setOnClickListener {
             if (holder.binding.timeTV.text != "MEHET!") {
+                val unixTime = System.currentTimeMillis()
                 if (!counting) {
                     listener.startTimer(position)
                     counting = true
+                    listener.serverTime(position, item.time, unixTime, counting)
                     holder.binding.startButton.text = "Stop"
                     holder.binding.startButton.setTextColor(Color.WHITE)
                     holder.binding.startButton.setBackgroundColor(Color.RED)
@@ -124,6 +126,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                 } else {
                     countDownTimer.cancel()
                     counting = false
+                    listener.serverTime(position, item.time, unixTime, counting)
                     holder.binding.startButton.text = "Start"
                     holder.binding.startButton.setTextColor(Color.BLACK)
                     holder.binding.startButton.setBackgroundColor(Color.GREEN)
@@ -133,9 +136,11 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
 
         holder.binding.timeTV.setOnClickListener {
             if (holder.binding.timeTV.text != "MEHET!") {
+                val unixTime = System.currentTimeMillis()
                 if (!counting) {
                     listener.startTimer(position)
                     counting = true
+                    listener.serverTime(position, item.time, unixTime, counting)
                     holder.binding.startButton.text = "Stop"
                     holder.binding.startButton.setTextColor(Color.WHITE)
                     holder.binding.startButton.setBackgroundColor(Color.RED)
@@ -182,6 +187,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                 } else {
                     countDownTimer.cancel()
                     counting = false
+                    listener.serverTime(position, item.time, unixTime, counting)
                     holder.binding.startButton.text = "Start"
                     holder.binding.startButton.setTextColor(Color.BLACK)
                     holder.binding.startButton.setBackgroundColor(Color.GREEN)
@@ -280,6 +286,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
                 if (counting) {
                     countDownTimer.cancel()
                     item.time += 1000.0
+
                     val ms = (item.time / 100 % 10).toInt()
                     val min = (item.time / 60000 % 60).toInt()
                     val sec = (item.time / 1000 % 60).toInt()
@@ -501,6 +508,7 @@ class WatchAdapter2(private val listener: Watch2ItemClickListener) :
         fun dataChangedBool(position: Int)
         fun dataChangedBoolFalse(position: Int)
         fun startTimer(position: Int)
+        fun serverTime(position: Int, time: Double, unixTime: Long, counting: Boolean)
     }
 
     fun addItem(item: Watch) {
