@@ -181,7 +181,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
                     if (stintId.toInt() > 1) {
-                        if (allTeams < 10 || (allTeams == 10 && allTeamTogether == true)) {
+                        if (allTeams < 10 || allTeamTogether == true) {
                             val prevStint = stintId.toInt() - 1
                             val prevParkKart = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
                             val id = p0.result.child("Id").value.toString()
@@ -1293,7 +1293,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                     if ((stintId.toString().toInt() + 1) <= allStintNumber) {
                         if (firstMore == true) {
-                            if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
+                            if (numberOfTeams < 10 || allTeamTogether == true) {
                                 if (teamNumber == numberOfTeams) {
                                     var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                     val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
@@ -1533,7 +1533,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
 
                     if ((stintId.toString().toInt() + 1) <= allStintNumber) {
                         if (firstMore == true) {
-                            if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
+                            if (numberOfTeams < 10 || allTeamTogether == true) {
                                 if (teamNumber == numberOfTeams) {
                                     var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                     val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
@@ -1914,6 +1914,7 @@ class DetailsStintFragment : Fragment(), DetailsStintFragmentAdapter.DetailsStin
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun sendNotification() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)

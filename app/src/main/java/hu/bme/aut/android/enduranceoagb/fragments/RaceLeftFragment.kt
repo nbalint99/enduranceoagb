@@ -406,10 +406,10 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                 8 -> 9
                 9 -> 10
                 10 -> 11
-                11 -> 7
-                12 -> 7
-                13 -> 8
-                14 -> 8
+                11 -> 12
+                12 -> 13
+                13 -> 14
+                14 -> 15
                 else -> 0
             }
         }

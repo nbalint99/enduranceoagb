@@ -167,7 +167,8 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                         .toInt()
                                 val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                                 var setSecondGroup = false
-                                if (numberOfTeams > 10 || (numberOfTeams == 10 && allTeamTogether != true)) {
+                                if (allTeamTogether != true) {
+                                //if (numberOfTeams > 10 && allTeamTogether != true) {
                                     val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
                                     var firstTeam = 1
                                     var group1 = 0
@@ -1255,7 +1256,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     divideGroup = ceil(divideGroup)
                 }
                 else if (group1 > group2) {
-                    if (numberOfTeams < 10.0 || (numberOfTeams == 10.0 && allTeamTogether == true)) {
+                    if (numberOfTeams < 10.0 || allTeamTogether == true) {
                         divideGroup = 0.0
                     }
                     else {
@@ -1873,7 +1874,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     divideGroup = ceil(divideGroup)
                 }
                 else if (group1 > group2) {
-                    if (numberOfTeams < 10.0 || (numberOfTeams == 10.0 && allTeamTogether == true)) {
+                    if (numberOfTeams < 10.0 || allTeamTogether == true) {
                         divideGroup = 0.0
                     }
                     else {

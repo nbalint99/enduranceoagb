@@ -65,7 +65,7 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                         val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                         val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                         val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
-                        if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
+                        if (numberOfTeams < 10 || allTeamTogether == true) {
                             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
                                 this,
                                 R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth

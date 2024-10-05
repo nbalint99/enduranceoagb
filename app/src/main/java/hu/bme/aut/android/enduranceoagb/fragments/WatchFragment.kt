@@ -1,5 +1,6 @@
 package hu.bme.aut.android.enduranceoagb.fragments
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -110,7 +111,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
 
                 val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                 val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
-                if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
+                if (numberOfTeams < 10 || allTeamTogether == true) {
                     adapter.update2(items!!)
                     adapter.update2Teams(itemsTeams!!)
                 }
@@ -209,7 +210,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 //C: x = 6 + 1 = 7
                 val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
 
-                if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
+                if (numberOfTeams < 10 || allTeamTogether == true) {
                     //do nothing
                 }
                 else {
@@ -268,6 +269,7 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun sendNotification2() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
