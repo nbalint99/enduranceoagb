@@ -49,5 +49,18 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:importantForAutofill="no" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/if10Teams"/>
+
+        <CheckBox
+            android:id="@+id/cbAllTogether"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/teamsTogether"/>
     </LinearLayout>
 </ScrollView>

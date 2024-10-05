@@ -123,14 +123,18 @@ class RaceActivity : AppCompatActivity() {
                                                         .child("allStintNumber").value.toString()
                                                         .toInt()
                                                 if (!p0.result.hasChild("AllStint")) {
+                                                    val allTeamTogether =
+                                                        p0.result.child("Info")
+                                                            .child("allTeamTogether").value.toString()
+                                                            .toBooleanStrictOrNull()
                                                     for (element in 1..stintNumber) {
 
                                                         val newItem = DoneStint(
                                                             element,
                                                             false,
                                                             false,
-                                                            zeroToUp(numberOfTeams, element),
-                                                            upToZero(numberOfTeams, element)
+                                                            zeroToUp(numberOfTeams, element, allTeamTogether),
+                                                            upToZero(numberOfTeams, element, allTeamTogether)
                                                         )
                                                         dbRef.child("AllStint")
                                                             .child("numberOfStint")
@@ -387,7 +391,7 @@ class RaceActivity : AppCompatActivity() {
         startActivity(myIntent)
     }
 
-    private fun zeroToUp(numberOfTeams: Int, stintNumber: Int): String {
+    private fun zeroToUp(numberOfTeams: Int, stintNumber: Int, allTeamTogether: Boolean?): String {
         when (numberOfTeams) {
             5 -> {
                 when (stintNumber) {
@@ -535,26 +539,87 @@ class RaceActivity : AppCompatActivity() {
                 }
             }
             10 -> {
-                when (stintNumber) {
-                    1 -> {
-                        return ""
+                if (allTeamTogether == true) {
+                    when (stintNumber) {
+                        1 -> {
+                            return ""
+                        }
+
+                        2 -> {
+                            return "0:13 - 0:20"
+                        }
+
+                        3 -> {
+                            return "0:29 - 0:36"
+                        }
+
+                        4 -> {
+                            return "0:46 - 0:53"
+                        }
+
+                        5 -> {
+                            return "1:02 - 1:09"
+                        }
+
+                        6 -> {
+                            return "1:18 - 1:25"
+                        }
+
+                        7 -> {
+                            return "1:35 - 1:42"
+                        }
+
+                        8 -> {
+                            return "1:51 - 1:58"
+                        }
+
+                        9 -> {
+                            return "2:08 - 2:15"
+                        }
+
+                        10 -> {
+                            return "2:24 - 2:31"
+                        }
+
+                        11 -> {
+                            return "2:40 - 2:47"
+                        }
+
+                        else -> {
+                            return ""
+                        }
                     }
-                    2 -> {
-                        return "0:25 - 0:35"
+                }
+                else {
+                    when (stintNumber) {
+                        1 -> {
+                            return ""
+                        }
+
+                        2 -> {
+                            return "0:25 - 0:35"
+                        }
+
+                        3 -> {
+                            return "0:55 - 1:05"
+                        }
+
+                        4 -> {
+                            return "1:25 - 1:35"
+                        }
+
+                        5 -> {
+                            return "1:55 - 2:05"
+                        }
+
+                        6 -> {
+                            return "2:25 - 2:35"
+                        }
+
+                        else -> {
+                            return ""
+                        }
                     }
-                    3 -> {
-                        return "0:55 - 1:05"
-                    }
-                    4 -> {
-                        return "1:25 - 1:35"
-                    }
-                    5 -> {
-                        return "1:55 - 2:05"
-                    }
-                    6 -> {
-                        return "2:25 - 2:35"
-                    }
-                    else -> {return ""}
                 }
             }
             11 -> {
@@ -671,7 +736,7 @@ class RaceActivity : AppCompatActivity() {
         }
     }
 
-    private fun upToZero(numberOfTeams: Int, stintNumber: Int): String {
+    private fun upToZero(numberOfTeams: Int, stintNumber: Int, allTeamTogether: Boolean?): String {
         when (numberOfTeams) {
             5 -> {
                 when (stintNumber) {
@@ -819,26 +884,87 @@ class RaceActivity : AppCompatActivity() {
                 }
             }
             10 -> {
-                when (stintNumber) {
-                    1 -> {
-                        return ""
+                if (allTeamTogether == true) {
+                    when (stintNumber) {
+                        1 -> {
+                            return ""
+                        }
+
+                        2 -> {
+                            return "2:47 - 2:40"
+                        }
+
+                        3 -> {
+                            return "2:31 - 2:24"
+                        }
+
+                        4 -> {
+                            return "2:14 - 2:07"
+                        }
+
+                        5 -> {
+                            return "1:58 - 1:51"
+                        }
+
+                        6 -> {
+                            return "1:42 - 1:35"
+                        }
+
+                        7 -> {
+                            return "1:25 - 1:18"
+                        }
+
+                        8 -> {
+                            return "1:09 - 1:02"
+                        }
+
+                        9 -> {
+                            return "0:52 - 0:45"
+                        }
+
+                        10 -> {
+                            return "0:36 - 0:29"
+                        }
+
+                        11 -> {
+                            return "0:20 - 0:13"
+                        }
+
+                        else -> {
+                            return ""
+                        }
                     }
-                    2 -> {
-                        return "2:35 - 2:25"
+                }
+                else {
+                    when (stintNumber) {
+                        1 -> {
+                            return ""
+                        }
+
+                        2 -> {
+                            return "2:35 - 2:25"
+                        }
+
+                        3 -> {
+                            return "2:05 - 1:55"
+                        }
+
+                        4 -> {
+                            return "1:35 - 1:25"
+                        }
+
+                        5 -> {
+                            return "1:05 - 0:55"
+                        }
+
+                        6 -> {
+                            return "0:35 - 0:25"
+                        }
+
+                        else -> {
+                            return ""
+                        }
                     }
-                    3 -> {
-                        return "2:05 - 1:55"
-                    }
-                    4 -> {
-                        return "1:35 - 1:25"
-                    }
-                    5 -> {
-                        return "1:05 - 0:55"
-                    }
-                    6 -> {
-                        return "0:35 - 0:25"
-                    }
-                    else -> {return ""}
                 }
             }
             11 -> {

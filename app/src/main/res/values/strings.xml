@@ -150,4 +150,6 @@
     <string name="qualiNumberFragment">Időmérős gokartszám megadása</string>
     <string name="startKartNumberFragment">Rajtolós gokart szám megadása</string>
     <string name="default_web_client_id">511625415336-0d5s36kjmg6cptuseomplulssftf836d.apps.googleusercontent.com</string>
+    <string name="if10Teams">Ha 10 csapat indul, akkor egy gépparkot kapjon mindenki?</string>
+    <string name="teamsTogether">Mindenki ugyanazokkal menjen</string>
 </resources>

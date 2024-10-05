@@ -165,8 +165,9 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 val numberOfTeams =
                                     p0.result.child("Info").child("numberOfTeams").value.toString()
                                         .toInt()
+                                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                                 var setSecondGroup = false
-                                if (numberOfTeams >= 10) {
+                                if (numberOfTeams > 10 || (numberOfTeams == 10 && allTeamTogether != true)) {
                                     val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
                                     var firstTeam = 1
                                     var group1 = 0
@@ -1247,13 +1248,19 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     }
                 }
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toDouble()
+                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                 var divideGroup = numberOfTeams / 2.0
                 var groupEqual = false
                 if (group1 < group2) {
                     divideGroup = ceil(divideGroup)
                 }
                 else if (group1 > group2) {
-                    divideGroup = floor(divideGroup)
+                    if (numberOfTeams < 10.0 || (numberOfTeams == 10.0 && allTeamTogether == true)) {
+                        divideGroup = 0.0
+                    }
+                    else {
+                        divideGroup = floor(divideGroup)
+                    }
                 }
                 else if (group1 == group2) {
                     groupEqual = true
@@ -1859,21 +1866,27 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                     }
                 }
                 val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toDouble()
+                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                 var divideGroup = numberOfTeams / 2.0
                 var groupEqual = false
                 if (group1 < group2) {
                     divideGroup = ceil(divideGroup)
                 }
                 else if (group1 > group2) {
-                    divideGroup = floor(divideGroup)
+                    if (numberOfTeams < 10.0 || (numberOfTeams == 10.0 && allTeamTogether == true)) {
+                        divideGroup = 0.0
+                    }
+                    else {
+                        divideGroup = floor(divideGroup)
+                    }
                 }
                 else if (group1 == group2) {
                     groupEqual = true
                     divideGroup += 0.5
                 }
-                if (numberOfTeams < 10.0) {
-                    divideGroup = 0.0
-                }
+                //if (numberOfTeams < 10.0) {
+                //    divideGroup = 0.0
+                //}
                 for (element in list) {
                     if (element.child("Info").child("nameTeam").value.toString() == teamName) {
 

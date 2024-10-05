@@ -96,7 +96,7 @@ class NewRaceFragment : DialogFragment() {
         nameR = year2 + " - " + binding.etNameRace.text.toString() + ". verseny",
         location = binding.etNewLocation.text.toString(),
         numberOfTeams = binding.etNewRaceTeams.text.toString().toInt(),
-        allStintNumber = numberOfStints(binding.etNewRaceTeams.text.toString().toInt()),
+        allStintNumber = numberOfStints(binding.etNewRaceTeams.text.toString().toInt(), binding.cbAllTogether.isChecked.toString().toBooleanStrictOrNull()),
         hasStintReady = false,
         hasRaceDone = false,
         petrolDone = false,
@@ -106,22 +106,40 @@ class NewRaceFragment : DialogFragment() {
         numberOfRace = binding.etNameRace.text.toString().toInt(),
         hasGroupDone = false,
         hasTeamsCreated = false,
-        hasFinalTeamsCreated = false
+        hasFinalTeamsCreated = false,
+        allTeamTogether = binding.cbAllTogether.isChecked.toString().toBooleanStrictOrNull()
     )
 
-    private fun numberOfStints(numberOfTeams: Int): Int {
-        return when (numberOfTeams) {
-            5 -> 6
-            6 -> 7
-            7 -> 8
-            8 -> 9
-            9 -> 10
-            10 -> 6
-            11 -> 7
-            12 -> 7
-            13 -> 8
-            14 -> 8
-            else -> 0
+    private fun numberOfStints(numberOfTeams: Int, allTeamTogether: Boolean?): Int {
+        if (allTeamTogether == true) {
+            return when (numberOfTeams) {
+                5 -> 6
+                6 -> 7
+                7 -> 8
+                8 -> 9
+                9 -> 10
+                10 -> 11
+                11 -> 7
+                12 -> 7
+                13 -> 8
+                14 -> 8
+                else -> 0
+            }
+        }
+        else {
+            return when (numberOfTeams) {
+                5 -> 6
+                6 -> 7
+                7 -> 8
+                8 -> 9
+                9 -> 10
+                10 -> 6
+                11 -> 7
+                12 -> 7
+                13 -> 8
+                14 -> 8
+                else -> 0
+            }
         }
     }
 }

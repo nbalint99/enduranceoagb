@@ -169,11 +169,12 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         secondGroupFirst = 0
                     }
                     val firstGroupLast = allTeams - secondGroupFirst
+                    val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
                     if (stintId.toInt() > 1) {
-                        if (allTeams < 10) {
+                        if (allTeams < 10 || (allTeams == 10 && allTeamTogether == true)) {
                             val prevStint = stintId.toInt() - 1
                             val prevParkKart = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
                             val id = p0.result.child("Id").value.toString()
@@ -1236,6 +1237,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     val secondGroupFirst =
                         p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                     val firstGroupLast = numberOfTeams - (secondGroupFirst?.minus(1)!!)
+                    val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
@@ -1246,7 +1248,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     if ((stintId.toString().toInt() + 1) <= allStintNumber) {
                         //println("ide????1?")
                         if (firstMore == true) {
-                            if (numberOfTeams < 10) {
+                            if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
                                 if (teamNumber == numberOfTeams) {
                                     var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                     val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
@@ -1291,9 +1293,9 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             }
                         }
                         else if (secondMore == true) {
-                            println("ide2?")
+                            //println("ide2?")
                             if (teamNumber == numberOfTeams) {
-                                println("ide3?")
+                                //println("ide3?")
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 var changeNext2 = "Etap: ${stintId.toString().toInt() + 2}"
                                 val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
@@ -1307,7 +1309,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                                     .child(teamStintNext12).child("kartNumber").setValue(kartNumber)
                             }
                             if (teamNumber == secondGroupFirst) {
-                                println("ide4?")
+                                //println("ide4?")
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext21 = "${stintId.toString().toInt() + 1}-box21"
                                 val teamStintNext22 = "${stintId.toString().toInt() + 1}-box22"
@@ -1338,7 +1340,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                             }
                         }
                         else {
-                            println("ide1111?")
+                            //println("ide1111?")
                             if (teamNumber == numberOfTeams) {
                                 var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                 val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"

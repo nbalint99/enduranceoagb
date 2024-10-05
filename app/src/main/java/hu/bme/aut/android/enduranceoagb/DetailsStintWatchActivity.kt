@@ -61,10 +61,11 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                 dbRef.get().addOnCompleteListener { p0 ->
                     if (p0.isSuccessful) {
                         val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                        val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                         val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                         val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                         val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
-                        if (numberOfTeams < 10) {
+                        if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
                             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
                                 this,
                                 R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
@@ -558,19 +559,19 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                             //for (element in teams) {
                                 for (el in quali) {
                                     val teams = p0.result.child("Teams").children
-                                    println(el)
-                                    println(quali)
+                                    //println(el)
+                                    //println(quali)
                                     //val teamName = element.child("Info").child("nameTeam").value.toString()
                                     //val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
                                     //val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                                     for (element in teams) {
-                                        println(element)
+                                        //println(element)
                                         val qualiTeamName = el.child("longTeamName").value.toString()
                                         val teamName = element.child("Info").child("nameTeam").value.toString()
                                         val teamNumber = element.child("Info").child("teamNumber").value.toString().toInt()
                                         val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
                                         if (teamName == qualiTeamName) {
-                                            println(teamName)
+                                            //println(teamName)
                                             val resultQuali = el.child("result").value.toString().toInt()
                                             val childTeam = "1-$teamNumber"
                                             val kartNumber = p0.result.child("Stints").child("Etap: 1").child("Info").child(childTeam)

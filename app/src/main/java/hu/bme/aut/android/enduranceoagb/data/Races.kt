@@ -24,6 +24,7 @@ data class Races(
     @ColumnInfo(name = "secondMore") var secondMore: Boolean? = null,
     @ColumnInfo(name = "equalGroup") var equalGroup: Boolean? = null,
     @ColumnInfo(name = "hasTeamsCreated") var hasTeamsCreated: Boolean? = null,
-    @ColumnInfo(name = "hasFinalTeamsCreated") var hasFinalTeamsCreated: Boolean? = null
+    @ColumnInfo(name = "hasFinalTeamsCreated") var hasFinalTeamsCreated: Boolean? = null,
+    @ColumnInfo(name = "allTeamTogether") var allTeamTogether: Boolean? = null
 
 )

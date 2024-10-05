@@ -109,7 +109,8 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 }
 
                 val secondGroupFirstOri = p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
-                if (numberOfTeams < 10) {
+                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
+                if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
                     adapter.update2(items!!)
                     adapter.update2Teams(itemsTeams!!)
                 }
@@ -206,8 +207,9 @@ class WatchFragment : Fragment(), WatchAdapter2.Watch2ItemClickListener{
                 //A: x = 5 + 1 = 6
                 //B: X = 6 + 1 = 7
                 //C: x = 6 + 1 = 7
+                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
 
-                if (numberOfTeams < 10) {
+                if (numberOfTeams < 10 || (numberOfTeams == 10 && allTeamTogether == true)) {
                     //do nothing
                 }
                 else {
