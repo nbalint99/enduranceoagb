@@ -165,59 +165,47 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 val numberOfTeams =
                                     p0.result.child("Info").child("numberOfTeams").value.toString()
                                         .toInt()
-                                val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
-                                var setSecondGroup = false
-                                if (allTeamTogether != true) {
-                                //if (numberOfTeams > 10 && allTeamTogether != true) {
+                                if (numberOfTeams >= 12) {
                                     val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
                                     var firstTeam = 1
-                                    var group1 = 0
-                                    var group2 = 0
+                                    var group1 = 1
+                                    var group2 = 1
                                     for (e in sortedItems) {
-                                        if (firstTeam < divideGroup.toInt()) {
-                                            dbRef.child("Teams").child(e.nameTeam).child("Info")
-                                                .child("group").setValue(1)
-                                            sortedItems[firstTeam-1].group = 1
-                                            group1++
-                                            firstTeam++
-                                        } else if (firstTeam > divideGroup.toInt()) {
-                                            dbRef.child("Teams").child(e.nameTeam).child("Info")
-                                                .child("group").setValue(2)
-                                            if (!setSecondGroup) {
-                                                dbRef.child("Info").child("secondGroup").setValue(firstTeam)
-                                                setSecondGroup = true
-                                            }
-                                            sortedItems[firstTeam-1].group = 2
-                                            group2++
-                                            firstTeam++
-                                        } else if (firstTeam == divideGroup.toInt()) {
-                                            if (firstTeam*2.0 == numberOfTeams.toDouble()) {
+                                        val teamCategory = e.gp2
+                                        if (teamCategory != true) { //Ha GP1-esek
+                                            if (group1 < divideGroup.toInt() || group1 == divideGroup.toInt()) {
                                                 dbRef.child("Teams").child(e.nameTeam).child("Info")
                                                     .child("group").setValue(1)
                                                 sortedItems[firstTeam-1].group = 1
                                                 group1++
                                                 firstTeam++
                                             }
-                                            else if (e.gp2 == true) {
-                                                dbRef.child("Teams").child(e.nameTeam)
-                                                    .child("Info").child("group")
-                                                    .setValue(2)
-                                                if (!setSecondGroup) {
-                                                    dbRef.child("Info").child("secondGroup").setValue(firstTeam)
-                                                    setSecondGroup = true
-                                                }
+                                            else if (group1 > divideGroup.toInt()) {
+                                                dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                    .child("group").setValue(2)
                                                 sortedItems[firstTeam-1].group = 2
                                                 group2++
                                                 firstTeam++
-                                            } else if (e.gp2 == false) {
-                                                dbRef.child("Teams").child(e.nameTeam)
-                                                    .child("Info").child("group")
-                                                    .setValue(1)
+                                            }
+                                        }
+                                        else { //Ha GP2-esek
+                                            if (group2 < divideGroup.toInt() || group2 == divideGroup.toInt()) {
+                                                dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                    .child("group").setValue(2)
+                                                sortedItems[firstTeam-1].group = 2
+                                                group2++
+                                                firstTeam++
+                                            }
+                                            else if (group2 > divideGroup.toInt()) {
+                                                dbRef.child("Teams").child(e.nameTeam).child("Info")
+                                                    .child("group").setValue(1)
                                                 sortedItems[firstTeam-1].group = 1
                                                 group1++
                                                 firstTeam++
                                             }
                                         }
+
+                                        dbRef.child("Info").child("secondGroup").setValue(group1)
                                     }
                                     dbRef6 = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
 

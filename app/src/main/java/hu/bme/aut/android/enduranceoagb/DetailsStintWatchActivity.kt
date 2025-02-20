@@ -61,11 +61,11 @@ class DetailsStintWatchActivity : FragmentActivity(), NewStintFragment.NewStintL
                 dbRef.get().addOnCompleteListener { p0 ->
                     if (p0.isSuccessful) {
                         val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                        val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
+                        //val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                         val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                         val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                         val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
-                        if (numberOfTeams < 10 || allTeamTogether == true) {
+                        if (numberOfTeams < 12) {
                             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
                                 this,
                                 R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth

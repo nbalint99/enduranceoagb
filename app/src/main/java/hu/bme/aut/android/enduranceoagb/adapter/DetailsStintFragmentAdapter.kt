@@ -40,7 +40,7 @@ class DetailsStintFragmentAdapter(private val listener: DetailsStintFragmentItem
     )
 
 
-    @SuppressLint("SetTextI18n", "ResourceAsColor")
+    @SuppressLint("SetTextI18n", "ResourceAsColor", "SuspiciousIndentation")
     override fun onBindViewHolder(holder: DetailsStintFragmentViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val detailsStintItem = items[position]
 

@@ -49,18 +49,5 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:importantForAutofill="no" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/allSame"/>
-
-        <CheckBox
-            android:id="@+id/cbAllTogether"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/yes"/>
     </LinearLayout>
 </ScrollView>

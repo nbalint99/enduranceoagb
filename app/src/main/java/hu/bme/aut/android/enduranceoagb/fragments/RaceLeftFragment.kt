@@ -356,11 +356,11 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
                         if (nameRaceEdit.text.toString()
                                 .isNotEmpty() && numberOfTeamsEdit.text.toString().isNotEmpty() && numberOfTeamsEdit.text.toString().toInt() in 5..14
                         ) {
-                            val together = p0.result.child(key).child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
+                            //val together = p0.result.child(key).child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                             dbRef.child(key).child("Info").child("numberOfRace").setValue(nameRaceEdit.text.toString())
                             dbRef.child(key).child("Info").child("nameR").setValue(year2 + " - " + nameRaceEdit.text.toString() + ". verseny")
                             dbRef.child(key).child("Info").child("numberOfTeams").setValue(numberOfTeamsEdit.text.toString())
-                            dbRef.child(key).child("Info").child("allStintNumber").setValue(numberOfStints(numberOfTeamsEdit.text.toString().toInt(), together).toString())
+                            dbRef.child(key).child("Info").child("allStintNumber").setValue(numberOfStints(numberOfTeamsEdit.text.toString().toInt()).toString())
 
                             if (cbActual.isChecked) {
                                 dbRef.child("Actual").child("key").setValue(key)
@@ -397,36 +397,19 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
         }
     }
 
-    private fun numberOfStints(numberOfTeams: Int, allTeamTogether: Boolean?): Int {
-        if (allTeamTogether == true) {
-            return when (numberOfTeams) {
-                5 -> 6
-                6 -> 7
-                7 -> 8
-                8 -> 9
-                9 -> 10
-                10 -> 11
-                11 -> 12
-                12 -> 13
-                13 -> 14
-                14 -> 15
-                else -> 0
-            }
-        }
-        else {
-            return when (numberOfTeams) {
-                5 -> 6
-                6 -> 7
-                7 -> 8
-                8 -> 9
-                9 -> 10
-                10 -> 6
-                11 -> 7
-                12 -> 7
-                13 -> 8
-                14 -> 8
-                else -> 0
-            }
+    private fun numberOfStints(numberOfTeams: Int): Int {
+        return when (numberOfTeams) {
+            5 -> 6
+            6 -> 7
+            7 -> 8
+            8 -> 9
+            9 -> 10
+            10 -> 11
+            11 -> 12
+            12 -> 7
+            13 -> 8
+            14 -> 8
+            else -> 0
         }
     }
 

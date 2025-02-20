@@ -89,14 +89,14 @@ class AllFinalCheckAdapter(private val listener: AllFinalCheckItemClickListener)
                 binding.tvTeamName.text = item?.nameTeam
             }
 
-            val avg = item?.avgWeight!! / item?.stintsDone.toString().toDouble()
+            val avg = (item?.avgWeight!! / item?.stintsDone.toString().toDouble()) + 0.09
 
-            if ((item?.avgWeight!! / item?.stintsDone.toString().toDouble()) < 90.0) {
+            if (avg < 90.0) {
                 binding.tvWeight.setTextColor(Color.RED)
                 val animationZoomIn = AnimationUtils.loadAnimation(binding.root.context, R.anim.zoom_in_normal)
                 binding.tvWeight.startAnimation(animationZoomIn)
             }
-            else if ((item?.avgWeight!! / item?.stintsDone.toString().toDouble()) >= 90.0) {
+            else if (avg >= 90.0) {
                 binding.tvWeight.setTextColor(Color.GRAY)
             }
 

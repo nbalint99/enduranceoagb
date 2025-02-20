@@ -126,7 +126,7 @@ class StintLeftFragment : Fragment(), StintAdapter.StintItemClickListener{
                             val equalGroup =
                                 p0.result.child("Info").child("equalGroup").value.toString()
                                     .toBooleanStrictOrNull()
-                            if (numberOfTeams < 10) {
+                            if (numberOfTeams < 12) {
                                 val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(
                                     requireContext(),
                                     android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth

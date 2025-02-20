@@ -65,7 +65,7 @@ class DetailsTeamCheckActivity : AppCompatActivity(), DetailsTeamCheckAdapter.De
                 val totalWeight = p0.result.child("Teams").child(teamName.toString()).child("Info").child("avgWeight").value.toString().toDouble()
                 val stintNumber = p0.result.child("Teams").child(teamName.toString()).child("Info").child("stintsDone").value.toString().toDouble()
 
-                val avg = totalWeight / stintNumber
+                val avg = (totalWeight / stintNumber) + 0.09
 
                 if (avg < 90.0) {
                     binding.tvWeightDetailsTeamCheckActivity.setTextColor(Color.RED)

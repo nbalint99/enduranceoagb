@@ -169,12 +169,12 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                         secondGroupFirst = 0
                     }
                     val firstGroupLast = allTeams - secondGroupFirst
-                    val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
+                    //val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
                     if (stintId.toInt() > 1) {
-                        if (allTeams < 10 || allTeamTogether == true) {
+                        if (allTeams < 12) {
                             val prevStint = stintId.toInt() - 1
                             val prevParkKart = p0.result.child("Stints").child("Etap: $prevStint").child("Info").child("$prevStint-$allTeams").child("kartNumber").value.toString().toInt()
                             val id = p0.result.child("Id").value.toString()
@@ -671,256 +671,6 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
         }
     }
 
-    //EZT KI KELL VENNI 2024-BEN
-    /*private fun loadBackgroundBoxItems() {
-        val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
-        val raceId: String = activity?.getMyData().toString()
-        val stintId: String = activity?.getMyDataStint().toString()
-
-        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
-
-        val items : MutableList<BoxTime>? = mutableListOf()
-        val itemsTeams : MutableList<Teams>? = mutableListOf()
-        val itemsTime : MutableList<Double>? = mutableListOf()
-
-        dbRef.get().addOnCompleteListener { p0 ->
-            if (p0.isSuccessful) {
-                val numberOfTeams = p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                if (!p0.result.child("BoxTime").child(stintId).exists()) {
-                    val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt()
-                    for (element in 1..numberOfTeams) {
-                        val boxTime = BoxTime(element, changeTime.toDouble(), false)
-                        dbRef.child("BoxTime").child(stintId).child(element.toString()).setValue(boxTime)
-                        items?.add(boxTime)
-                    }
-                }
-                else {
-                    for (element in 1..numberOfTeams) {
-                        val watchGet = BoxTime(p0.result.child("BoxTime").child(stintId).child(element.toString()).child("teamNumber").value.toString().toInt(),
-                            p0.result.child("BoxTime").child(stintId).child(element.toString()).child("initialTime").value.toString().toDouble(), p0.result.child("BoxTime").child(stintId).child(element.toString()).child("hasDone").value.toString().toBoolean(),
-                            p0.result.child("BoxTime").child(stintId).child(element.toString()).child("prevPenaltyTime").value.toString().toDoubleOrNull(),
-                            p0.result.child("BoxTime").child(stintId).child(element.toString()).child("actualTime").value.toString().toDoubleOrNull(),
-                            p0.result.child("BoxTime").child(stintId).child(element.toString()).child("penaltyTime").value.toString().toDoubleOrNull(),
-                            p0.result.child("BoxTime").child(stintId).child(element.toString()).child("nextTime").value.toString().toDoubleOrNull())
-                        items?.add(watchGet)
-                    }
-                }
-
-                val teams = p0.result.child("Teams").children
-                for (el in teams) {
-                    val teamsGet = Teams(el.child("Info").child("nameTeam").value.toString(), el.child("Info").child("people").value.toString().toInt(),
-                        el.child("Info").child("teamNumber").value.toString().toInt(), el.child("Info").child("avgWeight").value.toString().toDoubleOrNull(),
-                        el.child("Info").child("hasDriversDone").value.toString().toInt(), el.child("Info").child("startKartNumber").value.toString().toInt(),
-                        el.child("Info").child("hasQualiDone").value.toString().toBoolean(), el.child("Info").child("stintsDone").value.toString().toIntOrNull(), el.child("Info").child("gp2").value.toString().toBooleanStrictOrNull(),
-                        el.child("Info").child("points").value.toString().toIntOrNull(), el.child("Info").child("shortTeamName").value.toString(), el.child("Info").child("group").value.toString().toIntOrNull())
-                    itemsTeams?.add(teamsGet)
-                }
-                val changeTime = p0.result.child("Info").child("changeTime").value.toString().toInt().toDouble()
-                itemsTime?.add(changeTime)
-
-                requireActivity().runOnUiThread {
-                    adapter.update2Box(items!!)
-                    adapter.teams(itemsTeams!!)
-                    adapter.update3time(itemsTime!!)
-                }
-            }
-        }
-    }*/
-
-    /*private fun loadBackgroundItemsParam(raceIdpass: String?, stintIdpass: String?) {
-        val raceId = raceIdpass.toString()
-        val stintId = stintIdpass.toString()
-
-
-        dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
-
-        val items : MutableList<Stint>? = mutableListOf()
-
-        val itemsDrivers : MutableList<Drivers>? = mutableListOf()
-
-        val change = "Etap: $stintId"
-
-        dbRef.get().addOnCompleteListener { p0 ->
-            if (p0.isSuccessful) {
-
-                for (elem in p0.result.child("Drivers").children) {
-
-                    val nameDriver = elem.child("nameDriver").value.toString()
-                    val weight = elem.child("weight").value.toString().toDouble()
-
-                    val addDriver = Drivers(nameDriver, weight)
-
-                    itemsDrivers?.add(addDriver)
-                }
-
-                val numberOfTeam =
-                    p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
-                for (iterator in 1..numberOfTeam) {
-                    val stintTeam = stintId.toString() + "-" + iterator.toString()
-                    val nameDriver = p0.result.child("Stints").child(change).child("Info")
-                        .child(stintTeam).child("driverName").value.toString()
-                    val plus = p0.result.child("Stints").child(change).child("Info")
-                        .child(stintTeam).child("plusWeight").value.toString().toDoubleOrNull()
-
-                    for (element in p0.result.child("Teams").children) {
-                        val nameTeam = element.child("Info").child("nameTeam").value.toString()
-                        val teamNumber =
-                            element.child("Info").child("teamNumber").value.toString().toInt()
-                        val shortTeamName = element.child("Info").child("shortTeamName").value.toString()
-                        if (teamNumber == iterator) {
-                            if (stintId.toString().toInt() == 1) {
-                                val hasStintDone =
-                                    p0.result.child("Stints").child(change).child("Info").children
-                                for (ready in hasStintDone) {
-                                    val hasStintD =
-                                        ready.child("hasStintDone").value.toString().toBoolean()
-                                    val teamNum = ready.child("teamNumber").value.toString().toIntOrNull()
-                                    val stintNum =
-                                        ready.child("numberStint").value.toString().toIntOrNull()
-                                    val info = ready.child("info").value.toString()
-                                    val kartNumber =
-                                        ready.child("kartNumber").value.toString().toIntOrNull()
-                                    val expectedKartNumber =
-                                        p0.result.child("Teams").child(nameTeam).child("Info").child("startKartNumber").value.toString().toIntOrNull()
-
-                                    if (teamNum == teamNumber && stintNum == stintId.toString()
-                                            .toInt()
-                                    ) {
-                                        val addStint = Stint(
-                                            nameTeam,
-                                            teamNumber,
-                                            nameDriver,
-                                            stintId.toString().toInt(),
-                                            shortTeamName,
-                                            plus,
-                                            info,
-                                            null,
-                                            hasStintD, kartNumber, expectedKartNumber, null, null, null
-                                        )
-                                        items?.add(addStint)
-                                    }
-                                }
-                            } else if (stintId.toString().toInt() > 1) {
-                                val hasStintDone =
-                                    p0.result.child("Stints").child(change).child("Info").children
-                                for (ready in hasStintDone) {
-                                    val hasStintD =
-                                        ready.child("hasStintDone").value.toString().toBoolean()
-                                    val teamNum = ready.child("teamNumber").value.toString().toIntOrNull()
-                                    val stintNum =
-                                        ready.child("numberStint").value.toString().toIntOrNull()
-                                    val info = ready.child("info").value.toString()
-                                    val changePrevStint = "Etap: " + (stintId.toString().toInt()-1).toString()
-                                    val changePrev = (stintId.toString().toInt()-1).toString() + "-" + teamNum
-                                    val prevInfo = p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("info").value.toString()
-                                    val kartNumber =
-                                        ready.child("kartNumber").value.toString().toIntOrNull()
-                                    val prevKartNumber =
-                                        p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("kartNumber").value.toString().toIntOrNull()
-                                    val prevDriverName =
-                                        p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("driverName").value.toString()
-                                    val prevPlusWeight =
-                                        p0.result.child("Stints").child(changePrevStint).child("Info").child(changePrev).child("plusWeight").value.toString().toDoubleOrNull()
-                                    if (teamNumber > 1) {
-                                        if (teamNum.toString().toIntOrNull() != null) {
-                                            val changePrevTeam = (stintId.toString()
-                                                .toInt() - 1).toString() + "-" + (teamNum.toString()
-                                                .toInt() - 1)
-                                            val expectedKartNumber =
-                                                p0.result.child("Stints").child(changePrevStint)
-                                                    .child("Info").child(changePrevTeam)
-                                                    .child("kartNumber").value.toString()
-                                                    .toIntOrNull()
-
-                                            if (teamNum == teamNumber && stintNum == stintId.toString()
-                                                    .toInt()
-                                            ) {
-                                                val addStint = Stint(
-                                                    nameTeam,
-                                                    teamNumber,
-                                                    nameDriver,
-                                                    stintId.toString().toInt(),
-                                                    shortTeamName,
-                                                    plus,
-                                                    info,
-                                                    prevInfo,
-                                                    hasStintD,
-                                                    kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
-                                                )
-                                                items?.add(addStint)
-                                            }
-                                        } else {
-                                            val changePrevTeam = (stintId.toString()
-                                                .toInt() - 1).toString() + "-box"
-                                            val expectedKartNumber =
-                                                p0.result.child("Stints").child(changePrevStint)
-                                                    .child("Info").child(changePrevTeam)
-                                                    .child("kartNumber").value.toString()
-                                                    .toIntOrNull()
-
-                                            if (teamNum == teamNumber && stintNum == stintId.toString()
-                                                    .toInt()
-                                            ) {
-                                                val addStint = Stint(
-                                                    nameTeam,
-                                                    teamNumber,
-                                                    nameDriver,
-                                                    stintId.toString().toInt(),
-                                                    shortTeamName,
-                                                    plus,
-                                                    info,
-                                                    prevInfo,
-                                                    hasStintD,
-                                                    kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
-                                                )
-                                                items?.add(addStint)
-                                            }
-                                        }
-
-                                    } else if (teamNumber == 1) {
-                                        val changePrevTeam = (stintId.toString()
-                                            .toInt() - 1).toString() + "-" + "box"
-                                        val expectedKartNumber =
-                                            p0.result.child("Stints").child(changePrevStint)
-                                                .child("Info").child(changePrevTeam)
-                                                .child("kartNumber").value.toString()
-                                                .toIntOrNull()
-
-
-                                        if (teamNum == teamNumber && stintNum == stintId.toString()
-                                                .toInt()
-                                        ) {
-                                            val addStint = Stint(
-                                                nameTeam,
-                                                teamNumber,
-                                                nameDriver,
-                                                stintId.toString().toInt(),
-                                                shortTeamName,
-                                                plus,
-                                                info,
-                                                prevInfo,
-                                                hasStintD,
-                                                kartNumber, expectedKartNumber, prevDriverName, prevPlusWeight, prevKartNumber
-                                            )
-                                            items?.add(addStint)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //if (isAdded) {
-                requireActivity().runOnUiThread {
-                    adapter.update2(items!!.toMutableList())
-                    adapter.drivers(itemsDrivers!!.toMutableList())
-                }
-                //}
-
-            }
-        }
-    }*/
-
     override fun onNewStintListener(position: Int, teamNumber: Int, teamName: String, stintDone: Boolean, driverName: String?, plusWeight: Double?, shortTeamName: String?, driverWeight: Double?, prevTotalWeight: Double?) {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         val raceId: String = activity?.getMyData().toString()
@@ -1237,7 +987,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     val secondGroupFirst =
                         p0.result.child("Info").child("secondGroup").value.toString().toIntOrNull()
                     val firstGroupLast = numberOfTeams - (secondGroupFirst?.minus(1)!!)
-                    val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
+                    //val allTeamTogether = p0.result.child("Info").child("allTeamTogether").value.toString().toBooleanStrictOrNull()
                     val firstMore = p0.result.child("Info").child("firstMore").value.toString().toBooleanStrictOrNull()
                     val secondMore = p0.result.child("Info").child("secondMore").value.toString().toBooleanStrictOrNull()
                     val equalGroup = p0.result.child("Info").child("equalGroup").value.toString().toBooleanStrictOrNull()
@@ -1248,7 +998,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
                     if ((stintId.toString().toInt() + 1) <= allStintNumber) {
                         //println("ide????1?")
                         if (firstMore == true) {
-                            if (numberOfTeams < 10 || allTeamTogether == true) {
+                            if (numberOfTeams < 12) {
                                 if (teamNumber == numberOfTeams) {
                                     var changeNext = "Etap: ${stintId.toString().toInt() + 1}"
                                     val teamStintNext11 = "${stintId.toString().toInt() + 1}-box11"
