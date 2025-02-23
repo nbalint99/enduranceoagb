@@ -89,7 +89,7 @@ class AllCheckAdapter(private val listener: AllCheckItemClickListener) :
                 binding.tvTeamName.text = item?.nameTeam
             }
 
-            val avg = (item?.avgWeight!! / item?.stintsDone.toString().toDouble()) + 0.09
+            val avg = (item?.avgWeight!! + 0.009) / item?.stintsDone.toString().toDouble()
 
             if (avg < 90.0) {
                 binding.tvWeight.setTextColor(Color.RED)

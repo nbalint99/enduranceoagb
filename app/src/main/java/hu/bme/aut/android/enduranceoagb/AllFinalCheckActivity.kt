@@ -49,7 +49,7 @@ class AllFinalCheckActivity : AppCompatActivity(), AllFinalCheckAdapter.AllFinal
                 val numberOfStint = p0.result.child("Info").child("allStintNumber").value.toString().toInt().toDouble()
                 var valid = 0
                 for (element in list) {
-                    if ((((element.child("Info").child("avgWeight").value.toString().toDouble()) / numberOfStint) + 0.09) < 90.0) {
+                    if ((((element.child("Info").child("avgWeight").value.toString().toDouble()) + 0.009) / numberOfStint) < 90.0) {
                         valid += 1
                     }
                 }
