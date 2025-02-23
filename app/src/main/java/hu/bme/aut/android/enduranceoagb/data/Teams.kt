@@ -19,5 +19,10 @@ data class Teams(
     @ColumnInfo(name = "points") var points: Int? = null,
     @ColumnInfo(name = "shortTeamName") var shortTeamName: String? = null,
     @ColumnInfo(name = "group") var group: Int? = null,
-    @ColumnInfo(name = "hasQualiResultDone") var hasQualiResultDone: Boolean? = null
+    @ColumnInfo(name = "hasQualiResultDone") var hasQualiResultDone: Boolean? = null,
+    @ColumnInfo(name = "qualiName1") var qualiName1: String? = null,
+    @ColumnInfo(name = "qualiWeight1") var qualiWeight1: Double? = null,
+    @ColumnInfo(name = "qualiName2") var qualiName2: String? = null,
+    @ColumnInfo(name = "qualiWeight2") var qualiWeight2: Double? = null,
+    @ColumnInfo(name = "qualiTotalWeight") var qualiTotalWeight: Double? = null,
 )

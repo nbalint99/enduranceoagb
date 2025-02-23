@@ -153,4 +153,7 @@
     <string name="if10Teams">Ha 10 csapat indul, akkor egy gépparkot kapjon mindenki?</string>
     <string name="teamsTogether">Mindenki ugyanazokkal menjen</string>
     <string name="allSame">Mindenki egy közös gépparkkal menjen?</string>
+    <string name="qualiStints">Időmérő etapok</string>
+    <string name="newQuali">Új időmérő felvétele</string>
+    <string name="refresh">Frissítés</string>
 </resources>

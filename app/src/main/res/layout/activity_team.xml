@@ -43,6 +43,18 @@
 
     </Button>
 
+    <Button
+        android:id="@+id/qualiWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/red"
+        android:textColor="@color/white"
+        android:layout_margin="24dp"
+        android:text="@string/qualiStints"
+        android:layout_gravity="center|bottom">
+
+    </Button>
+
 
 
     <Button
@@ -50,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:textColor="@color/white"
-        android:text="@string/quali"
+        android:text="@string/qualiResults"
         android:layout_gravity="bottom|start"
         android:layout_margin="24dp">
 

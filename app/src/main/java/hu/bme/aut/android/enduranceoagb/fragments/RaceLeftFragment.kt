@@ -132,7 +132,8 @@ class RaceLeftFragment : Fragment(), RaceAdapter.RaceItemClickListener, NewRaceF
             if (p0.isSuccessful) {
                 for (element in p0.result.children) {
                     val addRace = Races(element.key, element.child("Info").child("nameR").value.toString(), element.child("Info").child("location").value.toString(),
-                        element.child("Info").child("numberOfTeams").value.toString().toInt(), element.child("Info").child("allStintNumber").value.toString().toInt(),
+                        element.child("Info").child("numberOfTeams").value.toString().toInt(),
+                        element.child("Info").child("allStintNumber").value.toString().toInt(),
                         element.child("Info").child("hasStintReady").value.toString().toBoolean(), element.child("Info").child("hasRaceDone").value.toString().toBoolean(),
                         element.child("Info").child("petrolDone").value.toString().toBoolean(), element.child("Info").child("hasTeamsDone").value.toString().toInt(),
                         element.child("Info").child("hasResultsDone").value.toString().toBoolean(), element.child("Info").child("hasQualiDone").value.toString().toInt(),

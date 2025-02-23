@@ -44,6 +44,7 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
     private lateinit var binding: ActivityDetailsstintBinding
 
     private lateinit var dbRef: DatabaseReference
+    private lateinit var dbRef2: DatabaseReference
     private lateinit var adapter: DetailsStintAdapter
 
     private val CHANNEL_ID = "channel_id_01"
@@ -946,8 +947,14 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
 
         dbRef = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("Races").child(raceId.toString())
 
+        dbRef2 = FirebaseDatabase.getInstance("https://enduranceoagb-bb301-default-rtdb.europe-west1.firebasedatabase.app").getReference("/")
+
         dbRef.get().addOnCompleteListener { p0 ->
             if (p0.isSuccessful) {
+                val numberOfTeamsAll =
+                    p0.result.child("Info").child("numberOfTeams").value.toString().toInt()
+                dbRef2.child("endTime").child("raceTime").child("changeTime")
+                    .setValue(changeTime(numberOfTeamsAll, stintId.toInt()))
                 val driverWeightReal = p0.result.child("Teams").child(teamName).child("Drivers").child(driver).child("weight").value.toString().toDoubleOrNull()
                 //var change = "Etap: $stintId"
                 //val allStintNumberAll = p0.result.child("Info").child("allStintNumber").value.toString().toInt()
@@ -1663,5 +1670,436 @@ class DetailsStintActivity : Fragment(), DetailsStintAdapter.DetailsStintItemCli
     override fun raceId(): String? {
         val activity: DetailsStintWatchActivity? = activity as DetailsStintWatchActivity?
         return activity?.getMyData().toString()
+    }
+
+    private fun changeTime(numberOfTeams: Int, stintNumber: Int): Int {
+        when (numberOfTeams) {
+            5 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return 28*60000
+                    }
+
+                    2 -> {
+                        return 58*60000
+                    }
+
+                    3 -> {
+                        return (60+28)*60000
+                    }
+
+                    4 -> {
+                        return (60+58)*60000
+                    }
+
+                    5 -> {
+                        return (120+28)*60000
+                    }
+
+                    6 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            6 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return 23*60000
+                    }
+
+                    2 -> {
+                        return 48*60000
+                    }
+
+                    3 -> {
+                        return (60+14)*60000
+                    }
+
+                    4 -> {
+                        return (60+40)*60000
+                    }
+
+                    5 -> {
+                        return (120+6)*60000
+                    }
+
+                    6 -> {
+                        return (120+32)*60000
+                    }
+
+                    7 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            7 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return 20*60000
+                    }
+
+                    2 -> {
+                        return 43*60000
+                    }
+
+                    3 -> {
+                        return (60+5)*60000
+                    }
+
+                    4 -> {
+                        return (60+28)*60000
+                    }
+
+                    5 -> {
+                        return (60+50)*60000
+                    }
+
+                    6 -> {
+                        return (120+12)*60000
+                    }
+
+                    7 -> {
+                        return (120+35)*60000
+                    }
+
+                    8 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            8 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (17)*60000
+                    }
+
+                    2 -> {
+                        return (37)*60000
+                    }
+
+                    3 -> {
+                        return (57)*60000
+                    }
+
+                    4 -> {
+                        return (60+17)*60000
+                    }
+
+                    5 -> {
+                        return (60+37)*60000
+                    }
+
+                    6 -> {
+                        return (60+57)*60000
+                    }
+
+                    7 -> {
+                        return (120+17)*60000
+                    }
+
+                    8 -> {
+                        return (120+37)*60000
+                    }
+
+                    9 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            9 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (15)*60000
+                    }
+
+                    2 -> {
+                        return (33)*60000
+                    }
+
+                    3 -> {
+                        return (51)*60000
+                    }
+
+                    4 -> {
+                        return (60+9)*60000
+                    }
+
+                    5 -> {
+                        return (60+27)*60000
+                    }
+
+                    6 -> {
+                        return (60+45)*60000
+                    }
+
+                    7 -> {
+                        return (120+3)*60000
+                    }
+
+                    8 -> {
+                        return (120+21)*60000
+                    }
+
+                    9 -> {
+                        return (120+39)*60000
+                    }
+
+                    10 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            10 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (13)*60000
+                    }
+
+                    2 -> {
+                        return (29)*60000
+                    }
+
+                    3 -> {
+                        return (46)*60000
+                    }
+
+                    4 -> {
+                        return (60+2)*60000
+                    }
+
+                    5 -> {
+                        return (60+18)*60000
+                    }
+
+                    6 -> {
+                        return (60+35)*60000
+                    }
+
+                    7 -> {
+                        return (60+51)*60000
+                    }
+
+                    8 -> {
+                        return (120+8)*60000
+                    }
+
+                    9 -> {
+                        return (120+24)*60000
+                    }
+
+                    10 -> {
+                        return (120+40)*60000
+                    }
+
+                    11 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+            11 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (11)*60000
+                    }
+
+                    2 -> {
+                        return (26)*60000
+                    }
+
+                    3 -> {
+                        return (41)*60000
+                    }
+
+                    4 -> {
+                        return (56)*60000
+                    }
+
+                    5 -> {
+                        return (60+11)*60000
+                    }
+
+                    6 -> {
+                        return (60+26)*60000
+                    }
+
+                    7 -> {
+                        return (60+41)*60000
+                    }
+
+                    8 -> {
+                        return (60+56)*60000
+                    }
+
+                    9 -> {
+                        return (120+11)*60000
+                    }
+
+                    10 -> {
+                        return (120+26)*60000
+                    }
+
+                    11 -> {
+                        return (120+41)*60000
+                    }
+
+                    12 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            12 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (21)*60000
+                    }
+
+                    2 -> {
+                        return (47)*60000
+                    }
+
+                    3 -> {
+                        return (60+13)*60000
+                    }
+
+                    4 -> {
+                        return (60+39)*60000
+                    }
+
+                    5 -> {
+                        return (120+5)*60000
+                    }
+
+                    6 -> {
+                        return (120+30)*60000
+                    }
+
+                    7 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            13 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (17)*60000
+                    }
+
+                    2 -> {
+                        return (39)*60000
+                    }
+
+                    3 -> {
+                        return (60+2)*60000
+                    }
+
+                    4 -> {
+                        return (60+24)*60000
+                    }
+
+                    5 -> {
+                        return (60+47)*60000
+                    }
+
+                    6 -> {
+                        return (120+9)*60000
+                    }
+
+                    7 -> {
+                        return (120+32)*60000
+                    }
+
+                    8 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            14 -> {
+                when (stintNumber) {
+                    1 -> {
+                        return (17)*60000
+                    }
+
+                    2 -> {
+                        return (39)*60000
+                    }
+
+                    3 -> {
+                        return (60+2)*60000
+                    }
+
+                    4 -> {
+                        return (60+24)*60000
+                    }
+
+                    5 -> {
+                        return (60+47)*60000
+                    }
+
+                    6 -> {
+                        return (120+9)*60000
+                    }
+
+                    7 -> {
+                        return (120+32)*60000
+                    }
+
+                    8 -> {
+                        return 0
+                    }
+
+                    else -> {
+                        return 0
+                    }
+                }
+            }
+
+            else -> {
+                return 0
+            }
+        }
     }
 }

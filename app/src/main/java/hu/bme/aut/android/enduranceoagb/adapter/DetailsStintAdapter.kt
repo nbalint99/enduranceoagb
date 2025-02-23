@@ -58,16 +58,7 @@ class DetailsStintAdapter(private val listener: DetailsStintItemClickListener) :
 
 
         if (detailsStintItem.numberStint != 1) {
-            /*holder.binding.tvPrevDriver.text = detailsStintItem.prevDriverName
-            holder.binding.tvPrevKart.text = "Gokart: " + detailsStintItem.prevKartNumber
-            holder.binding.tvPrevWeight.text = detailsStintItem.prevPlusWeight.toString() + " kg"
-            holder.binding.tvComing.text = "Érkezik:"
-            holder.binding.tvPrevDriver.setTextColor(Color.BLUE)
-            holder.binding.tvPrevKart.setTextColor(Color.BLUE)
-            holder.binding.tvPrevWeight.setTextColor(Color.BLUE)
-            holder.binding.tvComing.setTextColor(Color.BLUE)*/
-
-            holder.binding.tvTeamName.setOnClickListener {
+                        holder.binding.tvTeamName.setOnClickListener {
                 for (i in itemsTeams) {
                     if (i.teamNumber == detailsStintItem.teamNumber) {
                         listener.onTeamListener(detailsStintItem.teamName, detailsStintItem.teamNumber.toString(), i.gp2)

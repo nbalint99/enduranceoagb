@@ -10,7 +10,7 @@ data class Races(
     @ColumnInfo(name = "nameR") var nameR: String,
     @ColumnInfo(name = "location") var location: String,
     @ColumnInfo(name = "numberOfTeams") var numberOfTeams: Int,
-    @ColumnInfo(name = "allStintNumber") var allStintNumber: Int, //mindig eggyel több mint a felette levő
+    @ColumnInfo(name = "allStintNumber") var allStintNumber: Int,
     @ColumnInfo(name = "hasStintReady") var hasStintReady: Boolean,
     @ColumnInfo(name = "hasRaceDone") var hasRaceDone: Boolean,
     @ColumnInfo(name = "petrolDone") var petrolDone: Boolean,

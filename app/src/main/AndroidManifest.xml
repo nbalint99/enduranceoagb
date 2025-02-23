@@ -29,6 +29,10 @@
             android:exported="true"
             android:label="@string/teams" />
         <activity
+            android:name=".QualiStintFragment"
+            android:exported="true"
+            android:label="@string/qualiStints" />
+        <activity
             android:name=".TeamCheckActivity"
             android:exported="true"
             android:label="@string/teamsCheck" />

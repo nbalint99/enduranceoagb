@@ -10,6 +10,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +23,7 @@ import hu.bme.aut.android.enduranceoagb.data.Drivers
 import hu.bme.aut.android.enduranceoagb.data.Teams
 import hu.bme.aut.android.enduranceoagb.databinding.ActivityTeamBinding
 import hu.bme.aut.android.enduranceoagb.fragments.QualiFragment
+import hu.bme.aut.android.enduranceoagb.QualiStintFragment
 import hu.bme.aut.android.enduranceoagb.fragments.QualificationFragment
 import hu.bme.aut.android.enduranceoagb.fragments.StartKartFragment
 import java.util.*
@@ -78,6 +80,7 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                 val groupDone = p0.result.child("Info").child("hasGroupDone").value.toString().toBooleanStrictOrNull()
                 ///binding.importButton.isVisible = teamsDone != numberOfTeams
                 binding.divideButton.isVisible = teamsDone == numberOfTeams && groupDone == false
+                binding.qualiWeight.isVisible = groupDone == true && !binding.divideButton.isVisible
                 binding.btnQuali.isVisible = groupDone == true
             }
         }
@@ -106,7 +109,12 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
             }
         }
 
-
+        binding.qualiWeight.setOnClickListener {
+            val showDetailsIntent = Intent()
+            showDetailsIntent.setClass(this@TeamActivity, QualiStintFragment::class.java)
+            showDetailsIntent.putExtra(TeamActivity.EXTRA_RACE_NAME, raceId)
+            startActivity(showDetailsIntent)
+        }
 
         binding.divideButton.setOnClickListener {
             val builder = androidx.appcompat.app.AlertDialog.Builder(this)
@@ -165,12 +173,24 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                 val numberOfTeams =
                                     p0.result.child("Info").child("numberOfTeams").value.toString()
                                         .toInt()
+                                val id = p0.result.child("Id").value.toString()
+                                var idNumber = 0
+                                when (id) {
+                                    "-1" -> {
+                                        idNumber = 0
+                                    }
+                                    else -> {
+                                        idNumber++
+                                    }
+                                }
+                                dbRef.child("Id").setValue(idNumber)
                                 if (numberOfTeams >= 12) {
                                     val divideGroup = ceil(numberOfTeams.toDouble() / 2.0)
                                     var firstTeam = 1
                                     var group1 = 1
                                     var group2 = 1
                                     for (e in sortedItems) {
+
                                         val teamCategory = e.gp2
                                         if (teamCategory != true) { //Ha GP1-esek
                                             if (group1 < divideGroup.toInt() || group1 == divideGroup.toInt()) {
@@ -179,6 +199,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                                 sortedItems[firstTeam-1].group = 1
                                                 group1++
                                                 firstTeam++
+
+                                                dbRef.child("Id").setValue(idNumber)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("Group")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue(1)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue(e.shortTeamName)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue("-")
+                                                idNumber++
                                             }
                                             else if (group1 > divideGroup.toInt()) {
                                                 dbRef.child("Teams").child(e.nameTeam).child("Info")
@@ -186,6 +215,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                                 sortedItems[firstTeam-1].group = 2
                                                 group2++
                                                 firstTeam++
+
+                                                dbRef.child("Id").setValue(idNumber)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("Group")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue(2)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue(e.shortTeamName)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue("-")
+                                                idNumber++
                                             }
                                         }
                                         else { //Ha GP2-esek
@@ -195,6 +233,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                                 sortedItems[firstTeam-1].group = 2
                                                 group2++
                                                 firstTeam++
+
+                                                dbRef.child("Id").setValue(idNumber)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("Group")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue(2)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue(e.shortTeamName)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue("-")
+                                                idNumber++
                                             }
                                             else if (group2 > divideGroup.toInt()) {
                                                 dbRef.child("Teams").child(e.nameTeam).child("Info")
@@ -202,6 +249,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                                 sortedItems[firstTeam-1].group = 1
                                                 group1++
                                                 firstTeam++
+
+                                                dbRef.child("Id").setValue(idNumber)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("Group")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue(1)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue(e.shortTeamName)
+                                                dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                                dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue("-")
+                                                idNumber++
                                             }
                                         }
 
@@ -247,6 +303,15 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
                                         sortedItems[firstTeam-1].group = 1
                                         group1++
                                         firstTeam++
+
+                                        dbRef.child("Id").setValue(idNumber)
+                                        dbRef.child("Excel").child(idNumber.toString()).child("stintNumber").setValue("Group")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("teamNumber").setValue(1)
+                                        dbRef.child("Excel").child(idNumber.toString()).child("driver").setValue(e.shortTeamName)
+                                        dbRef.child("Excel").child(idNumber.toString()).child("plusWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("totalWeight").setValue("-")
+                                        dbRef.child("Excel").child(idNumber.toString()).child("kartNumber").setValue("-")
+                                        idNumber++
                                     }
                                     dbRef.child("Info").child("firstMore").setValue(true)
                                     dbRef.child("Info").child("secondMore").setValue(false)
@@ -3083,6 +3148,10 @@ class TeamActivity : AppCompatActivity(), TeamAdapter.TeamItemClickListener, Qua
         }
 
 
+    }
+
+    fun raceId(): String? {
+        return raceId
     }
 
 }
